@@ -1,0 +1,69 @@
+<app-dashboard-sidemenu></app-dashboard-sidemenu>
+
+<!-- Start Main Content Wrapper Area -->
+<div class="main-content d-flex flex-column">
+
+    <app-dashboard-navbar></app-dashboard-navbar>
+
+    <!-- Breadcrumb Area -->
+    <div class="breadcrumb-area" *ngFor="let Content of breadcrumb;">
+        <h1>{{Content.title}}</h1>
+        <ol class="breadcrumb">
+            <li class="item"><a routerLink="/">Home</a></li>
+            <li class="item"><a routerLink="/dashboard">{{Content.subTitle}}</a></li>
+            <li class="item">{{Content.title}}</li>
+        </ol>
+    </div>
+    <!-- End Breadcrumb Area -->
+    
+
+    
+    <div id="accordion" class="add-listings-box-comparison">
+        <ng-container *ngIf="quotationHeaders.length > 0"  >
+            <div class="card" *ngFor="let header of quotationHeaders; index as i">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <div class="row" style="display: flex; height: 100%; align-items: center;">
+                                <div class="col-lg-1 col-md-12">
+                                    <h6>#{{header.enquiryNo}}</h6>
+                                </div>
+                                <div class="col-lg-4 col-md-12">
+                                        <h6 style="font-size: 16px;">Date : {{header.enquiryDate | date}} </h6>
+                                </div>
+                                <!-- <div class="col-lg-5 col-md-12">
+                                    <h6>Validity Date : {{header.enquiryValidityDate | date}}</h6>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div style="display: flex; justify-content: end;height: 100%;align-items: center;">
+                                <span class="p-button-icon bx bx-lock-open-alt" style="font-size: 20px; cursor: pointer;" (click)="confirm1(header.enquiryId)" *ngIf="!header.isClose" aria-hidden="true"></span>
+                                <span class="p-button-icon bx bxs-lock" style="font-size: 20px;" *ngIf="header.isClose" aria-hidden="true"></span>
+                                <button pButton pRipple type="button" icon="bx bx-show" style="font-size: 20px; display: flex;"
+                                class="p-button-rounded p-button-primary
+                                p-button-text pt-2" (click)="getDataById(header)"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="quotationHeaders.length == 0">
+            <div class="card m-0">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <div class="row" style="display: flex; height: 100%; align-items: center; justify-content: center;">
+                                <span>No Purchase Enquiry Found</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <div class="flex-grow-1"></div>
+    <app-copyrights></app-copyrights>
+
+</div>

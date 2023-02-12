@@ -1,0 +1,1058 @@
+<app-navbar-style-one></app-navbar-style-one>
+
+<ng-container *ngIf="!showSuccess">
+    <div class="container authentication">
+        <!-- registerform -->
+        <div class="signup-form">
+            <!-- supplier registration form -->
+            <form [formGroup]="supplierFormControl" autocomplete="false"
+                *ngIf="!nextWizard" (ngSubmit)="registerSupplier('test')"
+                #register="ngForm">
+                <div class="signup-head">
+                    <span id="auth-head">
+                        <h2>Supplier Registration</h2>
+                    </span>
+                </div>
+                
+                <!-- Supplier / Vendor Master - Supplier Master -->
+                <div class="section-heading">
+                    <h5>Supplier / Vendor Master - Supplier Master</h5>
+                </div>
+                <!-- row-1 -->
+                <div class="row">
+                    <div class="col-lg-4 col-md-12 form-group">
+                        <label for="first-name">Supplier Name<span
+                                class="star_class">*</span></label>
+                        <input type="text" class="form-control" placeholder="Enter Supplier Name"
+                            [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('supplierName')?.invalid ||
+                            supplierFormControl.get('supplierName')?.invalid &&
+                            supplierFormControl.get('supplierName')?.touched"
+                            formControlName="supplierName" autocomplete="off"
+                            minlength="3" maxlength='35' required />
+                        <div class="invalid-feedback">
+                            Name is Required
+                        </div>
+                    </div>
+                    <div class="col-lg-8 col-md-12 form-group">
+                        <label for="address">Address with Pincode<span
+                                class="star_class">*</span></label>
+                        <textarea name="" id="" cols="1" rows="1"
+                            [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('supplierAddress')?.invalid ||
+                            supplierFormControl.get('supplierAddress')?.invalid &&
+                            supplierFormControl.get('supplierAddress')?.touched"
+                            placeholder="Enter Your Address"
+                            formControlName="supplierAddress" class="form-control"
+                            type="text" required></textarea>
+                        <div class="invalid-feedback"> Address is Required </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 form-group">
+                        <label for="state">Country<span class="star_class">*</span></label>
+                        <select class="form-control form-select" id="country"
+                            formControlName="countryId" (change)="getStateDropdown($event)"
+                            [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('countryId')?.invalid ||
+                            supplierFormControl.get('countryId')?.invalid &&
+                            supplierFormControl.get('countryId')?.touched" required>
+                            <option value="" disabled>Select Country</option>
+                            <ng-container *ngFor="let country of countryDropdown">
+                                <option [value]="country.id">{{country.value}}</option>
+                            </ng-container>
+                        </select>
+                        <div class="invalid-feedback"> Country is Required </div>
+                    </div>
+    
+                    <!-- row-2 -->
+                    <div class="col-lg-4 col-md-12 form-group" *ngIf="stateD">
+                        <label for="state">State<span class="star_class">*</span></label>
+                        <select class="form-control form-select" id="state"
+                            formControlName="stateId"
+                            [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('stateId')?.invalid ||
+                            supplierFormControl.get('stateId')?.invalid &&
+                            supplierFormControl.get('stateId')?.touched"
+                            (change)="ShowOtherState($event)" required>
+                            <option value="" disabled>Select State</option>
+                            <ng-container *ngFor="let state of stateDropdown">
+                                <option [value]="state.id">{{state.value}}</option>
+                            </ng-container>
+                        </select>
+                        <div class="invalid-feedback"> State is Required </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 form-group"
+                        *ngIf="showOtherCityBoolean">
+                        <label for="">Other State<span class="star_class">*</span></label>
+                        <input type="text" class="form-control"
+                            formControlName="otherState"
+                            [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('otherState')?.invalid ||
+                            supplierFormControl.get('otherState')?.invalid &&
+                            supplierFormControl.get('otherState')?.touched"
+                            placeholder="Enter Other State">
+                        <div class="invalid-feedback"> Other State is Required
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 form-group">
+                        <label for="city">Purpose<span class="star_class">*</span></label>
+                        <select class="form-control form-select" id="purpose"
+                            formControlName="purposeId" (change)="showState($event)"
+                            [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('purposeId')?.invalid ||
+                            supplierFormControl.get('purposeId')?.invalid &&
+                            supplierFormControl.get('purposeId')?.touched" required>
+                            <option disabled value="">Select Purpose</option>
+                            <ng-container *ngFor="let purpose of purposeDropdown">
+                                <option [value]="purpose.id">{{purpose.value}}</option>
+                            </ng-container>
+                        </select>
+                        <div class="invalid-feedback"> Purpose is Required </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 form-group"
+                        *ngIf="showStateDropdown">
+                        <label for="city">Provided<span class="star_class">*</span></label>
+                        <input class="form-control" formControlName="services"
+                            [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('services')?.invalid ||
+                            supplierFormControl.get('services')?.invalid &&
+                            supplierFormControl.get('services')?.touched"
+                            autocomplete="off" placeholder="Services"
+                            [required]="showStateDropdown" />
+                        <div class="invalid-feedback"> Service is Required </div>
+                    </div>
+    
+                    <!-- row-3 -->
+                    <div class="col-lg-4 col-md-12 form-group">
+                        <label for="city">In case of Intercompany correct Co. No. In
+                            GL off</label>
+                        <input class="form-control"
+                            formControlName="interCompany"
+                            autocomplete="off" placeholder="Enter CO No." />
+                        <div class="error" *ngIf="register.submitted &&
+                            supplierFormControl.get('interCompany')?.invalid
+                            ||
+                            supplierFormControl.get('interCompany')?.invalid
+                            &&
+                            supplierFormControl.get('interCompany')?.touched">
+                            inter company CorrectCONo is Required </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 form-group">
+                        <label for="credit">Payment Terms<span class="star_class">*</span></label>
+                        <input class="form-control" formControlName="payTermsId"
+                            [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('payTermsId')?.invalid ||
+                            supplierFormControl.get('payTermsId')?.invalid &&
+                            supplierFormControl.get('payTermsId')?.touched"
+                            autocomplete="off" placeholder="Enter Payment Terms" />
+                        <div class="invalid-feedback"> Payment Terms is Required
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 form-group">
+                        <label for="tds-applicable">TDS Applicable<span
+                                class="star_class">*</span></label>
+                        <select class="form-control form-select" id="tds"
+                            [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('tdsApplicable')?.invalid ||
+                            supplierFormControl.get('tdsApplicable')?.invalid &&
+                            supplierFormControl.get('tdsApplicable')?.touched"
+                            placeholder="" formControlName="tdsApplicable" required>
+                            <option disabled value="">Select</option>
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                        <div class="invalid-feedback"> Please Select TDS yes/no</div>
+                    </div>
+    
+                    <!-- row-4 -->
+                    <div class="col-lg-4 col-md-12 form-group">
+                        <label for="">Organization Profile<span class="star_class">*</span></label>
+                            <div *ngIf="!organizationProfileUrl">
+                                <input type="file" #organizationProfile required class="form-control"
+                                (change)="upload_doc($event, 'organization_profile')">                
+                                <div class="error" *ngIf="register.submitted &&
+                                    supplierFormControl.get('documentsUploadPath')?.invalid
+                                    ||
+                                    supplierFormControl.get('documentsUploadPath')?.invalid
+                                    &&
+                                    supplierFormControl.get('documentsUploadPath')?.touched">
+                                    Organization profile is required
+                                </div>
+                            </div>
+                            <span class="form-control preview-image"  *ngIf="organizationProfileUrl"><a [href]="organizationProfileUrl" target="_blank" [download]="organizationProfileUrl"><span  style="cursor: pointer; margin: 5px 10px; text-decoration: underline; color: var(--mainColor2);">Image Preview</span></a><span (click)="removeImages('organizationProfile')" style="cursor: pointer;"> X</span></span>
+                    </div>
+                    <div class="col-lg-4 col-md-12 form-group">
+                        <label for="password">Password<span class="star_class">*</span></label>
+                        <input class="form-control" type="password"
+                            placeholder="Enter Password"
+                            id="password" autocomplete="off"
+                            formControlName="password"
+                            [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('password')?.invalid ||
+                            supplierFormControl.get('password')?.invalid &&
+                            supplierFormControl.get('password')?.touched"
+                            required />
+                        <div class="invalid-feedback"
+                            *ngIf="supplierFormControl.get('password').errors?.required
+                            && supplierFormControl.get('password')?.touched ||
+                            supplierFormControl.get('password').errors?.required &&
+                            register.submitted">
+                            Password is Required
+                        </div>
+                        <div class="invalid-feedback"
+                            *ngIf="supplierFormControl.get('password').errors?.minlength">
+                            Please Enter Atleast 5 Characters
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 form-group">
+                        <label for="confirm-password">Confirm Password<span
+                                class="star_class">*</span></label>
+                        <input class="form-control" type="password"
+                            id="confirmPassword" placeholder="Enter Confirm Password" autocomplete="off"
+                            formControlName="confirmPassword"
+                            [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('confirmPassword')?.invalid ||
+                            supplierFormControl.get('confirmPassword')?.invalid &&
+                            supplierFormControl.get('confirmPassword')?.touched"
+                            required />
+                        <div class="invalid-feedback"
+                            *ngIf="supplierFormControl.get('confirmPassword')?.errors?.required">
+                            Confirm Password is Required
+                        </div>
+                        <div class="error" *ngIf="(this.getError().notSame &&
+                            supplierFormControl.get('confirmPassword')?.touched &&
+                            !(supplierFormControl.get('confirmPassword')?.errors?.required))
+                            || (this.getError().notSame && register.submitted &&
+                            !(supplierFormControl.get('confirmPassword')?.errors?.required))">Confirm
+                            Password not Matched
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 form-group">
+                        <label for="email">Whether Domestic or Foreign<span
+                                class="star_class">*</span></label>
+                        <span class="form-control">{{supplierFormControl.get('isDomestic').value == true ? 'Foreign' : 'Domestic'}}</span>
+                    </div>
+                    <div class="col-lg-4 col-md-12 form-group" *ngIf="showCurrency">
+                        <label for="email">If Foreign give Currency<span
+                                class="star_class">*</span></label>
+                        <input class="form-control" formControlName="currency"
+                            id="currency" [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('currency')?.invalid ||
+                            supplierFormControl.get('currency')?.invalid &&
+                            supplierFormControl.get('currency')?.touched"
+                            placeholder="Enter Currency Type" />
+                        <div class="invalid-feedback"> Please Enter Currency</div>
+                    </div>
+                </div>
+    
+    
+                <!-- Tax Registration Details -->
+    
+                <div class="section-heading">
+                    <h5>Tax Registration Details</h5>
+                </div>
+    
+                <!-- row-5 -->
+                <div class="row" *ngIf="!showCurrency">
+                    <div class="col-lg-4 col-md-12 form-group">
+                        <label for="city">GSTIN<span class="star_class">*</span></label>
+                        <input class="form-control" formControlName="gstinNo"
+                            oninput="this.value= this.value.toUpperCase()"
+                            placeholder="Enter GSTIN" minlength="15"
+                            maxlength="15" [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('gstinNo')?.invalid ||
+                            supplierFormControl.get('gstinNo')?.touched &&
+                            supplierFormControl.get('gstinNo')?.invalid"
+                            autocomplete="off" [required]="showCurrency"/>
+                        <div class="invalid-feedback"
+                            *ngIf="supplierFormControl.controls.gstinNo?.errors?.required">
+                            Please Enter GSTIN No.</div>
+                        <div class="invalid-feedback"
+                            *ngIf="supplierFormControl.controls.gstinNo?.errors?.pattern">Enter
+                            Valid GSTIN No.</div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 form-group">
+                        <label for="city">GSTIN Date<span class="star_class">*</span></label>
+                        <p-calendar formControlName="gstinDate" placeholder="Select GSTIN Date" [readonlyInput]="true" [maxDate]="myDate"
+                            [showIcon]="true"
+                            [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('gstinDate')?.invalid ||
+                            supplierFormControl.get('gstinDate')?.invalid &&
+                            supplierFormControl.get('gstinDate')?.touched"
+                            [required]="showCurrency"></p-calendar>
+                        <div class="invalid-feedback"> Please Select Date</div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 form-group">
+                        <label for="city">PAN<span class="star_class">*</span></label>
+                        <input class="form-control" formControlName="panNo"
+                            minlength="10" maxlength="10"
+                            oninput="this.value= this.value.toUpperCase()"
+                            [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('panNo')?.invalid ||
+                            supplierFormControl.get('panNo')?.touched &&
+                            supplierFormControl.get('panNo')?.invalid"
+                            placeholder="Enter PAN"
+                            autocomplete="off" [required]="showCurrency" />
+                        <div class="invalid-feedback"
+                            *ngIf="supplierFormControl.controls.panNo?.errors?.required">
+                            Please Enter PAN No.</div>
+                        <span class="error"
+                            *ngIf="supplierFormControl.controls.panNo?.errors?.pattern">Enter
+                            Valid PAN No.</span>
+                    </div>
+                </div>
+    
+                <!-- row-6 -->
+                <div class="row">
+                    <div class="col-lg-4 col-md-12 form-group">
+                        <label for="city">TAN</label>
+                        <input class="form-control"  formControlName="tanNo"
+                            placeholder="Enter TAN" oninput="this.value= this.value.toUpperCase()"
+                            maxlength="10" autocomplete="off" />
+                        <div class="error" *ngIf="register.submitted &&
+                            supplierFormControl.get('tanNo')?.invalid ||
+                            supplierFormControl.get('tanNo')?.invalid &&
+                            supplierFormControl.get('tanNo')?.touched">
+                            Please Enter Valid TAN
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 form-group">
+                        <label for="email">MSME Applicable<span class="star_class">*</span></label>
+                        <span class="form-control">{{supplierFormControl.get('msmeApplicable')?.value ? 'Yes' : 'No'}}</span>
+                        <div class="invalid-feedback"> MSME is Required </div>
+                    </div>
+                </div>
+    
+    
+    
+                <!-- Vendor Contact Details -->
+    
+                <div class="section-heading">
+                    <h5>Supplier Contact Details</h5>
+                </div>
+    
+                <!-- row-7 -->
+                <div class="row">
+                    <div class="col-lg-3 form-group">
+                        <label for="contact">Contact Person<span class="star_class">*</span></label>
+                        <input class="form-control"
+                            [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('contactPerson')?.invalid ||
+                            supplierFormControl.get('contactPerson')?.invalid &&
+                            supplierFormControl.get('contactPerson')?.touched"
+                            placeholder="Enter Contact Person"
+                            formControlName="contactPerson"
+                            autocomplete="off" required/>
+                        <div class="invalid-feedback">
+                            Contact Person is Required
+                        </div>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label for="tel">Contact Number<span class="star_class">*</span></label>
+                        <input pKeyFilter="money" class="form-control" 
+                            formControlName="mobileNo"
+                            [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('mobileNo')?.invalid ||
+                            supplierFormControl.get('mobileNo')?.invalid &&
+                            supplierFormControl.get('mobileNo')?.touched"
+                            placeholder="Enter Contact Number" minlength="10"
+                            maxlength="15"
+                            autocomplete="off" required/>
+                           
+                        <div class="invalid-feedback"
+                            *ngIf="this.supplierFormControl.get('mobileNo').errors?.required">
+                            Enter Contact Number
+                        </div>
+                        <div class="error"
+                            *ngIf="this.supplierFormControl.get('mobileNo').errors?.minlength">
+                            Enter Contact Number with Country Code Atleast 10 digit
+                        </div>
+                        <div class="error"
+                            *ngIf="this.supplierFormControl.get('mobileNo').errors?.pattern">
+                            Enter Valid Mobile Number </div>
+    
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label for="fax">Alternate Number</label>
+                        <input pKeyFilter="money" class="form-control" type="text" 
+                            formControlName="faxNo" placeholder="Enter Alternate Number"
+                            autocomplete="off" minlength="10" maxlength="15" />
+                        <div class="error" *ngIf="register.submitted &&
+                            supplierFormControl.get('faxNo')?.invalid ||
+                            supplierFormControl.get('faxNo')?.invalid &&
+                            supplierFormControl.get('faxNo')?.touched">
+                            Enter Contact Number
+                        </div>
+                        <div class="error"
+                            *ngIf="this.supplierFormControl.get('faxNo').errors?.minlength">
+                            Enter Contact Number with Country Code Atleast 10 digit
+                        </div>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label>Email Address<span class="star_class">*</span></label>
+                        <div class="form-control">
+                            <span>{{supplierFormControl.value.emailAddress}}</span>
+                        </div>
+                    </div>
+    
+                    <div class="col-lg-3 form-group">
+                        <label for="">Alternate Email Address</label>
+                        <input type="text" class="form-control"  [class.is-invalid]="register.submitted &&
+                        supplierFormControl.get('alternateEmail')?.invalid ||
+                        supplierFormControl.get('alternateEmail')?.invalid &&
+                        supplierFormControl.get('alternateEmail')?.touched"
+                            formControlName="alternateEmail" placeholder="Enter Email Address">
+                            <div class="invalid-feedback"
+                            *ngIf="this.supplierFormControl.controls['alternateEmail'].errors?.pattern">
+                            Enter Valid Email Address </div>
+                    </div>
+                </div>
+    
+                <!-- Vendor Bank Details -->
+    
+                <div class="section-heading">
+                    <h5>Bank Details</h5>
+                </div>
+                <!-- row-8-->
+                <div class="row">
+                    <div class="col-lg-3 form-group">
+                        <label for="accountType">Account Type<span
+                                class="star_class">*</span></label><br>
+                        <div style="display: flex;">
+                            <div style="display: flex; align-items: center; margin:
+                                0 5px;">
+                                <input type="radio" value="C"
+                                    formControlName="accountType" placeholder="Enter
+                                    Bank Address"
+                                    autocomplete="off" /> <span style="margin: 0
+                                    2px;">Current Account</span>
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <input type="radio"
+                                    formControlName="accountType" value="S"
+                                    placeholder="Enter Bank Address"
+                                    [class.is-invalid]="register.submitted &&
+                                    supplierFormControl.get('accountType')?.invalid"
+                                    autocomplete="off" /><span style="margin: 0
+                                    2px;">Saving Account</span>
+                            </div>
+                        </div>
+                        <div class="error" *ngIf="register.submitted &&
+                            supplierFormControl.get('accountType')?.invalid ||
+                            supplierFormControl.get('accountType')?.invalid &&
+                            supplierFormControl.get('accountType')?.touched">Please
+                            select Account Type</div>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label for="bankName">Bank Name<span class="star_class">*</span></label>
+                        <input class="form-control" type="text"
+                            formControlName="bankName" placeholder="Enter Bank Name"
+                            [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('bankName')?.invalid ||
+                            supplierFormControl.get('bankName')?.invalid &&
+                            supplierFormControl.get('bankName')?.touched"
+                            autocomplete="off" />
+                        <div class="invalid-feedback">Please enter bank name</div>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label for="account">Account No.<span class="star_class">*</span></label>
+                        <input class="form-control" type="text" 
+                            [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('accountNo')?.invalid ||
+                            supplierFormControl.get('accountNo')?.touched &&
+                            supplierFormControl.get('accountNo')?.invalid"
+                            formControlName="accountNo" maxlength="25"
+                            minlength="1"
+                            placeholder="Enter Account No."
+                            autocomplete="off" />
+                        <div class="invalid-feedback"
+                            *ngIf="supplierFormControl.get('accountNo')?.errors?.required">Please
+                            Enter Account no</div>
+                        <div class="invalid-feedback"
+                            *ngIf="supplierFormControl.get('accountNo')?.errors?.minlength">Please
+                            Enter Valid Account Number</div>
+    
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label for="ifscCode">IFSC Code or Swift Code <span
+                                class="star_class">*</span></label>
+                        <input class="form-control" type="text"
+                            [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('ifscCode')?.invalid ||
+                            supplierFormControl.get('ifscCode')?.touched &&
+                            supplierFormControl.get('ifscCode')?.invalid"
+                            oninput="this.value= this.value.toUpperCase()"
+                            formControlName="ifscCode" maxlength="15" placeholder="Enter IFSC Code"
+                            autocomplete="off" />
+                        <div class="invalid-feedback"
+                            *ngIf="supplierFormControl.get('ifscCode')?.errors?.required">Please
+                            enter ifsc code or swift code</div>
+                        <div class="invalid-feedback"
+                            *ngIf="supplierFormControl.get('ifscCode')?.errors?.pattern">Enter
+                            Valid IFSC Code</div>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label for="ifscCode">MICR No.</label>
+                        <!-- {{supplierFormControl.get('micrNo').value}} -->
+                        <input class="form-control" type="text"
+                            formControlName="micrNo" placeholder="Enter MICR no."
+                            autocomplete="off" />
+                        <div class="error" *ngIf="register.submitted &&
+                            supplierFormControl.get('micrNo')?.invalid ||
+                            supplierFormControl.get('micrNo')?.touched &&
+                            supplierFormControl.get('micrNo')?.invalid">
+                            Enter MICR No.
+                        </div>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label for="ifscCode">Bank Address</label>
+                        <input class="form-control" type="text"
+                            formControlName="bankAddress" placeholder="Enter Bank Address"
+                            autocomplete="off" />
+                        <div class="error" *ngIf="register.submitted &&
+                            supplierFormControl.get('bankAddress')?.invalid ||
+                            supplierFormControl.get('bankAddress')?.touched &&
+                            supplierFormControl.get('bankAddress')?.invalid">
+                            Enter Bank Address
+                        </div>
+                    </div>
+                    <div class="col-lg-4 form-group">
+                        <label for="account">Cancel Cheque<span class="star_class">*</span></label>
+                            <input class="form-control" *ngIf="!cancelChequeUrl" type="file" #cancelCheque
+                            [class.is-invalid]="(register.submitted &&
+                            supplierFormControl.get('cancelledCheque')?.invalid) ||
+                            (supplierFormControl.get('cancelledCheque')?.invalid &&
+                            supplierFormControl.get('cancelledCheque')?.touched)"
+                            (change)="upload_doc($event , 'cancelCheque')"
+                            autocomplete="off" required />
+                            <div class="invalid-feedback">Please upload cancel cheque</div>
+                            <span class="form-control preview-image"  *ngIf="cancelChequeUrl"><a [download]="cancelChequeUrl" target="_blank" [href]="cancelChequeUrl"><span  style="cursor: pointer; margin: 5px 10px; text-decoration: underline; color: var(--mainColor2);">Image Preview</span></a><span (click)="removeImages('cancelCheque')" style="cursor: pointer;"> X</span></span>
+                            <!-- <a target="_blank"><img [src]="cancelChequeUrl" alt="">Preview</a> -->
+                    </div>
+                    <!-- <button (click)="showUploadedImage()" type="button">Preview</button> -->
+                </div>
+    
+                <!-- previous 3 years Turnover -->
+                <div class="section-heading">
+                    <h5>Turnover Details</h5>
+                </div>
+    
+                <!-- row-9 -->
+                <div class="row">
+                    <div class="col-lg-2 form-group">
+                        <label for="city">Year of Establishment:<span
+                                class="star_class">*</span></label>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <p-calendar autocomplete="off" view="year"
+                            formControlName="yearofEstablishment" dateFormat="yy"
+                            [maxDate]="myDate" [readonlyInput]="true"
+                            [showIcon]="true" [class.is-invalid]="register.submitted
+                            && supplierFormControl.get('yearofEstablishment')?.invalid
+                            || supplierFormControl.get('yearofEstablishment')?.invalid
+                            &&
+                            supplierFormControl.get('yearofEstablishment')?.touched"
+                            placeholder="Year of Establishment"></p-calendar>
+                        <div class="invalid-feedback">Please Select year</div>
+                    </div>
+                </div>
+    
+                <div class="row">
+                    <div class="col-lg-2 form-group" style="display: flex;
+                        justify-content:left; align-items: center; text-align:
+                        center;">
+                        <label for="city">Turnover (Year 1)</label>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <p-calendar autocomplete="off" view="year"
+                            (onSelect)="setYears('year1')" dateFormat="yy"
+                            [maxDate]="myDate" [readonlyInput]="true"
+                            [showIcon]="true" formControlName="year1"
+                            placeholder="Please Select Year"></p-calendar>
+                    </div>
+                    <div class="col-lg-3 col-md-6 form-group">
+                        <div style="display: flex; ">
+                            <select class="form-select form-control select-currency"
+                                (change)="setCurrencyId($event , 'year1')"
+                                style="width: 70px;
+                                line-height : 22px; display: flex; align-items:
+                                center; border-right: none!important;
+                                border-bottom-right-radius: 0;
+                                border-top-right-radius: 0; background-color:
+                                #f1f1f1!important;" formControlName="currencyId">
+                                <option value=""></option>
+                                <ng-container *ngFor="let currency of currencyDropdown" >
+                                    <option [value]="currency.id"  [disabled]="currencyTypeValueINR == currency.id">{{currency.value}}</option>
+                                </ng-container>
+                            </select>
+                            <input type="text" class="form-control"
+                                style="border-left:
+                                none!important;
+                                border-top-left-radius: 0;
+                                border-bottom-left-radius: 0"
+                                pKeyFilter="money"
+                                formControlName="turnover1" placeholder="Enter Year Turnover">
+                        </div>
+                    </div>
+                    <div class="col-lg-2 form-group d-flex align-items-center">
+                        <label for="city" style="margin: 0;">Upload Balance Sheet :</label>
+                    </div>
+                    <div class="col-lg-2 form-group">
+                            <input *ngIf="!year1Url" class="form-control" type="file" #year1File
+                            (change)="upload_doc($event , 'year1')"
+                            autocomplete="off" />
+                            <div class="invalid-feedback">Please choose file</div>
+                        <span class="form-control preview-image" *ngIf="year1Url"><a [href]="year1Url" target="_blank" [download]="year1Url"><span  style="cursor: pointer; margin: 5px 10px; text-decoration: underline; color: var(--mainColor2);">Image Preview</span></a><span (click)="removeImages('year1')" style="cursor: pointer;"> X</span></span>
+                    </div>
+                </div>
+    
+                <div class="row">
+                    <div class="col-lg-2 form-group" style="display: flex;
+                        justify-content:left; align-items: center; text-align:
+                        center;">
+                        <label for="city">Turnover (Year 2)</label>
+                    </div>
+    
+                    <div class="col-lg-3 form-group">
+                        <p-calendar autocomplete="off" view="year"
+                            (onSelect)="setYears('year2')" dateFormat="yy"
+                            [maxDate]="myDate" [readonlyInput]="true"
+                            [showIcon]="true" formControlName="year2"
+                            placeholder="Please Select Year"></p-calendar>
+                    </div>
+                    <div class="col-lg-3 col-md-6 form-group">
+                        <div style="display: flex; ">
+                            <select class="form-select form-control select-currency"
+                                (change)="setCurrencyId($event , 'year2')"
+                                style="width: 70px;
+                                line-height : 22px; display: flex; align-items:
+                                center; border-right: none!important;
+                                border-bottom-right-radius: 0; background-color:
+                                #f1f1f1!important;
+                                border-top-right-radius: 0;"
+                                formControlName="currencyId">
+                                <option value=""></option>
+                                <ng-container *ngFor="let currency of currencyDropdown">
+                                    <option [value]="currency.id" >{{currency.value}}</option>
+                                </ng-container>
+                            </select>
+                            <input type="text" class="form-control"
+                                style="border-left:
+                                none!important;
+                                border-top-left-radius: 0;
+                                border-bottom-left-radius: 0"
+                               pKeyFilter="money"
+                                formControlName="turnover2" placeholder="Enter Year Turnover">
+                        </div>
+                    </div>
+                    <div class="col-lg-2 form-group d-flex align-items-center">
+                        <label for="Sheet2" style="margin: 0;">Upload Balance Sheet :</label>
+                    </div>
+                    <div class="col-lg-2 form-group">
+                        <input class="form-control" *ngIf="!year2Url" type="file" #year2File
+                            (change)="upload_doc($event , 'year2')"
+                            autocomplete="off" />
+                        <div class="invalid-feedback">Please choose file</div>
+                        <span class="form-control preview-image"  *ngIf="year2Url"><a target="_blank" [download]="year2Url" [href]="year2Url"><span  style="cursor: pointer; margin: 5px 10px; text-decoration: underline; color: var(--mainColor2);">Image Preview</span></a><span (click)="removeImages('year2')" style="cursor: pointer;"> X</span></span>
+                    </div>
+                </div>
+    
+                <div class="row">
+                    <div class="col-lg-2 form-group" style="display: flex;
+                        justify-content:left; align-items: center; text-align:
+                        center;">
+                        <label for="city">Turnover (Year 3)</label>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <p-calendar autocomplete="off" view="year"
+                            (onSelect)="setYears('year3')" dateFormat="yy"
+                            [maxDate]="myDate" [readonlyInput]="true"
+                            [showIcon]="true" formControlName="year3"
+                            placeholder="Please Select Year"></p-calendar>
+                    </div>
+                    <div class="col-lg-3 col-md-6 form-group">
+                        <div style="display: flex; ">
+                            <select class="form-select form-control select-currency"
+                                (change)="setCurrencyId($event , 'year3')"
+                                formControlName="currencyId" style="width: 70px;
+                                line-height : 22px; display: flex; align-items:
+                                center; border-right: none!important;
+                                border-bottom-right-radius: 0; background-color:
+                                #f1f1f1!important;
+                                border-top-right-radius: 0;">
+                                <option value=""></option>
+                                <ng-container *ngFor="let currency of
+                                    currencyDropdown">
+                                    <option [value]="currency.id">{{currency.value}}</option>
+                                </ng-container>
+                            </select>
+                            <input type="text" class="form-control"
+                                style="border-left:
+                                none!important;
+                                border-top-left-radius: 0;
+                                border-bottom-left-radius: 0"
+                                pKeyFilter="money"
+                                formControlName="turnover3" placeholder="Enter Year Turnover">
+                        </div>
+                    </div>
+                    <div class="col-lg-2 form-group d-flex align-items-center">
+                        <label for="city" style="margin: 0;">Upload Balance Sheet :</label>
+                    </div>
+                    <div class="col-lg-2 form-group">
+                        <input class="form-control" *ngIf="!year3Url" type="file" #year3File
+                            (change)="upload_doc($event , 'year3')"
+                            autocomplete="off" />
+                        <div class="invalid-feedback">Please choose file</div>
+                        <span class="form-control preview-image" *ngIf="year3Url"><a [download]="year3Url" [href]="year3Url"><span style="cursor: pointer; margin: 5px 10px; text-decoration: underline; color: var(--mainColor2);">Image Preview</span></a><span (click)="removeImages('year3')" style="cursor: pointer;"> X</span></span>
+                    </div>
+                </div>
+    
+    
+                <div class="section-heading">
+                    <h5>Authorized Signatory</h5>
+                </div>
+    
+                <!-- row-10 -->
+                <div class="row director_section global-director">
+                    <div class="">
+                        <label for="">Name<span class="star_class">*</span></label>
+                    </div>
+                    <div class="">
+                        <label for="">Contact Number<span
+                                class="star_class">*</span></label>
+                    </div>
+                    <div class="">
+                        <label for="">Email Address<span class="star_class">*</span></label>
+                    </div>
+                </div>
+    
+                <div formArrayName="directorArray">
+                    <ng-container *ngFor="let certificate of
+                        getDirectorArray().controls; index as idx; last as last">
+                        <div class="row director_section" [formGroupName]="idx">
+                            <div class="form-group" style="margin-top:
+                                0!important;">
+                                <label for="" class="inner-director"
+                                    style="margin-bottom: 0!important;">Name<span
+                                        class="star_class">*</span></label>
+                                <input class="form-control" type="text"
+                                    [class.is-invalid]="(register.submitted &&
+                                    this.supplierFormControl.get('directorArray').controls[idx].controls['directorName'].invalid)
+                                    || (
+                                    this.supplierFormControl.get('directorArray').controls[idx].touched
+                                    &&
+                                    this.supplierFormControl.get('directorArray').controls[idx].controls['directorName'].invalid)
+                                    ||
+                                    (this.supplierFormControl.get('directorArray').controls[idx].controls['directorName'].invalid
+                                    && directorBoolean)" placeholder="Enter Authorized Signatory Name"
+                                    formControlName="directorName"  
+                                    autocomplete="off" />
+                                <div class="invalid-feedback"> Enter Your Name
+                                </div>
+                            </div>
+                            <div class=" form-group" style="margin-top:
+                                0!important;">
+                                <label for="" class="inner-director"
+                                    style="margin-bottom: 0!important;"> Contact
+                                    Number<span
+                                        class="star_class">*</span></label>
+                                <input class="form-control" type="text"
+                                    placeholder="Enter Authorized Signatory Contact"
+                                    [class.is-invalid]="(register.submitted &&
+                                    this.supplierFormControl.get('directorArray').controls[idx].controls['mobileNo'].invalid)
+                                    || (
+                                    this.supplierFormControl.get('directorArray').controls[idx].controls['mobileNo'].touched
+                                    &&
+                                    this.supplierFormControl.get('directorArray').controls[idx].controls['mobileNo'].invalid)
+                                    ||
+                                    (this.supplierFormControl.get('directorArray').controls[idx].controls['mobileNo'].invalid
+                                    && directorBoolean)"
+                                    formControlName="mobileNo"
+                                    pKeyFilter="money"
+                                    maxlength="15" minlength="10" autocomplete="off"
+                                    />
+                                <div class="invalid-feedback"
+                                    *ngIf="this.supplierFormControl.get('directorArray').controls[idx].controls['mobileNo'].errors?.required">
+                                    Enter Contact Number
+                                </div>
+                                <div class="error"
+                                    *ngIf="this.supplierFormControl.get('directorArray').controls[idx].controls['mobileNo'].errors?.minlength">
+                                    Enter Contact Number with Country Code Atleast
+                                    10 digit
+                                </div>
+                                <div class="error"
+                                    *ngIf="this.supplierFormControl.get('directorArray').controls[idx].controls['mobileNo'].errors?.pattern">
+                                    Enter Valid Mobile Number </div>
+                            </div>
+                            <div class="form-group" style="margin-top:
+                                0!important;">
+                                <label for="" class="inner-director"
+                                    style="margin-bottom: 0!important;">Email
+                                    Address<span class="star_class">*</span></label>
+                                <input class="form-control" type="text"
+                                    formControlName="email"
+                                    [class.is-invalid]="(register.submitted &&
+                                    this.supplierFormControl.get('directorArray').controls[idx].controls['email'].invalid)
+                                    || (
+                                    this.supplierFormControl.get('directorArray').controls[idx].controls['email'].touched
+                                    &&
+                                    this.supplierFormControl.get('directorArray').controls[idx].controls['email'].invalid)
+                                    ||
+                                    (this.supplierFormControl.get('directorArray').controls[idx].controls['email'].invalid
+                                    && directorBoolean)"
+                                    placeholder="Enter Authorized Signatory Email"
+                                    autocomplete="off" />
+                                <div class="invalid-feedback"
+                                    *ngIf="this.supplierFormControl.get('directorArray').controls[idx].controls['email'].errors?.required">
+                                    Enter Email Address </div>
+                                <div class="invalid-feedback"
+                                    *ngIf="this.supplierFormControl.get('directorArray').controls[idx].controls['email'].errors?.pattern">
+                                    Enter Valid Email Address </div>
+                            </div>
+                            <div class="col-lg-2 form-group d-flex"
+                                style="margin-top: 0!important;">
+                                <button type="button"  *ngIf="last" style="padding : 6px 15px 6px;
+                                    margin-right: 5px; height: 35px;"
+                                    (click)="addDirectorRow('add' , last)">+</button>
+                                <button type="button" style="padding
+                                    : 6px 15px 6px; height: 35px;"
+                                    (click)="addDirectorRow('delete' ,
+                                    idx)">-</button>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+    
+                <div class="section-heading">
+                    <h5>Major Customers</h5>
+                </div>
+                <p><b>NOTE : Please Enter Atleast 3 Domestic and 5 Export Customers
+                        Details</b></p>
+                <!-- row-11 -->
+                <div class="row">
+                    <div class="col-lg-3 col-md-12">
+                        <label for="">Organization Name</label>
+                    </div>
+                    <div class="col-lg-3 col-md-12">
+                        <label for="">Contact Person</label>
+                    </div>
+                    <div class="col-lg-2 col-md-12">
+                        <label for="">Designation</label>
+                    </div>
+                    <div class="col-lg-2 col-md-12">
+                        <label for="">Email Address</label>
+                    </div>
+                    <div class="col-lg-2 col-md-12">
+                        <label for="">Contact Number</label>
+                    </div>
+                </div>
+                <div class="row" formArrayName="majorCustomerArray">
+                    <ng-container *ngFor="let certificate of
+                        getMajorCustomerArray().controls; index as idx; last as
+                        last">
+                        <ng-container [formGroupName]="idx">
+                            <div class="form-group col-lg-3 col-md-12"
+                                style="margin-top: 0!important;">
+                                <input class="form-control" type="text"
+                                    placeholder="Enter Organization Name"
+                                    formControlName="organizationName"
+                                    autocomplete="off" />
+                            </div>
+                            <div class="form-group col-lg-3 col-md-12"
+                                style="margin-top: 0!important;">
+                                <input class="form-control" type="text"
+                                    placeholder="Enter Contact Person Name"
+                                    formControlName="contactPerson"
+                                    autocomplete="off" />
+                            </div>
+                            <div class="form-group col-lg-2 col-md-12"
+                                style="margin-top: 0!important;">
+                                <input class="form-control" type="text"
+                                    placeholder="Enter Designation"
+                                    formControlName="designation" autocomplete="off"
+                                    />
+                            </div>
+                            <div class="form-group col-lg-2 col-md-12"
+                                style="margin-top: 0!important;">
+                                <input class="form-control" type="text"
+                                    placeholder="Enter Email Address"
+                                    formControlName="email" autocomplete="off" />
+                                <div class="error"
+                                    *ngIf="this.supplierFormControl.get('majorCustomerArray').controls[idx].controls['email'].errors?.pattern">
+                                    Enter Valid Email Address </div>
+                            </div>
+                            <div class="form-group col-lg-2 col-md-12"
+                                style="margin-top: 0!important;">
+                                <input class="form-control" type="text"
+                                    placeholder="Enter Contact No." maxlength="15"
+                                    minlength="10"
+                                    pKeyFilter="money"
+                                    formControlName="mobileNo" autocomplete="off" />
+                                <div class="error"
+                                    *ngIf="this.supplierFormControl.get('majorCustomerArray').controls[idx].controls['mobileNo'].errors?.pattern">
+                                    Enter Valid Mobile Number </div>
+                                <div class="error"
+                                    *ngIf="this.supplierFormControl.get('majorCustomerArray').controls[idx].controls['mobileNo'].errors?.minlength">
+                                    Enter Contact Number with Country Code Atleast
+                                    10 digit </div>
+                            </div>
+                        </ng-container>
+                        <div class="col-lg-1 form-group d-flex" style="margin-top:
+                            0!important;" *ngIf="last">
+                            <button type="button" style="padding : 6px 15px 6px;
+                                margin-right: 5px; height: 35px;"
+                                (click)="addMajorCustomerRow('add', idx)">+</button>
+                            <button type="button" style="padding : 6px 15px 6px;
+                                height: 35px;" *ngIf="idx>0"
+                                (click)="addMajorCustomerRow('delete' ,
+                                getMajorCustomerArray().value.length-1)">-</button>
+                        </div>
+                    </ng-container>
+                </div>
+    
+    
+                <div class="section-heading">
+                    <h5>Manufacturing Scope</h5>
+                </div>
+                <!-- row-11 -->
+                <div class="row">
+                    <div class="col-lg-3 col-md-12 form-group">
+                        <label for="">Manufacturing List<span class="star_class">*</span></label>
+                        <p-multiSelect [filter]="false" [ngModelOptions]="{standalone: true}"
+                            [showToggleAll]="false" [(ngModel)]="manufacturingList" 
+                            (onChange)="selectManufacturingList($event , 'manufacture')"
+                            class="multiselect-custom-virtual-scroll"
+                            [options]="selectManufacturingData"
+                            optionValue="id" placeholder="Select
+                            manufacture name" optionLabel="value"></p-multiSelect>
+                        <div class="error" *ngIf="register.submitted &&
+                            getManufacturingArray().value == 0">Please Select Manufacturing List</div>
+                    </div>
+                    <div class="col-lg-3 col-md-12 form-group">
+                        <label for="">Material Construction List<span class="star_class">*</span></label>
+                        <p-multiSelect [filter]="false" [(ngModel)]="materialList" 
+                            [ngModelOptions]="{standalone: true}"
+                            [showToggleAll]="false"
+                            (onChange)="selectManufacturingList($event ,
+                            'material')"
+                            class="multiselect-custom-virtual-scroll"
+                            optionValue="id"
+                            [options]="selectMaterialListData"
+                            placeholder="Select
+                            material name" optionLabel="value"></p-multiSelect>
+                        <div class="error" *ngIf="register.submitted &&
+                            getMaterialofConstruction().value == 0">Please Select Material Construction List</div>
+    
+                    </div>
+                    <div class="col-lg-3 col-md-12 form-group">
+                        <label for="">Other Category</label>
+                        <select class="form-control form-select"
+                            formControlName="otherCategoryId"
+                            (change)="getSelectOtherCategory($event)">
+                            <option value="">Select Other Category</option>
+                            <ng-container *ngFor="let dropdown of
+                                otherCategoryDropdown">
+                                <option [value]="dropdown.id">{{dropdown.value}}</option>
+                            </ng-container>
+                        </select>
+                    </div>
+                    <div class="col-lg-3 col-md-12 form-group" *ngIf="otherRemark">
+                        <label for="">Other Remarks<span
+                                class="star_class">*</span></label>
+                        <input type="text" class="form-control"
+                            formControlName="otherRemarks"
+                            [class.is-invalid]="register.submitted &&
+                            supplierFormControl.get('otherRemarks')?.invalid"
+                            placeholder="Enter Other Remarks">
+                        <div class="invalid-feedback"> Other Remarks is Required
+                        </div>
+                    </div>
+                </div>
+    
+    
+                <!-- action-button -->
+                <div class="d-flex" style="justify-content: right;">
+                    <button type="submit" class="mx-2 btn"
+                        (click)="registerSupplierBoolean = 'Save'" title="Save form fields and go to next wizard">Save & Next</button>
+                    <button type="submit" class="btn"
+                        (click)="registerSupplierBoolean = 'Next'" title="go to next wizard without saving form fields">Next</button>
+                </div>
+            </form>
+    
+    
+            <!-- Quality Assurance Certificates -->
+            <ng-container *ngIf="nextWizard">
+                <form (ngSubmit)="certificateSubmit(certificate)"
+                    #certificate="ngForm">
+                    <div class="section-heading">
+                        <h5>Quality Certificates</h5>
+                    </div>
+    
+                    <p class="error" style="font-size: 13px;"> <b>Note :</b> <span>
+                            {{certificateDetails[0]?.note}} </span> </p>
+    
+                    <div *ngFor="let certificate of certificateDetails; index as
+                        idx; last as last">
+                        <div class="row" id="query">
+                            <div class="col-lg-3 form-group">
+                                <span class="form-control" *ngIf="certificate.onboardingId > 0">{{certificate.certificateName}}</span>
+                                <input class="form-control" [name]="index" [ngModelOptions]="{standalone : true}"  *ngIf="certificate.onboardingId == 0" type="text" [(ngModel)]="certificate.certificateName" >
+                            </div>
+                            <div class="col-lg-3 form-group">
+                                <div style="display: flex;">
+                                    <input class="form-control"  *ngIf="!(this.certificateDetails[idx].uploaded)" required type="file" id="id{{idx}}"
+                                        name="certificateUploadPath{{idx}}" #file
+                                        (change)="upload_doc($event ,'certificate' , idx, 'id'+idx)" autocomplete="off" />
+                                        <span class="form-control" *ngIf="this.certificateDetails[idx].uploaded" style="display: flex; justify-content: space-between;">
+                                            <a [href]="this.certificateDetails[idx].certificateUploadPath" [download]="this.certificateDetails[idx].certificateUploadPath" target="_blank" *ngIf="this.certificateDetails[idx].uploaded">Preview</a>
+                                            <span *ngIf="this.certificateDetails[idx].uploaded" style="cursor: pointer;" (click)="this.certificateDetails[idx].uploaded = false">x</span>
+                                        </span>
+                                </div>
+                                <div class="invalid-feedback">Please Upload
+                                    Certificate</div>
+                            </div>
+    
+                            <div class="col-lg-1 form-group" style="display: flex;
+                                align-items: center;">
+                                <a [href]="certificate.path"
+                                    *ngIf="certificate.path" style="text-decoration:
+                                    none; margin: 0 5px;"
+                                    [download]="certificate.path" target="_blank"><button
+                                        style="height: 33px; padding: 0;" pButton
+                                        pRipple type="button" icon="bx bx-download"
+                                        class="p-button-rounded p-button-primary
+                                        p-button-text"></button></a>
+                                <button type="button" *ngIf="idx ==
+                                    certificateDetails.length-1"
+                                    (click)="addCertificate('add')" style="padding :
+                                    6px 15px 6px; margin-right: 5px; height: 35px;">+</button>
+                                <button type="button" *ngIf="idx>= default && idx ==
+                                    certificateDetails.length-1"
+                                    (click)="addCertificate('delete' ,
+                                    certificateDetails.length-1 )" style="padding :
+                                    6px 15px 6px; height: 35px;">-</button>
+                            </div>
+    
+                            <div class="col-lg-1 form-group" style="display: flex;
+                                align-items: center;">
+                                <span *ngIf="certificate.isMandatory" class="error">
+                                    Mandatory </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 form-group d-flex" style="margin-top:
+                        0.3rem!important; padding : 0!important;">
+                        <button type="button" class="mx-2" (click)="onPrevClick(pre)">Previous</button>
+                        <button type="button" (click)="onPrevClick('s&p')">Save & Previous</button>
+                        <button type="submit" class="mx-2">Submit</button>
+                    </div>
+                </form>
+            </ng-container>
+        </div>
+    </div>
+    <app-footer-style-one></app-footer-style-one>
+</ng-container>
+
+
+
+
+<app-success-page *ngIf="showSuccess"></app-success-page>

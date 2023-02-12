@@ -1,0 +1,71 @@
+<!-- Start -->
+<app-dashboard-sidemenu></app-dashboard-sidemenu>
+
+<!-- Start Main Content Wrapper Area -->
+<div class="main-content d-flex flex-column">
+
+    <app-dashboard-navbar></app-dashboard-navbar>
+
+    <!-- Breadcrumb Area -->
+    <div class="breadcrumb-area" *ngFor="let Content of breadcrumb;">
+        <h1>{{Content.title}}</h1>
+        <ol class="breadcrumb">
+            <li class="item"><a routerLink="/">Home</a></li>
+            <li class="item"><a routerLink="/dashboard">{{Content.subTitle}}</a></li>
+            <li class="item">{{Content.title}}</li>
+        </ol>
+    </div>
+    <div class="add-listings-box1">
+        <form [formGroup]="manufactureProcessForm" #manufacture="ngForm"
+            (ngSubmit)="manufactureProcessFormSubmit(manufacture)">
+            <div class="row">
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label for="status">Name<span class="star_class">*</span></label>
+                    <input type="text" class="form-control" maxlength="35"
+                        formControlName="manufacturingName" placeholder="Enter Item Name" [class.is-invalid]="(manufacture.submitted &&
+                        manufactureProcessForm.get('manufacturingName')?.invalid) ||
+                        (manufactureProcessForm.get('manufacturingName')?.touched &&
+                        manufactureProcessForm.get('manufacturingName')?.invalid)"
+                        required>
+                    <div class="invalid-feedback"> Manufacture Name is Required
+                    </div>
+                </div>
+                <div class="add-listings-btn col-lg-4 col-md-6">
+                    <div class="form-group">
+                        <button type="submit" class="submit_btn">{{submitButton}}</button>
+                        <button type="reset" class="mx-3 reset_btn"
+                            (click)="submitButton='Submit'">Reset</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="card cost-breaker" *ngIf="manufactureTable?.length>0">
+            <p-table #dt2 [value]="manufactureTable" responsiveLayout="scroll"  dataKey="id" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,20,30,50]"
+                [paginator]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [globalFilterFields]="['Item Date','Item Name','Item Desc' , 'hsnName']">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="min-width: 250px;">Manufacture Name</th>
+                        <th style="min-width: 250px;">Action</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-customer>
+                    <tr>
+                        <td style="min-width: 250px;"><span>{{customer.manufacturingName}}</span></td>
+                        <td style="min-width: 250px; padding: 0.1rem 0.1rem!important;">
+                            <button pButton pRipple type="button" icon="bx bx-pencil" class="p-button-rounded p-button-primary p-button-text" (click)="EditItem(customer)"></button>
+                            <button pButton pRipple type="button" icon="bx bx-trash" class="p-button-rounded p-button-danger p-button-text" (click)="confirm1(customer.manufacturingId)"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="5">No cost breaker found.</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div> 
+    </div>
+</div>
+<!-- End -->

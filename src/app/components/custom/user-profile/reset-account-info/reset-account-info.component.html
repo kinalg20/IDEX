@@ -1,0 +1,88 @@
+<app-navbar-style-one></app-navbar-style-one>
+
+
+ <!-- signin form  -->
+ <div class="login-page">
+    <div class="overlay"></div>
+    <div style="min-height: 100vh; overflow-y: hidden; display: flex; align-items: center; justify-content: center;">
+    <div class="vesax-login">
+        <form [formGroup]="forgotPasswordControl"
+            (ngSubmit)="getOtp(phone)" #phone="ngForm">
+            <div class="signup-head">
+                <span id="auth-head">
+                    <h3>Forgot Password</h3>
+                </span>
+            </div>
+
+            <div class="form-group" *ngIf="!showOTP">
+                <label for="emailAddress">Email <span class="star_class">*</span></label>
+                <input class="form-control" type="email"
+                    id="emailAddress" autocomplete="off"
+                    name="emailAddress" placeholder="Email Registered Email Address"
+                    (input)="validateEmail($event , 'signin')"
+                    formControlName="emailAddress"
+                    [class.is-invalid]="phone.submitted &&
+                    forgotPasswordControl.get('emailAddress')?.invalid || forgotPasswordControl.get('emailAddress')?.touched  &&
+                    forgotPasswordControl.get('emailAddress')?.invalid"
+                    required />
+                <div class="invalid-feedback" *ngIf="forgotPasswordControl.get('emailAddress')?.errors?.required">
+                    Email Address is Required
+                </div>
+                <div class="invalid-feedback" *ngIf="forgotPasswordControl.get('emailAddress')?.errors?.pattern">
+                    Enter Valid Email Address
+                </div>
+            </div>
+            
+            <div class="form-group" *ngIf="!showOTP">
+                <label for="phone">Mobile Number <span class="star_class">*</span></label>
+                <input class="form-control" type="text"
+                    id="phone" autocomplete="off" name="phone" formControlName="phoneNumber"  [class.is-invalid]="phone.submitted && forgotPasswordControl.get('phoneNumber')?.invalid || forgotPasswordControl.get('phoneNumber')?.invalid && forgotPasswordControl.get('phoneNumber')?.touched" (input)="validateMobile($event)"
+                    (keydown)="_utility.inputMobile($event)" maxlength="10" placeholder="Enter Registered Mobile Number" required>
+                    <div class="invalid-feedback" *ngIf="forgotPasswordControl.get('phoneNumber')?.errors?.required">
+                        Phone Number is Required
+                    </div>
+                    <div class="invalid-feedback" *ngIf="forgotPasswordControl.get('phoneNumber')?.errors?.pattern">
+                        Enter Valid Mobile Number
+                    </div>
+            </div>
+            <div class="form-group" *ngIf="showOTP">
+                <label for="">OTP <span class="star_class">*</span></label>
+                <input type="text" class="form-control" minlength="5" maxlength="6" formControlName="OTP" [class.is-invalid]="phone.submitted &&
+                forgotPasswordControl.get('OTP')?.invalid" placeholder="Enter OTP">
+                <div class="invalid-feedback">
+                    OTP is Required
+                </div>
+            </div>
+            <div class="form-group" *ngIf="showOTP">
+                    <label for="password">Password<span class="star_class">*</span></label>
+                    <input class="form-control" type="password"
+                        placeholder="Enter Password"
+                        id="password" autocomplete="off"
+                        formControlName="password"
+                        [class.is-invalid]="phone.submitted &&
+                        forgotPasswordControl.get('password')?.invalid"
+                        required />
+                        <div class="invalid-feedback" *ngIf="forgotPasswordControl.get('password').errors?.required && forgotPasswordControl.get('password')?.touched || forgotPasswordControl.get('password').errors?.required && signup.submitted">
+                            Password is Required
+                        </div>
+            </div>
+            <div class="form-group" *ngIf="showOTP">
+                    <label for="confirm-password">Confirm Password<span
+                            class="star_class">*</span></label>
+                    <input class="form-control" type="password"
+                        id="confirmpassword" placeholder="Enter Confirm Password" autocomplete="off"
+                        formControlName="confirmPassword" [class.is-invalid]="phone.submitted && forgotPasswordControl.get('confirmPassword')?.invalid"
+                        required />
+                    <div class="invalid-feedback">
+                        Confirm Password is Required
+                    </div>
+            </div>
+            <button type="submit">{{buttonName}}</button>
+        </form>
+    </div>
+    </div>
+</div>
+
+
+
+<app-footer-style-one></app-footer-style-one>

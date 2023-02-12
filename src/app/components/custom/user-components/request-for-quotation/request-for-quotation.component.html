@@ -1,0 +1,361 @@
+<app-dashboard-sidemenu></app-dashboard-sidemenu>
+
+<!-- Start Main Content Wrapper Area -->
+<div class="main-content d-flex flex-column">
+
+    <app-dashboard-navbar></app-dashboard-navbar>
+
+    <!-- Breadcrumb Area -->
+    <div class="breadcrumb-area" *ngFor="let Content of breadcrumb;">
+        <h1>{{Content.title}}</h1>
+        <ol class="breadcrumb">
+            <li class="item"><a routerLink="/">Home</a></li>
+            <li class="item"><a routerLink="/dashboard">{{Content.subTitle}}</a></li>
+            <li class="item">{{Content.title}}</li>
+        </ol>
+    </div>
+    <!-- End Breadcrumb Area -->
+
+    <form [formGroup]="requestForQuotationForm"
+        (ngSubmit)="requestForQuotationSubmit()" #requestForQuotation="ngForm">
+        <!-- Start -->
+        <div class="add-listings-box1">
+            <div class="row">
+                <div class="col-lg-4 col-md-12 form-group">
+                    <label>Enquiry Date<span class="star_class">*</span></label>
+                    <p-calendar formControlName="enquiryDate" [minDate]="myDate"
+                        [showIcon]="true" tabindex="0"
+                        placeholder="Select Date"
+                        [class.is-invalid]="(requestForQuotation.submitted &&
+                        requestForQuotationForm.get('enquiryDate')?.invalid) ||
+                        (requestForQuotationForm.get('enquiryDate').touched &&
+                        requestForQuotationForm.get('enquiryDate')?.invalid)"></p-calendar>
+                    <div class="invalid-feedback"> enquiry Date is Required
+                    </div>
+                </div>
+                <!-- <div class="col-lg-4 col-md-12 form-group">
+                        <label>Enquiry Validity Date<span class="star_class">*</span></label>
+                        <p-calendar [minDate]="myDate" formControlName="enquiryValidityDate" tabindex="1" [showIcon]="true" placeholder="Select Date" [class.is-invalid]="(requestForQuotation.submitted && requestForQuotationForm.get('enquiryValidityDate')?.invalid) || (requestForQuotationForm.get('enquiryValidityDate').touched && requestForQuotationForm.get('enquiryValidityDate')?.invalid)"></p-calendar>
+                        <div class="invalid-feedback"> enquiry validity Date is Required </div>
+                    </div> -->
+                <div class="col-lg-4 col-md-12 form-group">
+                    <label>Project Name</label>
+                    <input type="text" class="form-control"
+                        formControlName="projectName"
+                        placeholder="Enter Project Name">
+                </div>
+            </div>
+        </div>
+        <!-- End -->
+
+        <!-- Start -->
+        <div class="add-listings-box1">
+            <div class="row">
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label>Part Number<span class="star_class">*</span></label>
+                    <select class="form-control form-select" tabindex="2"
+                        [(ngModel)]="itemModel.itemId"
+                        [ngModelOptions]="{standalone: true}"
+                        (change)="fillFormData($event)" required>
+                        <option value="" disabled>Select Part Number</option>
+                        <ng-container *ngFor="let item of item_dropdown">
+                            <option [value]="item.itemId">{{item.itemName}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label>Unit Name<span class="star_class">*</span></label>
+                    <input type="text" class="form-control" readonly
+                        [(ngModel)]="itemModel.unitName"
+                        [ngModelOptions]="{standalone: true}" placeholder="Enter Unit Name" required>
+                </div>
+
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label>Qty<span class="star_class">*</span></label>
+                    <input type="number" tabindex="3" class="form-control"
+                        min="1" [(ngModel)]="itemModel.quantity"
+                        (keydown)="_utility.inputMobile($event)" maxlength="6"
+                        [ngModelOptions]="{standalone: true}"
+                        placeholder="Enter item quantity" required>
+                </div>
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label>Raw Part Weight(kg)</label>
+                    <input type="number" tabindex="5" class="form-control"
+                        readonly min="1" [(ngModel)]="itemModel.rawPartWeight"
+                        (keydown)="_utility.inputMobile($event)" maxlength="6"
+                        [ngModelOptions]="{standalone: true}"
+                        placeholder="Enter raw part weight" required>
+                </div>
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label>Finish Part Weight(kg)</label>
+                    <input type="number" tabindex="6" class="form-control"
+                        min="1"
+                        [(ngModel)]="itemModel.finishPartWeight" readonly
+                        (keydown)="_utility.inputMobile($event)" maxlength="6"
+                        [ngModelOptions]="{standalone: true}" placeholder="Enter finish part weight" required>
+                </div>
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label>volume(annually)</label>
+                    <input type="number" tabindex="7" class="form-control"
+                        min="1" [(ngModel)]="itemModel.volume"
+                        (keydown)="_utility.inputMobile($event)" maxlength="6"
+                        [ngModelOptions]="{standalone: true}"
+                        placeholder="Enter volume annum" required>
+                </div>
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label>Entry Type</label>
+                    <input type="text" class="form-control" readonly
+                        [(ngModel)]="itemModel.entryType"
+                        [ngModelOptions]="{standalone: true}" placeholder="Enter Entry Type">
+                </div>
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label>Remark</label>
+                    <input type="text" class="form-control" readonly
+                        [(ngModel)]="itemModel.remark"
+                        [ngModelOptions]="{standalone: true}" placeholder="Enter remark">
+                </div>
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label>Enquiry Description</label>
+                    <textarea rows="1" class="form-control" tabindex="8"
+                        [(ngModel)]="itemModel.enquiryDesc"
+                        [ngModelOptions]="{standalone: true}" placeholder="Enter enquiry description"
+                        required></textarea>
+                </div>
+                <div class="add-listings-btn col-lg-3 col-md-12 form-group">
+                    <label>Other Document</label>
+                    <input type="file" style="height: 35px;" #drawing
+                        class="form-control" multiple
+                        (change)="getAllFile($event)" required>
+                </div>
+                <div class="add-listings-btn col-lg-3 col-md-12 form-group"
+                    *ngIf="editUploadedDrawing?.length> 0">
+                    <label>Engineering Drawing</label>
+                    <a (click)="openModel()" style="text-decoration: underline;
+                        cursor: pointer;">Engg Drawings</a>
+                </div>
+
+                <div class="col-lg-12 col-md-12 form-group"
+                    *ngIf="materialofconstructionData.length> 0">
+                    <label>Material of Construction</label>
+                    <div class="d-flex" style="max-width: 100%; flex-wrap:
+                        wrap;">
+                        <div *ngFor="let status of materialofconstructionData |
+                            split; let i= index;">
+                            <div style="display: flex; align-items: flex-end;
+                                margin: 0 10px 0 0;">
+                                <label for="status">{{i+1}} . {{status}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="col-lg-12 col-md-12 form-group">
+                    <label class="m-0">Manufacturing List <span class="star_class">*</span></label>
+                    <div class="d-flex" style="max-width: 100%; flex-wrap:
+                        wrap;">
+                        <div formArrayName="manufacturingList"
+                            *ngFor="let status of
+                            getManufacturingList().controls; let i= index;">
+                            <div [formGroupName]="i" style="display: flex;
+                                align-items: flex-end; margin: 0 10px 0 0; ">
+                                <input type="checkbox" 
+                                    formControlName="isChecked" style="height: 20px!important;"
+                                    [checked]="status.value.isChecked"> <label
+                                    for="status">{{status.value.value}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+                <div class="col-lg-12 col-md-12 form-group">
+                    <label class="m-0">Require Document</label>
+                    <div class="col-lg-12 col-md-12" style="padding-left:
+                        0!important;">
+                        <div style="display: flex;">
+                            <div style="display: flex; align-items: center;
+                                margin: 0 5px;">
+                                <input type="checkbox" style="height: 12px;"
+                                    [(ngModel)]="toolsList.apqpRequire"
+                                    [ngModelOptions]="{standalone: true}"
+                                    autocomplete="off" /> <span style="margin: 0
+                                    2px; font-size: 13px; color: var(--blackColor); font-weight: 400;">APQP</span>
+                            </div>
+                            <div style="display: flex; align-items: center;
+                                margin: 0 5px;">
+                                <input type="checkbox"  style="height: 12px;"           
+                                    [(ngModel)]="toolsList.ppapRequire"
+                                    [ngModelOptions]="{standalone: true}"
+                                    autocomplete="off" /><span style="margin: 0
+                                    2px; font-size: 13px; color: var(--blackColor); font-weight: 400;">PPAP</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="add-listings-btn col-lg-2 col-md-6">
+                    <div class="form-group">
+                        <button type="button" tabindex="9" class="submit_btn"
+                            (click)="addNewItemRow()">{{itemButton}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End -->
+
+        <div class="add-listings-box1" *ngIf="getItemArray().controls?.length>0">
+            <div formArrayName="itemArray">
+                <div class="card rfq">
+                    <p-table #dt2 [value]="getItemArray().controls" dataKey="id"
+                        responsiveLayout="scroll" [rows]="10"
+                        [showCurrentPageReport]="true"
+                        [rowsPerPageOptions]="[10,20,30,50]" [paginator]="false"
+                        currentPageReportTemplate="Showing
+                        {first} to {last} of {totalRecords} entries">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>S.No.</th>
+                                <th style="min-width: 100px;">Part Name</th>
+                                <th>Qty</th>
+                                <th>Material of Construction</th>
+                                <th>volume</th>
+                                <th>APQP Require</th>
+                                <th>PPAP Require</th>
+                                <th>Engineering Document</th>
+                                <th>Other Document</th>
+                                <th>Action</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-customer
+                            let-i="rowIndex">
+                            <tr>
+                                <td>{{i+1}}</td>
+                                <td style="min-width: 100px;"><span>{{customer.value?.itemName}}</span></td>
+                                <td>
+                                    <span class="image-text">{{customer.value?.quantity}}</span>
+                                </td>
+                                <td>
+                                    <span class="image-text">{{customer.value?.materialOfConstruction}}</span>
+                                </td>
+                                <td>
+                                    <span class="image-text">{{customer.value?.volume}}</span>
+                                </td>
+                                <td>
+                                    <span class="image-text"><input type="checkbox" [ngModelOptions]="{standalone: true}" [checked]="customer.value.apqpRequire"></span>
+                                </td>
+                                <td>
+                                    <span class="image-text"><input type="checkbox" [ngModelOptions]="{standalone: true}" [checked]="customer.value.ppapRequire"></span>
+                                </td>
+                                <td>
+                                    <button pButton pRipple type="button"
+                                        icon="bx bx-show"
+                                        class="p-button-rounded p-button-primary
+                                        p-button-text" (click)="getAllItemDrawing(customer?.value.itemId , customer?.value.itemName , 'getItem')"></button>
+                                </td>
+                                <td>
+                                    <button pButton pRipple type="button"
+                                        icon="bx bx-show" 
+                                        class="p-button-rounded p-button-primary
+                                        p-button-text" (click)="getOtherDocument(customer?.value)"></button>
+                                </td>
+                                <td>
+                                    <button pButton pRipple type="button"
+                                        icon="bx bx-trash"
+                                        class="p-button-rounded p-button-danger
+                                        p-button-text"
+                                        (click)="confirm1(customer.value.itemId)"></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="5">No item found.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+
+        <app-cost (getTableData)="getTableData($event)"
+            *ngIf="openCostBreakupSection"></app-cost>
+        <!-- Start -->
+        <div class="add-listings-box1">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 form-group">
+                    <div style="display: flex; justify-content: space-between;
+                        align-items: center;">
+                        <label>Enquiry Cost Breakup Details<span
+                                class="star_class">*</span></label>
+                        <div class="add-listings-btn">
+                            <button type="button" class="add_btn"
+                                style="margin-top: 0; margin-bottom: 10px;"
+                                (click)="openCostBreakupSection=
+                                !openCostBreakupSection">Add new CostBreakup +</button>
+                        </div>
+                    </div>
+
+                    <div class="cost-breakup-div">
+                        <div formArrayName="costBreakupArray" *ngFor="let item
+                            of getCostBreakArray().controls; let i= index;">
+                            <div [formGroupName]="i">
+                                <div class="cost-breakup">
+                                    <input type="checkbox"
+                                        formControlName="isChecked"
+                                        placeholder="Item description"><label
+                                        for="">{{item.value.costBreakupName}}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End -->
+
+        <!-- Start -->
+        <div class="add-listings-btn col-lg-4 col-md-6">
+            <div class="form-group">
+                <button type="submit" class="submit_btn final_submit my-0">{{submitButton}}</button>
+                <button type="button" class="mx-3 reset_btn final_submit"
+                    *ngIf="submitButton == 'Submit'">Reset</button>
+            </div>
+        </div>
+    </form>
+    <!-- End -->
+
+    <app-copyrights></app-copyrights>
+</div>
+
+
+
+<div class="engg-drawings">
+    <p-dialog header="Part : {{itemName}}" [style]="{'width' : '50vw'}" [breakpoints]="{'960px': '75vw', '640px': '90vw'}" [draggable]="false" [modal]="true" [(visible)]="displayDialog">
+        <ng-container *ngFor="let drawing of drawingUploaded; let index = index;">
+           <span style="font-size: 14px;">{{index+1}}. </span> 
+           <a [href]="drawing.engineeringDrawing" style="font-size: 14px;" target="_blank" [download]="drawing.engineeringDrawing">Engg Drawing {{index+1}}</a>
+           <br>
+        </ng-container>
+        <!-- <p-carousel [value]="drawingUploaded">
+            <ng-template let-drawing pTemplate="item">
+                <a [href]="drawing.engineeringDrawing" [download]="drawing.engineeringDrawing" target="_blank"><img [src]="drawing.engineeringDrawing" style="width: 120px;" alt=""></a>
+            </ng-template>
+        </p-carousel> -->
+    </p-dialog>
+</div>
+
+<div class="engg-drawings">
+    <p-dialog header="Other Drawing" [style]="{'width' : '50vw'}" [breakpoints]="{'960px': '75vw', '640px': '90vw'}" [draggable]="false" [modal]="true" [(visible)]="displayOtherDialog">
+        
+        <!-- <p-carousel [value]="otherDocumentList">
+            <ng-template let-drawing let-index = index; pTemplate="item">
+                <a [href]="drawing.value" [download]="drawing.value" target="_blank">document{{index+1}}</a>
+            </ng-template>
+        </p-carousel> -->
+        <ng-container *ngFor="let drawing of otherDocumentList; let index = index;">
+            <span style="font-size: 14px;">{{index+1}}. </span> 
+            <a [href]="drawing.value" style="font-size: 14px;" target="_blank" [download]="drawing.value">Other Drawing {{index+1}}</a>
+            <br>
+         </ng-container>
+    </p-dialog>
+</div>

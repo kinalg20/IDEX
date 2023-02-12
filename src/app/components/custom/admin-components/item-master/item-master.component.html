@@ -1,0 +1,314 @@
+<app-dashboard-sidemenu></app-dashboard-sidemenu>
+
+<!-- Start Main Content Wrapper Area -->
+<div class="main-content d-flex flex-column">
+
+    <app-dashboard-navbar></app-dashboard-navbar>
+
+    <!-- Breadcrumb Area -->
+    <div class="breadcrumb-area" *ngFor="let Content of breadcrumb;">
+        <h1>{{Content.title}}</h1>
+        <ol class="breadcrumb">
+            <li class="item"><a routerLink="/">Home</a></li>
+            <li class="item"><a routerLink="/dashboard">{{Content.subTitle}}</a></li>
+            <li class="item">{{Content.title}}</li>
+        </ol>
+    </div>
+    <!-- End Breadcrumb Area -->
+
+    <!-- Start -->
+    <div class="add-listings-box1">
+        <form [formGroup]="itemMaster" (ngSubmit)="itemMasterSubmit(itemForm)"
+            #itemForm="ngForm">
+            <div class="row">
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label for="status">Part Number / Drg. Number<span
+                            class="star_class">*</span></label>
+                    <input type="text" class="form-control"
+                        formControlName="itemCode" placeholder="Enter Part Code"
+                        [class.is-invalid]="(itemForm.submitted &&
+                        itemMaster.get('itemCode')?.invalid) ||
+                        (itemMaster.get('itemCode').touched &&
+                        itemMaster.get('itemCode')?.invalid)" required>
+                    <div class="invalid-feedback"> Part code is Required </div>
+                </div>
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label for="status">Entry Date<span class="star_class">*</span></label>
+                    <p-calendar formControlName="itemDate"
+                        [readonlyInput]='true' [minDate]="date"
+                        [showIcon]="true" disabled
+                        placeholder="Select Date"
+                        [class.is-invalid]="(itemForm.submitted &&
+                        itemMaster.get('itemDate')?.invalid) ||
+                        (itemMaster.get('itemDate').touched &&
+                        itemMaster.get('itemDate')?.invalid)"></p-calendar>
+                    <div class="invalid-feedback"> Entry Date is Required </div>
+                </div>
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label for="doc">Part Description<span class="star_class">*</span></label>
+                    <input type="text" class="form-control"
+                        formControlName="itemDesc"
+                        placeholder="Enter Part Description"
+                        [class.is-invalid]="(itemForm.submitted &&
+                        itemMaster.get('itemDesc')?.invalid) ||
+                        (itemMaster.get('itemDesc').touched &&
+                        itemMaster.get('itemDesc')?.invalid)" required>
+                    <div class="invalid-feedback"> Part Description is Required
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label for="unitName">Unit Name<span class="star_class">*</span></label>
+                    <input type="text" pKeyFilter="alpha" class="form-control"
+                        formControlName="unitName" placeholder="Enter Unit Name"
+                        [class.is-invalid]="itemForm.submitted &&
+                        itemMaster.get('unitName')?.invalid ||
+                        (itemMaster.get('unitName').touched &&
+                        itemMaster.get('unitName')?.invalid)" required>
+                    <div class="invalid-feedback"> Unit name is Required </div>
+                </div>
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label>Raw Part Weight(kg)</label>
+                    <input type="number" class="form-control" min="1"
+                        formControlName="rawPartWeight"
+                        (keydown)="_utility.inputMobile($event)" maxlength="6"
+                        placeholder="Enter raw part weight"
+                        [class.is-invalid]="itemForm.submitted &&
+                        itemMaster.get('rawPartWeight')?.invalid ||
+                        (itemMaster.get('rawPartWeight').touched &&
+                        itemMaster.get('rawPartWeight')?.invalid)">
+                    <div class="invalid-feedback"> Raw Part Weight is Required
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label>Finish Part Weight(kg)</label>
+                    <input type="number" class="form-control" min="1"
+                        formControlName="finishPartWeight"
+                        (keydown)="_utility.inputMobile($event)" maxlength="6"
+                        placeholder="Enter finish part weight"
+                        [class.is-invalid]="itemForm.submitted &&
+                        itemMaster.get('finishPartWeight')?.invalid ||
+                        (itemMaster.get('finishPartWeight').touched &&
+                        itemMaster.get('finishPartWeight')?.invalid)">
+                    <div class="invalid-feedback"> Finish Part Weight is
+                        Required </div>
+                </div>
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label for="status">Entry</label>
+                    <select class="form-control form-select" id="status"
+                        formControlName="entryType"
+                        [class.is-invalid]="(itemForm.submitted &&
+                        itemMaster.get('entryType')?.invalid) ||
+                        (itemMaster.get('entryType').touched &&
+                        itemMaster.get('entryType')?.invalid)">
+                        <option value="">Select entry</option>
+                        <ng-container *ngFor="let status of tax_dropdown">
+                            <option [value]="status.value">{{status.value}}</option>
+                        </ng-container>
+                    </select>
+                    <div class="invalid-feedback"> entry is Required </div>
+                </div>
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label for="status">Remark</label>
+                    <textarea name="" id="" cols="30" rows="10"
+                        class="form-control" formControlName="remark"
+                        placeholder="Enter remark"
+                        [class.is-invalid]="(itemForm.submitted &&
+                        itemMaster.get('remark')?.invalid) ||
+                        (itemMaster.get('remark').touched &&
+                        itemMaster.get('remark')?.invalid)"></textarea>
+                </div>
+
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label>Engineering Drawing</label>
+                    <input type="file" class="form-control" min="1" #enggDrawing
+                        (change)="getDrawing($event)" multiple>
+                </div>
+
+                <div class="col-lg-9 col-md-12 form-group">
+                    <ng-container *ngIf="editUploadedDrawing?.length> 0">
+                        <label>Uploaded Drawing</label>
+                        <div class="ml-1">
+                            <ng-container *ngFor="let data of
+                                editUploadedDrawing; index as index">
+                                <a [href]="data?.engineeringDrawing"
+                                    [download]="data?.engineeringDrawing"
+                                    target="_blank">Engg Drawing</a>
+                                <span class="ml-2" style="cursor: pointer;"
+                                    (click)="confirm1(data, 'Drawing')">x</span><br>
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                </div>
+
+
+                <!-- <div class="col-lg-12" *ngFor>
+                    
+                </div> -->
+                <div class="col-lg-12 col-md-12 form-group">
+                    <label>Material of Construction<span class="star_class">*</span></label>
+                    <div class="d-flex" style="max-width: 100%; flex-wrap:
+                        wrap;">
+                        <div formArrayName="materialOfConstruction" *ngFor="let
+                            status of getMaterialofConstruction().controls; let
+                            i= index;">
+                            <div [formGroupName]="i" style="display: flex;
+                                align-items: flex-end; margin: 0 10px 0 0;">
+                                <input type="checkbox"
+                                    formControlName="isChecked" style="height:
+                                    30px;" (change)="getSelectedMOC()"
+                                    [checked]="status.value.isChecked"> <label
+                                    for="status">{{status.value.value}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 p-0 mt-2">
+                        <label for="Material">Material Remark</label>
+                        <input type="text" formControlName="materialRemark" placeholder="Enter Material Remark" class="form-control">
+                    </div>
+                    <div class="error" *ngIf="!mocBoolean &&
+                        itemForm.submitted">Please Select Atleast 1 MOC</div>
+                </div>
+
+                <div class="add-listings-btn col-lg-4 col-md-6">
+                    <div class="form-group">
+                        <button type="submit" class="submit_btn">{{submitButton}}</button>
+                        <button type="button" class="mx-3 reset_btn"
+                            (click)="resetFields()">Reset</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- End -->
+
+    <div class="card item-master" *ngIf="itemMasterTable.length> 0">
+        <p-table #dt2 [value]="itemMasterTable" dataKey="id" [rows]="10"
+            [showCurrentPageReport]="true"
+            responsiveLayout="scroll" [rowsPerPageOptions]="[10,20,30,50]"
+            [paginator]="true" currentPageReportTemplate="Showing {first} to
+            {last} of {totalRecords} entries"
+            [globalFilterFields]="['itemCode','materialofconstructionList','rawPartWeight','finishPartWeight','materialofconstructionList',
+            'entryType','unitName']">
+            <ng-template pTemplate="caption">
+                <span class="p-input-icon-left d-flex align-items-center">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text"
+                        (input)="dt2.filterGlobal($event.target.value,
+                        'contains')"
+                        placeholder="Global Search" [(ngModel)]="filterval" />
+                    <p-button type="button" class="ml-2" (click)="reset(dt2)"
+                        icon="bx bx-reset"></p-button>
+                </span>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="min-width: 20px;">S.No.</th>
+                    <th style="min-width: 150px;">Part Number</th>
+                    <th style="min-width: 100px;">Entry Date</th>
+                    <th style="min-width: 100px;">Part Description</th>
+                    <th style="min-width: 100px;">Unit Name</th>
+                    <th style="min-width: 100px;">Material of Construction</th>
+                    <th style="min-width: 100px;">Raw Part Weight(kg)</th>
+                    <th style="min-width: 100px;">Finish Part Weight(kg)</th>
+                    <th style="min-width: 100px;">Engineering Drawing</th>
+                    <th style="min-width: 100px;">Remark</th>
+                    <th style="min-width: 100px;">Entry Type</th>
+                    <th>Action</th>
+                </tr>
+                <!-- <tr>
+                    <th style="min-width: 20px;"></th>
+                    <th style="min-width: 150px;">
+                        <p-columnFilter type="text" field="itemName"></p-columnFilter>
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr> -->
+            </ng-template>
+            <ng-template pTemplate="body" let-customer let-i="rowIndex">
+                <tr>
+                    <td style="min-width: 20px;">{{i+1}}</td>
+                    <td style="padding: 0.2rem 1rem!important;min-width:
+                        150px;">
+                        <span class="image-text">{{customer?.itemCode}}</span>
+                    </td>
+                    <td style="min-width: 150px;">
+                        <span>{{customer?.itemDate | date}}</span>
+                    </td>
+                    <td style="min-width: 150px;">
+                        <span class="image-text">{{customer?.itemDesc}}</span>
+                    </td>
+                    <td style="min-width: 150px;">
+                        <span class="image-text">{{customer?.unitName}}</span>
+                    </td>
+                    <td style="min-width: 150px;">
+                        <span class="image-text">{{customer?.materialofconstructionList}}</span>
+                    </td>
+                    <td style="min-width: 150px;">
+                        <span class="image-text">{{customer?.rawPartWeight}}</span>
+                    </td>
+                    <td style="min-width: 150px;">
+                        <span class="image-text">{{customer?.finishPartWeight}}</span>
+                    </td>
+                    <td>
+                        <button pButton pRipple type="button"
+                            icon="bx bx-show"
+                            (click)="getAllItemDrawing(customer , 'Preview')"
+                            class="p-button-rounded p-button-primary
+                            p-button-text"></button>
+                    </td>
+                    <td style="min-width: 150px;">
+                        <span class="image-text">{{customer?.remark}}</span>
+                    </td>
+                    <td style="min-width: 150px;">
+                        <span class="image-text">{{customer?.entryType}}</span>
+                    </td>
+                    <td style="min-width:120px;">
+                        <button pButton pRipple type="button" icon="bx bx-pencil" class="p-button-rounded p-button-primary
+                            p-button-text" (click)="EditItem(customer)"></button>
+                        <button pButton pRipple type="button" icon="bx bx-trash"
+                            class="p-button-rounded p-button-danger
+                            p-button-text" (click)="confirm1(customer.itemId ,
+                            'itemDelete')"></button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5">No customers found.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <div class="flex-grow-1"></div>
+    </div>
+    <app-copyrights></app-copyrights>
+</div>
+
+
+
+
+<p-dialog [style]="{'width' : '50vw'}" header="Part Name : {{itemName}}" [(visible)]="displayDialog" [modal]="true" [draggable]="false" [resizable]="false">
+    <ng-container *ngFor="let drawing of previewImages; let index = index">
+        <span style="font-size: 12px;" class="mx-2">{{index+1}}.</span><a style="font-size: 12px;" [href]="drawing.engineeringDrawing"
+        [download]="drawing.engineeringDrawing" target="_blank">Engg Drawing {{index+1}}</a><br> 
+    </ng-container>
+</p-dialog>
+
+
+
+<!-- <ng-container *ngIf="!(drawing.engineeringDrawing.includes('.pdf'))">
+                <img [src]="drawing.engineeringDrawing" alt="">
+            </ng-container>
+            <ng-container *ngIf="drawing.engineeringDrawing.includes('.pdf')">
+            <object width="400" height="400" [attr.data]="getSafeUrl(drawing.engineeringDrawing)" type="application/pdf"></object>
+            </ng-container> -->
+            <!-- <a [href]="drawing.engineeringDrawing"
+                [download]="drawing.engineeringDrawing" target="_blank"><img
+                    [src]="drawing.engineeringDrawing" style="width: 100px;"
+                    alt=""></a> -->

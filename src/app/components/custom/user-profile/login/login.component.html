@@ -1,0 +1,57 @@
+<!-- signin form  -->
+<app-navbar-style-one></app-navbar-style-one>
+
+<!-- login -->
+<div class="login-page">
+    <div class="overlay"></div>
+    <div style="min-height: 100vh; overflow-y: hidden; display: flex; align-items: center; justify-content: center;">
+        <div class="vesax-login">
+            <form [formGroup]="userFormControl"
+                (ngSubmit)="signinWithEmail()" #signin="ngForm">
+                <div class="signup-head">
+                    <span id="auth-head">
+                        <h3>Sign In</h3>
+                    </span>
+                </div>
+                <div class="form-group">
+                    <label for="emailAddress">Email <span class="star_class">*</span></label>
+                    <input class="form-control" type="email"
+                        id="emailAddress" autocomplete="off" placeholder="Email"
+                        (input)="validateEmail($event , 'signin')"
+                        formControlName="emailAddress"
+                        [class.is-invalid]="signin.submitted &&
+                        userFormControl.get('emailAddress')?.invalid || userFormControl.get('emailAddress')?.touched && userFormControl.get('emailAddress')?.invalid"
+                        required />
+                    <div class="invalid-feedback" *ngIf="userFormControl.controls.emailAddress?.errors?.required">
+                        Email is Required
+                    </div>
+                    <div class="invalid-feedback" *ngIf="userFormControl.controls.emailAddress?.errors?.pattern">
+                        Enter Valid Email Address
+                     </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password<span
+                            class="star_class">*</span></label>
+                    <input class="form-control" type="password"
+                        id="password" autocomplete="off" placeholder="Password"
+                        name="password" formControlName="password"
+                        [class.is-invalid]="signin.submitted &&
+                        userFormControl.get('password')?.invalid || userFormControl.get('password')?.touched && userFormControl.get('password')?.invalid"
+                        required>
+                    <div class="invalid-feedback">
+                        Password is Required
+                    </div>
+                </div>
+                <button type="submit">Login Now</button>
+                <div class="forgot-password">
+                <span>Forgot Your Password ? <a routerLink="/reset-password">Forgot Password</a></span>
+                </div>
+                <!-- <div class="dont-account">
+                <span>Don't have account? <a routerLink="">Register Now</a></span>
+                </div> -->
+            </form>
+        </div>
+    </div>
+    <!-- <app-copyrights style="align-items: flex-end;"></app-copyrights> -->
+</div>
+<!-- <app-footer-style-one></app-footer-style-one> -->

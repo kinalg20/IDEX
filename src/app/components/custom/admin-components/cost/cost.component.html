@@ -1,0 +1,24 @@
+<!-- Start -->
+<div class="add-listings-box1">
+  
+    <form [formGroup]="costBreakerForm" #costBreaker="ngForm" (ngSubmit)="costBreakerSubmit(costBreaker)">
+        <div class="row">
+                <div class="col-lg-3 col-md-12 form-group">
+                    <label for="status">Cost Breakup Name<span class="star_class">*</span></label>
+                    <input type="text" class="form-control" maxlength="35" formControlName="costBreakupName" placeholder="Enter Cost Breakup Name" [class.is-invalid]="(costBreaker.submitted && costBreakerForm.get('costBreakupName') ?.invalid) ||  (costBreakerForm.get('costBreakupName').touched && costBreakerForm.get('costBreakupName')?.invalid)" required>
+                    <div class="invalid-feedback"> Cost Breakup is Required </div>
+                </div>
+                <div class="col-lg-3 col-md-12  addTotal d-flex" style="align-items: center;">
+                    <input type="checkbox" formControlName="isAddTotal">
+                    <label for="checkbox" class="mx-2" style="margin-bottom: 0;">Add in Total</label>
+                </div>
+                <div class="add-listings-btn col-lg-4 col-md-6">
+                    <div class="form-group">
+                        <button type="submit"  class="submit_btn">{{submitButton}}</button>
+                        <button type="reset" class="mx-3 reset_btn"  (click)="submitButton='Submit'">Reset</button>
+                    </div>
+                </div>
+        </div>
+    </form>
+</div>
+<!-- End -->

@@ -1,0 +1,33 @@
+<!-- <p-toast></p-toast>
+<div class="add-listings-box" *ngIf="state == false">
+  <div class="wrapper red">
+    <div class="header__wrapper">
+      <div class="header">
+        <div class="sign"><span></span></div>
+      </div>
+    </div>
+    <h1>Whooops</h1>
+    <p>Something went wrong, please try again.</p>
+
+    <button>Dismiss</button>
+  </div>
+</div> -->
+
+<div class="add-listings-box">
+
+  <div class="wrapper green">
+    <div class="header__wrapper">
+      <div class="header">
+        <div class="sign"><span></span></div>
+      </div>
+    </div>
+    <!-- <h1>Yeah</h1> -->
+    <div style="margin-top: 35px;">
+      <p >{{redirectMessage | titlecase}}</p>
+      <a href="#" style="text-decoration: none;">We will connect you soon</a>
+      <!-- <a>{{this.redirectMessage | titlecase}} </a> -->
+      <!-- <a  routerLink="/">Go to Home Page</a> -->
+    </div>
+    <!-- <button routerLink="">Go to home page</button> -->
+  </div>
+</div>

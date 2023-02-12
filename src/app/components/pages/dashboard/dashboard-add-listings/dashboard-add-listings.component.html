@@ -1,0 +1,154 @@
+<app-dashboard-sidemenu></app-dashboard-sidemenu>
+
+<!-- Start Main Content Wrapper Area -->
+<div class="main-content d-flex flex-column">
+
+    <app-dashboard-navbar></app-dashboard-navbar>
+
+    <!-- Breadcrumb Area -->
+    <div class="breadcrumb-area" *ngFor="let Content of breadcrumb;">
+        <h1>{{Content.title}}</h1>
+        <ol class="breadcrumb">
+            <li class="item"><a routerLink="/">Home</a></li>
+            <li class="item"><a routerLink="/dashboard">{{Content.subTitle}}</a></li>
+            <li class="item">{{Content.title}}</li>
+        </ol>
+    </div>
+    <!-- End Breadcrumb Area -->
+
+    <div class="add-listings-box">
+        <!-- Start -->
+        <prime-toast></prime-toast>
+        <!-- End -->
+
+        <!-- Start -->
+        <form [formGroup]="AddSupplierFormControl"
+            (ngSubmit)="AddSupplierSubmit(addSupplier)" #addSupplier="ngForm">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 form-group">
+                    <label>Email Address<span class="star_class">*</span></label>
+                    <input type="email" class="form-control" placeholder="Enter Your Email Address"
+                        [class.is-invalid]="(addSupplier.submitted &&
+                        AddSupplierFormControl.get('emailAddress')?.invalid) ||
+                        (AddSupplierFormControl.get('emailAddress').touched &&
+                        AddSupplierFormControl.get('emailAddress')?.invalid)"
+                        formControlName="emailAddress" required>
+                    <div class="invalid-feedback" *ngIf="AddSupplierFormControl.get('emailAddress')?.errors?.required">
+                        Email Address is Required
+                    </div>
+                    <div class="invalid-feedback" *ngIf="(addSupplier.submitted &&
+                    AddSupplierFormControl.get('emailAddress')?.errors?.pattern) ||
+                    (AddSupplierFormControl.get('emailAddress').touched &&
+                    AddSupplierFormControl.get('emailAddress')?.errors?.pattern)">
+                        Enter Valid Email Address
+                    </div>
+                </div> 
+                <div class="col-lg-4 col-md-6 form-group">
+                    <label>Mobile Number</label>
+                    <div style="display: flex; ">
+                        <select class="form-select form-control" formControlName="countryCode" style="width: 90px; line-height :  22px; display: flex; align-items: center; border-right: none!important;
+                        border-bottom-right-radius: 0;
+                        border-top-right-radius: 0;">
+                            <option value="+91">+91</option>
+                            <option value="+93">+93</option>
+                            <option value="+213">+213</option>
+                            <option value="+1-684">1-684</option>
+                        </select>
+                        <!-- <p-inputNumber [useGrouping]="false"
+                        style="border-left: none!important; border-top-left-radius: 0;
+                        border-bottom-left-radius: 0 "  maxlength="20"     formControlName="phone" placeholder="Enter Your Mobile Number"></p-inputNumber> -->
+                        <input pKeyFilter="money" type="text" class="form-control"
+                             style="border-left: none!important;
+                            border-top-left-radius: 0;
+                            border-bottom-left-radius: 0" maxlength="15"
+                            formControlName="phone" placeholder="Enter Your Mobile Number">
+                            
+                    </div>
+                    <div class="invalid-feedback" *ngIf="this.AddSupplierFormControl.get('phone').errors?.required"> Enter Mobile Number
+                    </div>
+                    <div class="error-msg" *ngIf="this.AddSupplierFormControl.get('phone').errors?.minlength"> Enter Mobile Number Atleast 10 digit
+                    </div>                    
+                </div>
+
+                <div class="add-listings-btn col-lg-4 col-md-6">
+                    <div class="form-group">
+                        <button type="submit">Add</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- End -->
+    </div>
+
+    <!-- Start -->
+    <div class="card">
+        <p-table #dt2 [value]="customers" dataKey="id" responsiveLayout="scroll"
+            [rows]="10" [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10,20,30,50]" [loading]="loading"
+            [paginator]="true" currentPageReportTemplate="Showing {first} to
+            {last} of {totalRecords} entries"
+            [globalFilterFields]="['emailAddress','mobileNo']">
+            <ng-template pTemplate="caption">
+                <span class="p-input-icon-left d-flex align-items-center">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text"
+                        (input)="dt2.filterGlobal($event.target.value,
+                        'contains')"
+                        placeholder="Global Search" [(ngModel)]="filterval" />
+                    <!-- <p-calendar appendTo="body" class="ml-2" dateFormat="dd-mm-yy" placeholder="Bill Date"
+                                 [(ngModel)]="dateFilterVal"
+                                (onSelect)="searchFilter($event)">
+                            </p-calendar> -->
+                    <p-button type="button" class="ml-2" (click)="reset(dt2)"
+                        icon="bx bx-reset"></p-button>
+                </span>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Email Address</th>
+                    <th>Mobile Number</th>
+                    <th>Registered</th>
+                </tr>
+                <!-- <tr>
+                    <th>
+                        <p-columnFilter type="text" field="emailAddress"></p-columnFilter>
+                        
+                    </th>
+                    <th  style="min-width: 250px;">
+                        <p-columnFilter type="text" field="mobileNo"></p-columnFilter>
+                    </th>
+                    <th style="min-width: 250px;">
+                        <p-columnFilter type="boolean" field="isApplied"></p-columnFilter>
+                    </th>
+                </tr> -->
+            </ng-template>
+            <ng-template pTemplate="body" let-customer>
+                <tr>
+                    <td >
+                        {{customer.emailAddress}}
+                    </td>
+                    <td>
+                        <span class="image-text">{{customer.mobileNo}}</span>
+                    </td>
+                    <td style="padding: 0.1rem 0.4rem!important;">
+                        <button pButton pRipple type="button" *ngIf="customer.isApplied" icon="bx bx-check-circle" class="p-button-rounded p-button-success  p-button-text"
+                            (click)="confirm1(customer.onboardingId)"></button>
+
+                        <button pButton pRipple type="button" *ngIf="!customer.isApplied" icon="pi pi-times-circle" class="p-button-rounded p-button-danger p-button-text"
+                            (click)="confirm1(customer.onboardingId)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5">No data found.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <!-- End -->
+
+    <app-copyrights></app-copyrights>
+
+</div>
+<!-- End Main Content Wrapper Area -->

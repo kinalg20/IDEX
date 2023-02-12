@@ -1,0 +1,83 @@
+@import "../../../pages/dashboard/dashboard.component.scss";
+
+
+.star_class{
+    color: red;
+}
+
+/* Max width 767px */
+@media only screen and (max-width: 767px) {
+
+    .add-listings-box {
+        padding: 0 20px 0 20px;
+
+        h3 {
+            padding: 15px 20px;
+
+            margin: {
+                bottom: 20px;
+                left: -20px;
+                right: -20px;
+            }
+
+            ;
+        }
+
+        .form-group {
+            .form-control {
+                height: 35px;
+                font-size: 13.5px;
+
+                padding: {
+                    right: 10px;
+                    left: 10px;
+                }
+
+                ;
+            }
+
+            select {
+                height: 35px;
+                line-height: 45px;
+                font-size: 13.5px;
+
+                padding: {
+                    right: 10px;
+                    left: 10px;
+                }
+            }
+        }
+    }
+
+}
+
+/* Min width 576px to Max width 767px */
+@media (max-width: 767px) {
+    .add-listings-box {
+        button {
+            margin-top: 0;
+        }
+    }
+
+    .form-group {
+        label {
+            margin-bottom: 3px!important;
+        }
+    }
+}
+
+/* Min width 768px to Max width 991px */
+@media (min-width: 768px) and (max-width: 991px) {
+
+    .add-listings-box {
+        button {
+            margin-top: 0;
+        }
+    }
+}
+
+.final_submit{
+    margin: 0 10px 10px 0!important;
+}
+
+        

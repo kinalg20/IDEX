@@ -1,0 +1,248 @@
+
+
+<app-dashboard-sidemenu></app-dashboard-sidemenu>
+
+<!-- Start Main Content Wrapper Area -->
+<div class="main-content d-flex flex-column">
+
+    <app-dashboard-navbar></app-dashboard-navbar>
+
+    <!-- Breadcrumb Area -->
+    <div class="breadcrumb-area" *ngFor="let Content of breadcrumb;">
+        <h1>{{Content.title}}</h1>
+        <ol class="breadcrumb">
+            <li class="item"><a routerLink="/">Home</a></li>
+            <li class="item"><a routerLink="/dashboard">{{Content.subTitle}}</a></li>
+            <li class="item">{{Content.title}}</li>
+        </ol>
+    </div>
+    <!-- End Breadcrumb Area -->
+
+    <!-- Start -->
+    <div class="add-listings-box1">
+        <!-- Start -->
+        <!-- End -->
+
+
+        <div class="vesax-register">
+            <form [formGroup]="userRegisterFormControl"
+                (ngSubmit)="registerUser(signup)" #signup="ngForm">
+                <div class="row">
+                    <div class="col-lg-4 col-md-12">
+                        <div class="form-group">
+                            <label for="name">Name <span class="star_class">*</span></label>
+                            <input class="form-control" type="text"
+                                id="name" autocomplete="off"
+                                name="name" placeholder="name"
+                                formControlName="name"
+                                [class.is-invalid]="signup.submitted &&
+                                userRegisterFormControl.get('name')?.invalid || userRegisterFormControl.get('name')?.invalid && userRegisterFormControl.get('name')?.touched "
+                                required />
+                            <div class="invalid-feedback">
+                                Name is Required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <div class="form-group">
+                            <label for="emailAddress">Email <span
+                                    class="star_class">*</span></label>
+                            <input class="form-control" type="email"
+                                id="emailAddress" autocomplete="off"
+                                name="emailAddress" placeholder="Email"
+                                (input)="validateEmail($event , 'signin')"
+                                formControlName="emailAddress"
+                                [class.is-invalid]="signup.submitted &&
+                                userRegisterFormControl.get('emailAddress')?.invalid || userRegisterFormControl.get('emailAddress')?.invalid && userRegisterFormControl.get('emailAddress')?.touched"required />
+                            <div class="invalid-feedback" *ngIf="userRegisterFormControl.get('emailAddress')?.invalid && userRegisterFormControl.get('emailAddress')?.errors?.required">
+                                Email Address is Required
+                            </div>
+                            <div class="invalid-feedback" *ngIf="userRegisterFormControl.get('emailAddress')?.invalid && userRegisterFormControl.get('emailAddress')?.errors?.pattern">
+                                Enter Valid Email Address
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <div class="form-group">
+                            <label for="phone">Mobile Number <span
+                                    class="star_class">*</span></label>
+                            <input class="form-control" type="text"
+                                id="phone" autocomplete="off" name="phone"
+                                formControlName="mobile_no"
+                                [class.is-invalid]="signup.submitted && userRegisterFormControl.get('mobile_no')?.invalid || userRegisterFormControl.get('mobile_no')?.invalid && userRegisterFormControl.get('mobile_no')?.touched"
+                                (keydown)="_utility.inputMobile($event)"
+                                maxlength="10" placeholder="Enter Registered Mobile Number" required>
+                            <div class="invalid-feedback" *ngIf="userRegisterFormControl.controls.mobile_no?.errors?.required">
+                                Mobile Number is Required
+                            </div>
+                            <div class="invalid-feedback" *ngIf="userRegisterFormControl.controls.mobile_no?.errors?.minlength">
+                                Enter Valid Mobile Number
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <div class="form-group">
+                            <label for="name">Address</label>
+                            <input class="form-control" type="text"
+                                id="name" autocomplete="off"
+                                name="address" placeholder="address"
+                                formControlName="address"/>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <div class=" form-group">
+                            <label for="password">Password <span class="star_class">*</span></label>
+                            <!-- <div class="form-control"> -->
+                                <input type="password" class="form-control" id="password" autocomplete="off" placeholder="Enter Password"
+                                    formControlName="password"
+                                    [class.is-invalid]="signup.submitted && userRegisterFormControl.get('password')?.invalid || userRegisterFormControl.get('password')?.invalid && userRegisterFormControl.get('password')?.touched"
+                                    required />
+                                    <!-- <i class='bx bx-show' style="cursor: pointer;" *ngIf="show" (click)="onClick('show')"></i>
+                                    <i class='bx bx-show-alt' style="cursor: pointer;" (click)="onClick('hide')" *ngIf="!show"></i> -->
+                            <!-- </div> -->
+                            <div class="error-msg" *ngIf="userRegisterFormControl.get('password').errors?.required && userRegisterFormControl.get('password')?.touched || userRegisterFormControl.get('password').errors?.required && signup.submitted">
+                                Password is Required
+                            </div>
+
+                            <!-- <div class="error-msg" *ngIf="userRegisterFormControl.get('password').errors?.pattern">
+                                Must contain at least one number and one uppercase and lowercase letter,
+                                and at least 8 or more characters.
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <div class="form-group">
+                            <label for="confirm-password">Confirm Password <span class="star_class">*</span></label>
+                            <input class="form-control" type="password"
+                                id="confirmpassword" formControlName="confirmPassword" placeholder="Enter Confirm Password"
+                                autocomplete="off" [class.is-invalid]="signup.submitted && userRegisterFormControl.get('confirmPassword')?.invalid || userRegisterFormControl.get('confirmPassword')?.invalid && userRegisterFormControl.get('confirmPassword')?.touched"
+                                required/>
+                                {{userRegisterFormControl.get('confirmPassword').errors?.pattern}}
+                                <div class="invalid-feedback" *ngIf="userRegisterFormControl.get('confirmPassword').errors?.required && !(this.userRegisterFormControl.getError('mismatch'))">
+                                    Confirm Password is Required
+                                </div>
+                                <div class="error-msg" *ngIf="(this.userRegisterFormControl.getError('mismatch') && signup.submitted || this.userRegisterFormControl.getError('mismatch') && userRegisterFormControl.get('confirmPassword')?.touched)">Confirm Password not Matched </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <div class="form-group">
+                            <label for="user-role">User Role<span class="star_class">*</span></label>
+                            <select class="form-control form-select" formControlName="userRole" [class.is-invalid]="signup.submitted && userRegisterFormControl.get('userRole')?.invalid || userRegisterFormControl.get('userRole')?.invalid && userRegisterFormControl.get('userRole')?.touched"
+                            required>
+                                <option value="">Select User Role</option>
+                                <ng-container *ngFor="let user of userRoles">
+                                    <option [value]="user.Name">{{user.Name}}</option>
+                                </ng-container>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="userRegisterFormControl.get('userRole').errors?.required">
+                                User Role is Required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <div class="form-group">
+                            <label for="user-role">User Status<span class="star_class">*</span></label>
+                            <select class="form-control form-select" formControlName="isActive" [class.is-invalid]="signup.submitted && userRegisterFormControl.get('isActive')?.invalid || userRegisterFormControl.get('isActive')?.invalid && userRegisterFormControl.get('isActive')?.touched"
+                            required>
+                                <option value="true">Active</option>
+                                <option value="false">Inactive</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                User Status is Required
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-12">
+                        <div class="form-group">
+                            <label for="user-role"> User Permission</label>
+                            <div style="display: flex;">
+                                <div style="display: flex; align-items: center; margin: 0 5px;">
+                                    <input type="radio" value="checker1" placeholder="Enter Bank Address" formControlName="checker"
+                                    autocomplete="off" /> <span style="margin: 0 2px;" >Checker1</span>
+                                </div>
+                                <div style="display: flex; align-items: center;">
+                                    <input type="radio" value="checker2" placeholder="Enter Bank Address"  formControlName="checker"
+                                    autocomplete="off" /><span style="margin: 0 2px;">Checker2</span>
+                                </div>
+                                <a href="JavaScript:void(0);" class="mt-2 mx-1" (click)="userRegisterFormControl.get('checker').setValue(null)">Clear</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="add-listings-btn">
+                    <div class="form-group">
+                        <button type="submit" class="submit_btn">{{submitButton}}</button>
+                        <button type="reset" (click)="submitButton = 'Submit'" class="reset_btn mx-2">Reset</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="add-listings-box1">
+        <p-table #dt2 [value]="userArray" dataKey="id"
+            responsiveLayout="scroll" [rows]="10"
+            [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10,20,30,50]"
+            [paginator]="false" currentPageReportTemplate="Showing
+            {first} to {last} of {totalRecords} entries"
+            [globalFilterFields]="['name','country.name','status']">
+            <ng-template pTemplate="header">
+                <tr style="width: 100%;">
+                    <th>S.No.</th>
+                    <th>Name</th>
+                    <th>Email Address</th>
+                    <th>Mobile No</th>
+                    <th>User Role</th>
+                    <th>User Status</th>
+                    <th>Checker1</th>
+                    <th>Checker2</th>
+                    <th>Address</th>
+                    <th>Action</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-customer
+                let-i="rowIndex">
+                <tr>
+                    <td>{{i+1}}</td>
+                    <td><span>{{customer.userName}}</span></td>
+                    <td>
+                        <span class="image-text">{{customer.loginName}}</span>
+                    </td>
+                    <td>
+                        <span class="image-text">{{customer.mobileNo}}</span>
+                    </td>
+                    <td>
+                        <span class="image-text">{{customer.roleName}}</span>
+                    </td>
+                    <td>
+                        <span class="image-text">{{customer.isActive}}</span>
+                    </td>
+                    <td>
+                        <button pButton pRipple type="button" icon="bx bx-check-circle"  *ngIf="customer.checker1" class="p-button-rounded p-button-success p-button-text"></button>
+                        <button pButton pRipple type="button" icon="pi pi-times-circle"  *ngIf="!customer.checker1" class="p-button-rounded p-button-danger p-button-text"></button>
+                    </td>
+                    <td>
+                        <button pButton pRipple type="button" icon="bx bx-check-circle"  *ngIf="customer.checker2" class="p-button-rounded p-button-success p-button-text"></button>
+                        <button pButton pRipple type="button" icon="pi pi-times-circle"  *ngIf="!customer.checker2" class="p-button-rounded p-button-danger p-button-text"></button>
+                    </td>
+                    <td>
+                        <span class="image-text">{{customer.address}}</span>
+                    </td>
+                    <td>
+                        <button pButton pRipple type="button" icon="bx bx-pencil" class="p-button-rounded p-button-primary p-button-text"  (click)="EditItem(customer)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5">No item found.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <!-- End -->
+    <app-copyrights></app-copyrights>
+</div>

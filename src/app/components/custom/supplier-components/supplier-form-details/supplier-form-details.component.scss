@@ -1,0 +1,138 @@
+@import "../../../pages/dashboard/dashboard.component.scss";
+
+// .authentication {
+//     margin-top: 100px;
+
+    // .signup-form {
+        .fa-close:hover {
+            cursor: pointer;
+        }
+
+        // width: 100%;
+        // margin: 30px auto;
+        // padding: 30px;
+        // box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        // border-radius: 10px;
+
+        // form {
+            .form-group {
+                // margin: 10px 0;
+
+                .form-control {
+                    border: 1px solid #d5d5d5 !important;
+                    border-radius: 5px;
+                    background-color: var(--whiteColor) !important;
+                    padding-top: 6px;
+                    height: 33px;
+                }
+
+            }
+        // }
+
+        input,
+        select {
+            height: 35px;
+        }
+
+        label {
+            font-size: 13px;
+        }
+
+        .radio-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100px;
+
+            .radio-button {
+                display: flex;
+                align-items: center;
+                margin: 5px 0 0;
+
+                input {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+    // }
+
+    button {
+        display: block;
+        background-color: var(--mainColor);
+        color: var(--whiteColor);
+        border: none;
+        // width: 100%;
+        border-radius: 5px;
+        padding: 8px 30px 8px;
+        transition: var(--transition);
+        font-size: 14px;
+
+        &:hover {
+            background-color: var(--blackColor);
+            color: var(--whiteColor);
+        }
+    }
+
+// }
+
+.major-customer {
+    display: grid;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+}
+
+.director_section {
+    display: grid;
+    grid-template-columns: 30% 30% 30% 10%;
+}
+
+
+.error {
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+}
+
+.inner-director {
+    display: none;
+}
+
+
+
+::ng-deep {
+    .p-datepicker .p-yearpicker .p-yearpicker-year.p-highlight {
+        background: var(--mainColor) !important;
+    }
+
+    .p-multiselect {
+        // width: 180px;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 13px !important;
+    }
+
+    .p-dropdown-label{
+        display: flex!important;
+        font-size: 13px;
+        align-items: center;
+        color: #000;
+    }
+}
+
+
+
+@media(max-width : 768px) {
+    .director_section {
+        display: grid;
+        grid-template-columns: 100%;
+    }
+
+    .global-director {
+        display: none;
+    }
+
+    .inner-director {
+        display: block;
+    }
+}

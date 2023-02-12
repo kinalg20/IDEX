@@ -1,0 +1,122 @@
+
+    
+    <div class="section-heading" style="margin-top: 0!important;">
+        <h4 style="margin-bottom: 0!important;">Comparison Screen</h4>
+    </div>
+
+    <div class="enquiryNo">
+        <span class="d-flex" style="align-items: baseline;"><h6 class="mx-2">Enquiry No : </h6><span style="font-size: 16px;">{{enquiryNoHeading}}</span></span>
+        <span class="d-flex" style="align-items: baseline;"><h6 class="mx-2" *ngIf="ProjectNameHeading">Project Name : </h6><span style="font-size: 16px;">{{ProjectNameHeading}}</span></span>
+        <h6 class="mx-2"></h6>
+    </div>
+    <div class="earning-comparison-box mt-3">
+            <table class="table vanillaHandsets">
+                <thead>
+                  <tr>
+                    <th>Sr No</th>
+                    <ng-container *ngFor="let item of comparisonHeaders">
+                        <th>{{item}}</th>
+                    </ng-container>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let supplierDetails of supplierQuotation | groupby : 'Part Number'; index as i">
+                    <tr *ngFor="let itemDetails of supplierDetails.value; index as index; last as last">
+                        <td style="display: flex;" ><input type="checkbox" (change)="selectOneCheckbox($event ,i+1 , itemDetails)"  [id]="i+1" *ngIf="index == 0" class="mx-2">{{index == 0 ? i+1 : ''}}</td>
+                        <!-- {{comparisonHeaders | json}} -->
+                        <ng-container *ngFor="let item of comparisonHeaders; index as comparisonIndex; last as last1">
+                            <ng-container *ngIf="item == 'Item Name' || item == 'Item Code' || item == 'Part Number' || item == 'Quantity'; then firstblock else secondblock"></ng-container>
+                            <ng-template #firstblock>
+                                <td>{{index == 0 ? itemDetails[item] : ''}}</td>
+                            </ng-template>
+                            <ng-template #secondblock>
+                                <td *ngIf="itemDetails[item] != '-Total'">
+                                    <span *ngIf="last">
+                                        <ng-container *ngFor="let itemvalue of totalArray">
+                                            <ng-container *ngIf="itemvalue.ItemId == itemDetails.ItemId;">
+                                                <ng-container *ngIf="itemvalue.minAmount != null">
+                                                    <span [ngClass]="{my_class : itemvalue.minAmount == itemDetails[item]}" *ngIf="itemvalue.minAmount == itemDetails[item]" style="background-color:red; padding: 5px; color: #fff; border-radius: 5px;">{{itemDetails[item]}}</span>
+                                                    <span *ngIf="itemvalue.minAmount != itemDetails[item]"><b>{{itemDetails[item]}}</b></span>
+                                                </ng-container>
+                                            </ng-container>
+                                        </ng-container>
+                                    </span>
+                                    <span *ngIf="!last">{{itemDetails[item]}}</span>
+                                </td>
+                                <td *ngIf="itemDetails[item] == '-Total'"><b>Total</b></td>
+                            </ng-template>
+                        </ng-container>     
+                    </tr>
+                </tbody>
+            </table>
+    </div>
+
+
+<p-dialog header="Order Quantity"  [(visible)]="display1" [modal]="true" [draggable] = "false" (onHide)="onHide()"  [blockScroll]="true">
+    <ng-container *ngIf="!popupCheck">
+        <table class="table vanillaHandsets" style="width: 100%;">
+            <thead>
+              <tr>
+                <th>SrNo</th>
+                <th>Supplier Name</th>
+                <th>Quantity </th>
+                <th>Order Quantity </th>
+                <th>Extra Details</th>
+              </tr> 
+            </thead>
+            <tbody *ngFor="let supplierDetails of getEnquiryData ; index as i">
+                <tr>
+                    <td>{{i+1}}</td>
+                    <td>{{supplierDetails.value}}</td>
+                    <td>{{selectedItem.Quantity}}</td>
+                    <td class="form-group"><input type="text" [disabled]="enquiryClosed || !submitBoolean" class="form-control" (keydown)="_utility.inputMobile($event)"  [(ngModel)]="supplierDetails.quantity" placeholder="Enter Quantity"></td>
+                    <td>
+                        <button pButton pRipple type="button" style="height: 0!important;" icon="bx bx-show" *ngIf="supplierDetails.paymentTerms.length > 0" (click)="showExtraInfo(supplierDetails)" class="p-button-rounded p-button-primary p-button-text" style="background: none!important;"></button>
+                        <a [href]="supplierDetails.documentUpload" *ngIf="supplierDetails.documentUpload.length > 0" [download]="supplierDetails.documentUpload" target="_blank" style="text-decoration: none;"><button pButton pRipple type="button" icon="bx bx-download" class="p-button-rounded p-button-primary p-button-text" style="background: none!important;"></button></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="row">
+            <div class="col-lg-12 my-2">
+                <label for=""><b>Remark</b></label>
+                <textarea name="" id="" class="form-control" [disabled]="userObject.roleName == 'Bussiness head' || userObject.roleName == 'Precurement head'" placeholder="Enter Remark" cols="30" rows="4" [(ngModel)]="toolsList.comparisonRemark" style="width: 100%; height: unset;"></textarea>
+            </div>
+                <div class="col-lg-12 form-group">
+                    <label for=""><b>Approval Status : </b></label>
+                    <select name="" id="" class="form-control form-select" [(ngModel)]="toolsList.status" [disabled]="(userObject.roleName != 'Bussiness head' && userObject.roleName != 'Precurement head') || submitBoolean">
+                        <option value="">Pending</option>   
+                        <option value="Approved">Approved</option>   
+                        <option value="Rejected">Rejected</option>   
+                    </select>
+                </div>
+            <div class="col-lg-12 my-2">
+                <label for=""><b>Bussiness / procurement head Remark</b></label>
+                <textarea name="" id="" class="form-control" [disabled]="(userObject.roleName != 'Bussiness head' && userObject.roleName != 'Precurement head') || submitBoolean" placeholder="Enter Remark" cols="30" rows="4" [(ngModel)]="toolsList.headRemark" style="width: 100%; height: unset;"></textarea>
+            </div>
+        </div>
+
+        <div class="add-listings-btn d-flex">
+            <div class="form-group">
+                <button class="submit_btn final_submit my-0" type="button" (click)="submitOrderQuantity()" *ngIf="!submitBoolean">{{submitButton}}</button>
+            </div>
+
+            <div class="form-group"  *ngIf="!enquiryClosed && submitBoolean">
+                <button type="submit" class="submit_btn final_submit my-0" (click)="submitOrderQuantity('Submit')">Submit </button>
+            </div>
+        </div>
+    </ng-container>
+    <ng-container  *ngIf="popupCheck">
+        <span style="cursor: pointer;" (click)="popupCheck = !popupCheck"><i class='pi pi-arrow-left'></i></span>
+        <ng-container *ngIf="popupValue.paymentTerms.length > 0">
+            <p>Payment Terms : {{popupValue.paymentTerms}}</p>
+        </ng-container>
+        <ng-container *ngIf="popupValue.deliveryNotes.length > 0">
+            <p>Delivery Notes : {{popupValue.deliveryNotes}}</p>
+        </ng-container>
+        <ng-container *ngIf="popupValue.otherRemark.length > 0">
+            <p>Other Remarks : {{popupValue.otherRemark}}</p>
+        </ng-container>
+        <!-- <p>Other Remarks : {{popupValue.taxId}}</p> -->
+    </ng-container>
+</p-dialog>

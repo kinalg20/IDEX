@@ -1,0 +1,320 @@
+@import "../../../pages/dashboard/dashboard.component.scss";
+
+    h3 {
+        padding: 10px 25px 10px;
+        border-bottom: 1px dashed #eeeeee;
+
+        font: {
+            size: 17px;
+            weight: 600;
+        }
+
+        margin: {
+            bottom: 25px;
+            left: -25px;
+            right: -25px;
+        }
+
+        ;
+    }
+
+    // form {
+        .form-group {
+            margin: 10px 0;    
+            .form-control {
+                border: 1px solid #d5d5d5 !important;
+                border-radius: 5px;
+                background-color: #f9f9f9 !important;
+                padding-top: 6px;
+            }
+        }
+
+        input , select{
+            height: 35px!important;
+        }
+
+        label{
+            display: block;
+            margin-bottom: 5px;
+            color: var(--blackColor);
+            position: relative;
+            padding-left: 2px;
+            font-weight: 500;
+            font-size: 13.5px;
+        }
+
+        .radio-buttons{
+            display: flex;
+            justify-content: space-between;
+            width: 100px;
+            .radio-button{
+                display: flex;
+                align-items: center;
+                margin: 5px 0 0;
+                input{
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+    // }
+// }
+
+.add-listings-btn {
+
+    // margin-bottom: 30px;
+    button {
+        display: inline-block;
+        padding: 8px 30px;
+        box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
+        border-radius: 5px;
+        transition: var(--transition);
+        border: none;
+        margin-top: 25px;
+        font: {
+            size: var(--fontSize);
+            weight: 600;
+        }
+
+        ;
+
+        &:hover {
+            background-color: #3b99ca;
+            color: var(--whiteColor);
+        }
+    }
+
+    .reset_btn{
+        background-color: var(--optionalColor);
+        color: var(--whiteColor);
+    }
+
+    .submit_btn{
+        background-color: var(--mainColor);
+        color: var(--whiteColor);
+    }
+
+}
+.cost-breakup {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 0 10px;
+    // justify-content: space-between;
+    input{
+        margin:0 8px 0 5px;
+    }
+}
+
+.cost-breakup-div{
+    display: flex;
+    // justify-content: space-between;
+    width: 900px;
+    flex-wrap: wrap;
+}
+
+.alert{
+    padding: 10px;
+    margin-top: 5px;
+}
+
+
+.star_class{
+    color: red;
+}
+
+.submit_btn{
+    margin-top: 0!important;
+}
+
+/* Max width 767px */
+@media only screen and (max-width: 767px) {
+
+    .send-email-checker2{
+        display: block!important;
+        justify-content: center;
+        text-align: center;
+    }
+
+
+    .add-listings-box {
+        padding: 0 20px 0 20px;
+
+        h3 {
+            padding: 15px 20px;
+
+            margin: {
+                bottom: 20px;
+                left: -20px;
+                right: -20px;
+            }
+
+            ;
+        }
+
+        .form-group {
+            .form-control {
+                height: 35px;
+                font-size: 13.5px;
+
+                padding: {
+                    right: 10px;
+                    left: 10px;
+                }
+
+                ;
+            }
+
+            select {
+                height: 35px;
+                line-height: 45px;
+                font-size: 13.5px;
+
+                padding: {
+                    right: 10px;
+                    left: 10px;
+                }
+            }
+        }
+    }
+
+}
+
+/* Min width 576px to Max width 767px */
+@media (max-width: 767px) and (min-width: 425px)  {
+    .add-listings-box {
+        button {
+            margin-top: 0;
+        }
+    }
+
+    .form-group {
+        label {
+            margin-bottom: 3px!important;
+        }
+    }
+}
+
+
+.breadcrumb-area h1::before{
+    display: none;
+}
+
+
+@media(max-width : 425px){
+    .submit-toggle1 , .submit_btn{
+        margin-top: 5px!important;
+        border-radius: 10px;
+    }
+    
+}
+/* Min width 768px to Max width 991px */
+@media (min-width: 768px) and (max-width: 991px) {
+
+    .add-listings-box {
+        button {
+            margin-top: 0;
+        }
+    }
+
+    .submit-toggle1 , .submit_btn{
+        margin-top: 13px;
+    }
+}
+
+
+.submit-toggle1 , .submit_btn{
+    // margin-top: 13px;
+    width: 100%;
+}
+
+
+::ng-deep{
+    @media(max-width : 426px){
+        .p-dialog{
+            width: 80vw!important;
+        }
+    }
+    
+    .p-column-filter-row p-columnfilterformelement{
+        width: 100%!important;
+    }
+
+    .p-column-filter-clear-button{
+        display: none!important;
+    }
+
+    .p-multiselect .p-multiselect-label{
+        padding: 0.3rem 0.5rem!important;
+        font-size: 13.5px;
+        height: 33px;
+        justify-content: left;
+        background: #f9f9f9 !important;
+        display: flex;
+        align-items: center;
+    }
+
+    .p-paginator .p-dropdown{
+        align-items: center;
+    }
+
+    @media(max-width : 768px){
+        .p-multiselect {
+            margin-top: 5px;
+        }  
+        
+        .submit-toggle1{
+            margin-top: 0!important;
+        }
+    }
+
+    // .p-dialog{
+    //     width: 70vw!important;
+    // }
+}
+
+
+
+.send-email-checker2{
+    button{
+        background-color: var(--mainColor) !important;
+        color: #fff;
+    }
+    display: flex; justify-content: space-between; align-items: center;
+}
+
+
+.status_button{
+    font-size: 12px;
+    padding:0.2rem 1rem;
+}
+.pending{
+    background-color: #e5952e!important;
+    border:  #e5952e!important;
+}
+
+.p-button:hover{
+    background-color: #e5952e;
+    border-color: #e5952e;
+}
+
+.p-button:focus{
+    box-shadow: none!important;
+}
+
+
+
+::ng-deep{
+    .p-datatable .p-datatable-thead > tr > th {
+        white-space: nowrap;
+    }
+
+    .p-button.p-button-icon-only {
+        width: 2.357rem;
+        padding: 0.2rem 0;
+    }
+
+    .p-datatable .p-datatable-header{
+        padding: 0.5rem!important;
+    }
+}

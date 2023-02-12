@@ -1,0 +1,786 @@
+<app-dashboard-sidemenu></app-dashboard-sidemenu>
+
+<!-- Start Main Content Wrapper Area -->
+<div class="main-content d-flex flex-column">
+
+    <app-dashboard-navbar></app-dashboard-navbar>
+
+    <!-- Breadcrumb Area -->
+    <div class="breadcrumb-area" *ngFor="let Content of breadcrumb;">
+        <h1>{{Content.title}}</h1>
+        <ol class="breadcrumb">
+            <li class="item"><a routerLink="/">Home</a></li>
+            <li class="item"><a routerLink="/dashboard">{{Content.subTitle}}</a></li>
+            <li class="item">{{Content.title}}</li>
+        </ol>
+    </div>
+    <!-- End Breadcrumb Area -->
+
+
+
+
+    <!-- Start -->
+    <div class="card">
+        <p-table #dt2 [value]="supplierList"
+            dataKey="supplierId" [rows]="10"
+            responsiveLayout="scroll" [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10,20,30,50]"
+            [paginator]="true" currentPageReportTemplate="Showing {first} to
+            {last} of {totalRecords} entries" [filterDelay]="0"
+            [globalFilterFields]="['emailAddress','mobileNo','supplierAddress','manufacturingProcessList','materialofconstructionList',
+            'isVerify' , 'supplierName' , 'isApproved', 'jdeNo']">
+            <ng-template pTemplate="caption">
+                <span class="p-input-icon-left d-flex align-items-center">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text"
+                        (input)="dt2.filterGlobal($event.target.value,
+                        'contains')"
+                        placeholder="Global Search" [(ngModel)]="filterval" />
+                    <p-button type="button" class="ml-2" (click)="reset(dt2)"
+                        icon="bx bx-reset"></p-button>
+                </span>
+            </ng-template>
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>S.No.</th>
+                    <th>Action</th>
+                    <th>JDE No.</th>
+                    <th>Checker1</th>
+                    <th style="white-space: nowrap; min-width: 150px;">Checker2</th>
+                    <th>Supplier Name</th>
+                    <th>Supplier Email</th>
+                    <th>Mobile No</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-customer let-i="rowIndex">
+                <ng-container >
+                    <tr class="p-selectable-row">
+                        <td>{{i+1}}</td>
+                        <td>
+                            <button pButton pRipple type="button" icon="bx bx-show"
+                                class="p-button-rounded p-button-primary
+                                p-button-text"
+                                (click)="openModal(customer.supplierId ,
+                                'show')"></button>
+                        </td>
+                        <td>{{customer.jdeNo ? customer.jdeNo : '-'}}</td>
+                        <td>
+                            <button pButton pRipple type="button"
+                                (click)="openModal(customer.supplierId)"
+                                *ngIf="customer.raiseVerify == 'Verified'"
+                                [label]="customer.isVerify"
+                                class="p-button-rounded
+                                p-button-success status_button"
+                                style="font-size:
+                                12px; padding:
+                                0.2rem 1rem;"></button>
+                            <button pButton pRipple type="button"
+                                (click)="openModal(customer.supplierId)"
+                                *ngIf="customer.raiseVerify == 'Pending'"
+                                label="Pending" class="p-button-rounded
+                                status_button pending"></button>
+                            <button pButton pRipple type="button"
+                                *ngIf="customer.raiseVerify == 'Rework'"
+                                (click)="openModal(customer.supplierId ,'show')"
+                                [label]="customer.raiseVerify"
+                                class="p-button-rounded
+                                p-button-info status_button"></button>
+                            <button pButton pRipple type="button"
+                                (click)="openModal(customer.supplierId ,'show')"
+                                *ngIf="customer.raiseVerify == 'Rejected'"
+                                [label]="customer.raiseVerify"
+                                class="p-button-rounded
+                                p-button-danger status_button"></button>
+                        </td>
+                        <td style="white-space: nowrap;">
+                            <ng-container *ngIf="customer.raiseVerify ==
+                                'Verified'">
+                                <button pButton pRipple type="button"
+                                    *ngIf="customer.raiseApproved == 'Approved'"
+                                    (click)="jdeWindow(customer)"
+                                    label="Approved for JDE"
+                                    class="p-button-rounded
+                                    p-button-success status_button"></button>
+                                <button pButton pRipple type="button"
+                                    *ngIf="customer.raiseApproved ==
+                                    'Registered'"
+                                    label="Registered In JDE"
+                                    class="p-button-rounded
+                                    p-button-success status_button"></button>
+                                <button pButton pRipple type="button"
+                                    (click)="openModal(customer.supplierId
+                                    ,'show')"
+                                    *ngIf="customer.raiseApproved == 'Pending'"
+                                    label="Awaiting Checker2 Approval"
+                                    class="p-button-rounded status_button
+                                    pending"></button>
+                                <a href="javascript:void(0)"
+                                    *ngIf="customer.raiseApproved == '' &&
+                                    customer.isVerify == 'Verified' &&
+                                    userroleName.checker1 == true"
+                                    (click)="confirm1(customer)">Send to
+                                    Checker2</a>
+                                <button pButton pRipple type="button"
+                                    (click)="openModal(customer.supplierId ,
+                                    'show')"
+                                    *ngIf="customer.raiseApproved == 'Rework'"
+                                    [label]="customer.raiseApproved"
+                                    class="p-button-rounded p-button-info
+                                    status_button"></button>
+                                <button pButton pRipple type="button"
+                                    (click)="openModal(customer.supplierId ,
+                                    'show')"
+                                    *ngIf="customer.raiseApproved == 'Rejected'"
+                                    [label]="customer.raiseApproved"
+                                    class="p-button-rounded p-button-danger
+                                    status_button"></button>
+                            </ng-container>
+                        </td>
+                        <td>
+                            <span>{{customer.supplierName }}</span>
+                        </td>
+                        <td>
+                            <span class="image-text">{{customer.emailAddress}}</span>
+                        </td>
+                        <td>
+                            <span class="image-text">{{customer.mobileNo}}</span>
+                        </td>
+                        <td style="min-width: 150px; white-space:
+                            nowrap!important;">
+                            <span class="image-text">{{customer.supplierAddress}}</span>
+                        </td>
+                    </tr>
+                </ng-container>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5">No customers found.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <div class="flex-grow-1"></div>
+    <!-- End -->
+
+    <app-copyrights></app-copyrights>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<p-dialog header="Supplier Change Request" [(visible)]="display" [modal]="true"
+    [style]="{width: '90vw'}" [draggable]="false" [resizable]="false">
+    <div class="container authentication">
+        <div class="signup-form">
+            <div class="row">
+                <div class="col-lg-3 col-md-12 form-group">
+                    <select class="form-control form-select" id="applicable"
+                        required [disabled]="userCapture"
+                        [(ngModel)]="supplierListById.statusCapture">
+                        <ng-container *ngFor="let approvalStatus of approvalStatus">
+                            <option [value]='approvalStatus.value'>{{approvalStatus.name}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+                <div class="add-listings-btn col-lg-2 col-md-12 form-group"
+                    *ngIf="!userCapture">
+                    <div class="submit-toggle1">
+                        <button type="submit" class="submit_btn"
+                            (click)="captureStatus(supplierListById ,
+                            'Submit')">Submit</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="section-heading">
+                <h5>Supplier Certificates</h5>
+            </div>
+            <div class="row"> -->
+                <!-- <ng-container *ngFor="let doc of certificates">
+                    <ng-container *ngIf="doc.documentPath != '' &&
+                        doc.documentName != ''">
+                        <div class="col-lg-3 col-md-6 col-sm-12 form-group">
+                            <a [href]="doc.documentPath" style="font-size:13px;
+                                font-weight: 600; color: var(--mainColor);"
+                                target="_blank"
+                                [download]="doc.documentPath">{{doc.documentName}}</a>
+                        </div>
+                    </ng-container> -->
+                <!-- </ng-container> -->
+                <!-- <div class="col-lg-3 col-md-6 col-sm-12 form-group">
+                    <a [href]="supplierListById.cancelledCheque"
+                        target="_blank" style="font-size:13px; font-weight: 600;
+                        color: var(--mainColor);"
+                        [download]="supplierListById.cancelledCheque">Cancelled
+                        Cheque Preview</a>
+                </div> -->
+            <!-- </div> -->
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <h3 style="text-align: center;">Previous Data</h3>
+
+                    <ng-container *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Supplier Name')">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-12 form-group">
+                                <label for="first-name">Supplier Name</label>
+                                <span class="form-control">{{supplierListById.supplierName}}</span>
+                            </div>
+                            <div class="col-lg-8 col-md-12 form-group">
+                                <label for="address">Address with Pincode</label>
+                                <div class="d-flex">
+                                    <textarea name="" id="" cols="1" rows="1"
+                                        placeholder="Enter Your Address"
+                                        [(ngModel)]="supplierListById.supplierAddress"
+                                        class="form-control" type="text"
+                                        readonly
+                                        required></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- row-2 -->
+                        <div class="row">
+                            <div class="col-lg-4 col-md-12 form-group">
+                                <label for="state">State</label>
+                                <ng-container *ngFor="let value of
+                                    stateDropdown">
+                                    <ng-container *ngIf="value.id ==
+                                        supplierListById.stateId"><span
+                                            class="form-control">{{value.value}}</span></ng-container>
+                                </ng-container>
+                            </div>
+                            <div class="col-lg-5 col-md-12 form-group">
+                                <label for="city">Purpose</label>
+                                <ng-container *ngFor="let value of
+                                    purposeDropdown">
+                                    <ng-container *ngIf="value.id ==
+                                        supplierListById.purposeId"><span
+                                            class="form-control">{{value.value}}</span></ng-container>
+                                </ng-container>
+                            </div>
+                            <div class="col-lg-3 col-md-12 form-group">
+                                <label for="city">Service Provided</label>
+                                <span class="form-control">{{supplierListById.services}}</span>
+                            </div>
+                        </div>
+
+                        <!-- row-3 -->
+                        <div class="row">
+                            <div class="col-lg-8 col-md-12 form-group">
+                                <label for="city">In case of Intercompany
+                                    correct Co. No. In GL off</label>
+                                <span class="form-control">{{supplierListById.interCompany}}</span>
+                            </div>
+                            <div class="col-lg-4 col-md-12 form-group">
+                                <label for="credit">Payment Terms</label>
+                                <span class="form-control">{{supplierListById.payTermsId}}</span>
+                            </div>
+                            <div class="col-lg-6 col-md-12 form-group">
+                                <label for="tds-applicable">TDS Applicable</label>
+                                <span class="form-control">{{supplierListById.tdsApplicable
+                                    ? 'Yes' : 'No'}}</span>
+                            </div>
+
+
+
+                            <div class="col-lg-6 col-md-12 form-group">
+                                <label for="email">Whether Domestic or Foreign
+                                    <span class="star_class">*</span></label>
+                                <span class="form-control">{{supplierListById.isDomestic
+                                    ? 'Foreign' : 'Domestic'}}</span>
+                            </div>
+                            <div class="col-lg-4 col-md-12 form-group"
+                                *ngIf="supplierListById.isDomestic">
+                                <label for="email">If Foreign give Currency
+                                    <span class="star_class">*</span></label>
+                                    <span class="form-control">{{supplierListById.currency}}</span>
+                            </div>
+                        </div>
+                    </ng-container>
+
+
+                    <ng-container *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Tax Details')">
+                        <!-- Tax Registration Details -->
+                        <div class="section-heading">
+                            <h6 class="m-0">Tax Registration Details</h6>
+                        </div>
+
+                        <!-- row-5 -->
+                        <div class="row" *ngIf="! supplierListById.isDomestic">
+                            <div class="col-lg-4 col-md-12 form-group">
+                                <label for="city">GSTIN <span class="star_class">*</span></label>
+                                <span class="form-control">{{supplierListById.gstinNo}}</span>
+                            </div>
+                            <div class="col-lg-4 col-md-12 form-group">
+                                <label for="city">GSTIN Date</label>
+                                <span class="form-control">{{supplierListById.gstinDate | date : 'MM/dd/YYYY'}}</span>
+                                <!-- <p-calendar
+                                    [(ngModel)]="supplierListById.date"
+                                    placeholder="Select
+                                    GSTIN Date" required></p-calendar> -->
+                            </div>
+                            <div class="col-lg-4 col-md-12 form-group">
+                                <label for="city">PAN <span class="star_class">*</span></label>
+                                <span class="form-control">{{supplierListById.panNo}}</span>
+                            </div>
+                        </div>
+
+                        <!-- row-6 -->
+                        <div class="row">
+                            <div class="col-lg-4 col-md-12 form-group">
+                                <label for="city">TAN Number</label>
+                                <span class="form-control">{{supplierListById.tanNo}}</span>
+                            </div>
+                            <div class="col-lg-4 col-md-12 form-group">
+                                <label for="email">MSME Applicable</label>
+                                <span class="form-control">{{supplierListById.msmeApplicable ? 'Yes' : 'No'}}</span>
+                            </div>
+                        </div>
+                    </ng-container>
+
+
+                    <ng-container *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Contact Details')">
+                        <!-- Vendor Contact Details -->
+
+                        <div class="section-heading">
+                            <h6 class="m-0">Supplier Contact Details</h6>
+                        </div>
+
+                        <!-- row-7 -->
+                        <div class="row">
+                            <div class="col-lg-4 form-group">
+                                <label for="contact">Contact Person</label>
+                                <span class="form-control">{{supplierListById.contactPerson}}</span>
+                            </div>
+                            <div class="col-lg-4 form-group">
+                                <label for="tel">Contact Number</label>
+                                <span class="form-control">{{supplierListById.mobileNo}}</span>
+                            </div>
+                            <div class="col-lg-4 form-group">
+                                <label for="fax">FAX Number</label>
+                                <span class="form-control">{{supplierListById.faxNo}}</span>
+                            </div>
+                            <div class="col-lg-5 form-group">
+                                <label for="email">Email Address</label>
+                                <span class="form-control">{{supplierListById.emailAddress}}</span>
+                            </div>
+                            <div class="col-lg-4 form-group">
+                                <label for="email">Alternet Email Address</label>
+                                <span class="form-control">{{supplierListById.alternetEmail}}</span>
+                            </div>
+                        </div>
+                    </ng-container>
+
+
+                    <ng-container  *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Bank Details')">
+                        <!-- Vendor Bank Details -->
+                        <div class="section-heading">
+                            <h6 class="m-0">Bank Details</h6>
+                        </div>
+                        <!-- row-8-->
+                        <div class="row">
+                            <div class="col-lg-4 form-group">
+                                <label for="ifscCode">Account Type</label>
+
+                                        <span class="form-control">{{supplierListById.accountType
+                                            == 'C' ? 'Current Account' : 'Saving
+                                            Account'}}</span>
+                            </div>
+                            <div class="col-lg-4 form-group">
+                                <label for="bankName">Bank Name</label>
+                                        <span class="form-control">{{supplierListById.bankName}}</span>
+                            </div>
+                            <div class="col-lg-4 form-group">
+                                <label for="account">Account No.</label>
+                                <span class="form-control">{{supplierListById.accountNo}}</span>
+                            </div>
+                            <div class="col-lg-4 form-group">
+                                <label for="ifscCode">IFSC Code or Swift Code</label>
+                                <span class="form-control">{{supplierListById.ifscCode}}</span>
+                            </div>
+
+                            <div class="col-lg-4 form-group">
+                                <label for="ifscCode">MICR No.</label>
+                                <span class="form-control">{{supplierListById.micrNo}}</span>
+                            </div>
+
+                            <div class="col-lg-4 form-group">
+                                <label for="ifscCode">Bank Address</label>
+                                <span class="form-control">{{supplierListById.bankAddress}}</span>
+                            </div>
+                            <div class="col-lg-4 col-md-6 col-sm-12 form-group">
+                            <span class="form-control">
+                                <a [href]="supplierListById.cancelledCheque"
+                                target="_blank" style="font-size:13px; font-weight: 600;
+                                color: var(--mainColor);"
+                                [download]="supplierListById.cancelledCheque">Cancelled Cheque</a>
+                            </span>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <ng-container  *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Authorized Signatory Details')">
+                        <div
+                            class="section-heading"*ngIf="supplierListById.supplierDirectorsDetails?.length>
+                            0" >
+                            <h6 style="margin: 0;">Authorized Signatory Details</h6>
+                        </div>
+
+                        <!-- row-10 -->
+                        <ng-container *ngFor="let director of
+                            supplierListById.supplierDirectorsDetails; index
+                            as idx; last as
+                            last">
+                            <div class="row">
+                                <div class="form-group col-lg-4 col-md-4"
+                                    style="margin-top:
+                                    0.3rem!important;">
+                                    <label for="" style="margin-bottom:
+                                        0.3rem!important;">
+                                        Name<span class="star_class">*</span></label>
+                                        <span class="form-control">{{director.directorName}}</span>
+                                </div>
+                                <div class=" form-group col-lg-4 col-md-4"
+                                    style="margin-top: 0.3rem!important;">
+                                    <label for="" style="margin-bottom:
+                                        0.3rem!important;">
+                                        Contact Number<span
+                                            class="star_class">*</span></label>
+                                        <span class="form-control">{{director.mobileNo}}</span>
+                                </div>
+                                <div class="form-group col-lg-4 col-md-4"
+                                    style="margin-top:
+                                    0.3rem!important;">
+                                    <label for="" style="margin-bottom:
+                                        0.3rem!important;">Email
+                                        Address<span class="star_class">*</span></label>
+                                        <span class="form-control">{{director.email}}</span>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </div>
+                <div class="col-lg-6" style="border-left: 1px dashed #dedede;">
+                    <h3 style="text-align: center;">New Data</h3>
+
+                    <!-- row-1 -->
+                    <ng-container *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Supplier Name')">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-12 form-group">
+                                <label for="first-name">Supplier Name</label>
+                                <span class="form-control">{{supplierJsonData.supplierName}}</span>
+                            </div>
+                            <div class="col-lg-8 col-md-12 form-group">
+                                <label for="address">Address with Pincode</label>
+                                <span class="form-control">{{supplierJsonData.supplierAddress}}</span>
+                                    <!-- <textarea name="" id="" cols="1" rows="1"
+                                        placeholder="Enter Your Address"
+                                        [(ngModel)]="supplierJsonData.supplierAddress"
+                                        class="form-control" type="text"
+                                        readonly
+                                        required></textarea> -->
+                            </div>
+                        </div>
+
+                        <!-- row-2 -->
+                        <div class="row">
+                            <div class="col-lg-4 col-md-12 form-group">
+                                <label for="state">State</label>
+                                <ng-container *ngFor="let value of stateDropdown">
+                                    <ng-container *ngIf="value.id ==
+                                        supplierJsonData.stateId"><span
+                                            class="form-control">{{value.value}}</span></ng-container>
+                                </ng-container>
+                            </div>
+                            <div class="col-lg-5 col-md-12 form-group">
+                                <label for="city">Purpose</label>
+                                <ng-container *ngFor="let value of
+                                    purposeDropdown">
+                                    <ng-container *ngIf="value.id ==
+                                        supplierJsonData.purposeId"><span
+                                            class="form-control">{{value.value}}</span></ng-container>
+                                </ng-container>
+                            </div>
+                            <div class="col-lg-3 col-md-12 form-group">
+                                <label for="city">Service Provided</label>
+                                <span class="form-control">{{supplierJsonData.services}}</span>
+                            </div>
+                        </div>
+
+                        <!-- row-3 -->
+                        <div class="row">
+                            <div class="col-lg-8 col-md-12 form-group">
+                                <label for="city">In case of Intercompany
+                                    correct Co. No. In GL off</label>
+                                <span class="form-control">{{supplierJsonData.interCompany}}</span>
+                            </div>
+                            <div class="col-lg-4 col-md-12 form-group">
+                                <label for="credit">Payment Terms</label>
+                                <span class="form-control">{{supplierJsonData.payTermsId}}</span>
+                            </div>
+                            <div class="col-lg-3 col-md-12 form-group">
+                                <label for="tds-applicable">TDS Applicable</label>
+                                <span class="form-control">{{supplierJsonData.tdsApplicable ? 'Yes' : 'No'}}</span>
+                            </div>
+
+
+
+                            <div class="col-lg-6 col-md-12 form-group">
+                                <label for="email">Whether Domestic or Foreign
+                                    <span class="star_class">*</span></label>
+                                <input type="text" class="form-control"
+                                    *ngIf="supplierJsonData.isDomestic"
+                                    value="Foreign">
+                                <input type="text" class="form-control"
+                                    *ngIf="!supplierJsonData.isDomestic"
+                                    value="Domestic">
+                            </div>
+                            <div class="col-lg-4 col-md-12 form-group"
+                                *ngIf="supplierJsonData.isDomestic">
+                                <label for="email">If Foreign give Currency
+                                    <span class="star_class">*</span></label>
+                                    <span class="form-control">{{supplierJsonData.currency}}</span>
+                            </div>
+                        </div>
+                    </ng-container>
+
+
+                    <ng-container
+                        *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Tax Details')">
+                        <!-- Tax Registration Details -->
+                        <div class="section-heading">
+                            <h6 class="m-0">Tax Registration Details</h6>
+                        </div>
+
+                        <!-- row-5 -->
+                        <div class="row" *ngIf="! supplierJsonData.isDomestic">
+                            <div class="col-lg-4 col-md-12 form-group">
+                                <label for="city">GSTIN </label>
+                                <input class="form-control"
+                                    [(ngModel)]="supplierJsonData.gstinNo"
+                                    placeholder="Enter GSTIN"
+                                    minlength="15"
+                                    maxlength="15" autocomplete="off"
+                                    required/>
+                            </div>
+                            <div class="col-lg-4 col-md-12 form-group">
+                                <label for="city">GSTIN Date</label>
+                                <span class="form-control">{{supplierJsonData.gstinDate | date : 'MM/dd/YYYY'}}</span>
+                            </div>
+                            <div class="col-lg-4 col-md-12 form-group">
+                                <label for="city">PAN </label>
+                                <input class="form-control" type="text"
+                                    [(ngModel)]="supplierJsonData.panNo"
+                                    minlength="10"
+                                    maxlength="10" required
+                                    autocomplete="off" />
+                            </div>
+                        </div>
+
+                        <!-- row-6 -->
+                        <div class="row">
+                            <div class="col-lg-4 col-md-12 form-group">
+                                <label for="city">TAN Number</label>
+                                <input class="form-control"
+                                    [(ngModel)]="supplierJsonData.tanNo"
+                                    placeholder="Enter
+                                    TAN Number" minlength="10"
+                                    maxlength="10"
+                                    autocomplete="off" />
+                            </div>
+                            <div class="col-lg-4 col-md-12 form-group">
+                                <label for="email">MSME Applicable</label>
+                                <input class="form-control"
+                                    *ngIf="supplierJsonData.msmeApplicable"
+                                    value="Yes"
+                                    placeholder="Enter TAN Number"
+                                    minlength="10"
+                                    maxlength="10" autocomplete="off" />
+                                <input class="form-control"
+                                    *ngIf="!supplierJsonData.msmeApplicable"
+                                    value="No"
+                                    placeholder="Enter TAN Number"
+                                    minlength="10"
+                                    maxlength="10" autocomplete="off" />
+                            </div>
+                        </div>
+                    </ng-container>
+
+
+                    <ng-container
+                        *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Contact Details')">
+                        <!-- Vendor Contact Details -->
+
+                        <div class="section-heading">
+                            <h6 class="m-0">Supplier Contact Details</h6>
+                        </div>
+
+                        <!-- row-7 -->
+                        <div class="row">
+                            <div class="col-lg-4 form-group">
+                                <label for="contact">Contact Person</label>
+                                <span class="form-control">{{supplierJsonData.contactPerson}}</span>
+                            </div>
+                            <div class="col-lg-4 form-group">
+                                <label for="tel">Contact Number</label>
+                                <span class="form-control">{{supplierJsonData.mobileNo}}</span>
+                            </div>
+                            <div class="col-lg-4 form-group">
+                                <label for="fax">FAX Number</label>
+                                <span class="form-control">{{supplierJsonData.faxNo}}</span>
+                            </div>
+                            <div class="col-lg-5 form-group">
+                                <label for="email">Email Address</label>
+                                <span class="form-control">{{supplierJsonData.emailAddress}}</span>
+                            </div>
+                            <div class="col-lg-4 form-group">
+                                <label for="email">Alternet Email Address</label>
+                                <span class="form-control">{{supplierJsonData.alternetEmail}}</span>
+                            </div>
+                        </div>
+                    </ng-container>
+
+
+                    <ng-container
+                        *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Bank Details')">
+                        <!-- Vendor Bank Details -->
+                        <div class="section-heading">
+                            <h6 class="m-0">Bank Details</h6>
+                        </div>
+                        <!-- row-8-->
+                        <div class="row">
+                            <div class="col-lg-4 form-group">
+                                <label for="ifscCode">Account Type</label>
+                                <div>
+                                    <span class="form-control">{{supplierJsonData.accountType
+                                        == 'C' ? 'Current Account' : 'Saving
+                                        Account'}}</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 form-group">
+                                <label for="bankName">Bank Name</label>
+                                <input class="form-control"
+
+                                    type="text"
+                                    [(ngModel)]="supplierJsonData.bankName"
+                                    placeholder="Enter Bank Name"
+                                    autocomplete="off" />
+                            </div>
+                            <div class="col-lg-4 form-group">
+                                <label for="account">Account No.</label>
+                                <input class="form-control"
+
+                                    type="text"
+                                    [(ngModel)]="supplierJsonData.accountNo"
+                                    maxlength="16"
+                                    placeholder="Enter Account No."
+                                    autocomplete="off" />
+
+                            </div>
+                            <div class="col-lg-4 form-group">
+                                <label for="ifscCode">IFSC Code or Swift Code </label>
+                                <input class="form-control"
+
+                                    type="text"
+                                    [(ngModel)]="supplierJsonData.ifscCode"
+                                    placeholder="Enter IFSC Code"
+                                    autocomplete="off" />
+                            </div>
+
+                            <div class="col-lg-4 form-group">
+                                <label for="ifscCode">MICR No.</label>
+                                <input class="form-control"
+                                    type="text"
+                                    maxlength="10"
+                                    [(ngModel)]="supplierJsonData.micrNo"
+                                    placeholder="Enter MICR No."
+                                    autocomplete="off" />
+                            </div>
+
+                            <div class="col-lg-4 form-group">
+                                <label for="ifscCode">Bank Address</label>
+                                <input class="form-control"
+
+                                    type="text"
+                                    maxlength="10"
+                                    [(ngModel)]="supplierJsonData.bankAddress"
+                                    placeholder="Enter Bank Address"
+                                    autocomplete="off" />
+                            </div>
+                            <div class="col-lg-4 col-md-6 col-sm-12 form-group">
+                                <span class="form-control"><a [href]="supplierJsonData.cancelledCheque"
+                                    target="_blank" style="font-size:13px; font-weight: 600;
+                                    color: var(--mainColor);"
+                                    [download]="supplierJsonData.cancelledCheque">Cancelled Cheque </a></span>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <ng-container
+                        *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Authorized Signatory Details')">
+                        <div
+                            class="section-heading"*ngIf="supplierJsonData.supplierDirectorsDetails?.length>
+                            0" >
+                            <h6 style="margin: 0;">Authorized Signatory Details</h6>
+                        </div>
+
+                        <!-- row-10 -->
+                        <ng-container *ngFor="let director of
+                            supplierJsonData.supplierDirectorsDetails; index
+                            as idx; last as
+                            last">
+                            <div class="row">
+                                <div class="form-group col-lg-4 col-md-4"
+                                    style="margin-top:
+                                    0.3rem!important;">
+                                    <label for="" style="margin-bottom:
+                                        0.3rem!important;">
+                                        Name<span class="star_class">*</span></label>
+                                    <input class="form-control" type="text"
+                                        placeholder="Enter Authorized
+                                        Signatory Name"
+                                        [(ngModel)]="director.directorName"
+                                        autocomplete="off" />
+                                </div>
+                                <div class=" form-group col-lg-4 col-md-4"
+                                    style="margin-top: 0.3rem!important;">
+                                    <label for="" style="margin-bottom:
+                                        0.3rem!important;">
+                                        Contact Number<span
+                                            class="star_class">*</span></label>
+                                    <input class="form-control" type="text"
+                                        placeholder="Enter Authorized
+                                        Signatory Contact"
+                                        [(ngModel)]="director.mobileNo"
+                                        maxlength="10"
+                                        minlength="10" autocomplete="off" />
+                                </div>
+                                <div class="form-group col-lg-4 col-md-4"
+                                    style="margin-top:
+                                    0.3rem!important;">
+                                    <label for="" style="margin-bottom:
+                                        0.3rem!important;">Email
+                                        Address<span class="star_class">*</span></label>
+                                    <input class="form-control" type="text"
+                                        [(ngModel)]="director.email"
+                                        placeholder="Enter
+                                        Director Email Address"
+                                        autocomplete="off" />
+                                </div>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</p-dialog>

@@ -1,0 +1,278 @@
+<app-dashboard-sidemenu></app-dashboard-sidemenu>
+
+<!-- Start Main Content Wrapper Area -->
+<div class="main-content d-flex flex-column">
+
+    <app-dashboard-navbar></app-dashboard-navbar>
+
+    <!-- Breadcrumb Area -->
+    <div class="breadcrumb-area" *ngIf="this.roleName == 'Supplier'">
+        <h1>{{breadcrumb[0].title}}</h1>
+        <ol class="breadcrumb">
+            <li class="item"><a routerLink="/">Home</a></li>
+            <li class="item"><a routerLink="dashboard">{{breadcrumb[0].subTitle}}</a></li>
+            <li class="item">{{breadcrumb[0].title}}</li>
+        </ol>
+    </div>
+    <div class="breadcrumb-area" *ngIf="this.roleName == 'User' || this.roleName
+        == 'Admin'">
+        <h1>{{breadcrumb[1].title}}</h1>
+        <ol class="breadcrumb">
+            <li class="item"><a routerLink="/">Home</a></li>
+            <li class="item"><a routerLink="dashboard">{{breadcrumb[1].subTitle}}</a></li>
+            <li class="item">{{breadcrumb[1].title}}</li>
+        </ol>
+    </div>
+    <!-- End Breadcrumb Area -->
+
+    <!-- Start -->
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-6 offset-lg-0 offset-md-3
+            offset-sm-3">
+            <div class="stats-card-box">
+                <h3>{{supplierEnquiryData[0]?.totalEnquiry}}</h3>
+                <span class="sub-title">Total Enquiry</span>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="stats-card-box">
+                <h3>{{supplierEnquiryData[0]?.replyEnquiry}}</h3>
+                <span class="sub-title">Answered Enquiry</span>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="stats-card-box">
+                <h3>{{supplierEnquiryData[0]?.pendingEnquiry}}</h3>
+                <span class="sub-title">Pending Enquiry</span>
+            </div>
+        </div>
+
+    </div>
+    <!-- End -->
+
+    <!-- Start -->
+    <div class="row">
+        <div class="col-lg-6 col-md-12">
+            <div class="earnings-box">
+                <h3>Enquiry Details</h3>
+                <ul *ngFor="let data of supplierEnquiryData">
+                    <li class="single-li">
+                        <ul>
+                            <li>Enquiry date: {{data.enquiryDate | date }}</li>
+                            <li class="price">Validity date: <strong>{{data.enquiryValidityDate
+                                    | date }}</strong></li>
+                            <li *ngIf="roleName == 'Supplier'"
+                                [ngStyle]="{'font-weight'
+                                : data.isRead ? '400' : '800'}">#{{data.enquiryNo}}</li>
+                            <li *ngIf="roleName == 'User'"
+                                [ngStyle]="{'font-weight'
+                                : data.isRead ? '800' : '400'}">#{{data.enquiryNo}}</li>
+                            <li *ngIf="!disableRemark">Supplier Name : <strong>{{data.supplierName}}</strong></li>
+                            <li *ngIf="disableRemark">User Name : <strong>{{data.userName}}</strong></li>
+                            <li *ngIf="disableRemark">Mobile No. : <strong>{{data.mobileNo}}</strong></li>
+                            <li *ngIf="roleName == 'User'"><p-button
+                                    [label]="data.isRead ? 'Unread' : 'Read'"
+                                    [styleClass]="data.isRead ?
+                                    'p-button-warning' : 'p-button-success'"></p-button></li>
+                            <li *ngIf="roleName == 'Supplier'"><p-button
+                                    [severity]="danger" [label]="data.isRead ?
+                                    'Read' : 'Unread'" [styleClass]="data.isRead
+                                    ? 'p-button-success' : 'p-button-warning'"></p-button></li>
+                        </ul>
+
+                        <div class="d-flex" style="align-items: center;">
+                            <span><button class="submit_btn" type="button"
+                                    (click)="openModel(data)">View Details</button></span>
+                            <span class="p-button-icon bx bxs-lock mx-2"
+                                style="font-size: 18px; display: flex;
+                                justify-content: end;" *ngIf="data.isClose"
+                                aria-hidden="true"></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-12">
+            <div class="earnings-box">
+                <h3>Enquiry #{{enquiryNo}} <span *ngIf="roleName == 'User' &&
+                        supplierName">({{supplierName}})</span></h3>
+                <ul *ngIf="assignSupplierData?.length>0">
+                    <li *ngFor="let enquiry of this.assignSupplierData">
+                        <ul>
+                            <li class="price">{{enquiry.itemName}}</li>
+                            <li>quantity : {{enquiry.quantity}}</li>
+                            <li>unit name : {{enquiry.unitName}}</li>
+                            <button pButton style="height: 1.2rem!important;"
+                                pRipple type="button" icon="bx bx-show"
+                                (click)="openModel1(enquiry)"  (click)="getItemDetails(enquiry.itemId)"
+                                class="p-button-rounded p-button-primary
+                                p-button-text pt-2"></button>
+                                <a href="{{enquiry.drawingDetails[0].drawingUpload}}" *ngIf="enquiry.drawingDetails[0].drawingUpload" style="text-decoration: none;" download="{{enquiry.drawingDetails[0].drawingUpload}}" target="_blank">
+                                    <button pButton pRipple type="button" icon="bx bx-download"  style="height: 1.2rem!important;"
+                                    class="p-button-rounded p-button-primary p-button-text"></button></a>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- End -->
+
+    <div class="flex-grow-1"></div>
+
+    <app-copyrights></app-copyrights>
+
+</div>
+<!-- End Main Content Wrapper Area -->
+
+<p-dialog [header]="this.header" [(visible)]="display" [modal]="true"
+    [style]="{width: '85vw'}" [draggable]="false" [resizable]="false">
+    <div class="add-listings-box-breakup extra-wallet" style="align-items: center;">
+        <h6>Part Details</h6>
+        <p-table class="mb-2" #dt4 [value]="itemDetails"
+        dataKey="id" responsiveLayout="scroll">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>S.No.</th>
+                    <th>Part Number</th>
+                    <th>Quantity</th>
+                    <th>Material of Construction</th>
+                    <th>Raw Part Weight (Kg)</th>
+                    <th>Finish Part Weight (Kg)</th>
+                    <th>Engineering Drawings</th>
+                    <th>Other Documents</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-customer let-i="rowIndex">
+                <tr>
+                    <td>{{i+1}}</td>
+                    <td ><span>{{customer?.itemName}}</span></td>
+                    <td>
+                        <span class="image-text">{{extraInfo.quantity}}</span>
+                    </td>
+                    <td>
+                        <span class="image-text">{{customer?.materialofconstructionList}}</span>
+                    </td>
+                    <td >
+                        <span class="image-text">{{customer?.rawPartWeight}}kg</span>
+                    </td>
+                    <td >
+                        <span class="image-text">{{customer?.finishPartWeight}}kg</span>
+                    </td>
+                    <td class="text-center" style="cursor: pointer;">
+                        <span class="image-text"><i class="bx bx-image"  (click)="showImagePreview(customer?.itemId , 'engg')"></i></span>
+                    </td>
+                    <td class="text-center" style="cursor: pointer;">
+                        <span class="image-text"><i class="bx bx-image"  (click)="showImagePreview(customer?.itemId , 'other')"></i></span>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5">No item found.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <div class="rfqReply">
+            <h6>Add Cost Breakup Details</h6>
+            <div class="form-group d-flex">
+                <ng-container *ngIf="disableRemark">
+                    <div style="width: 100%;">
+                        <input  #uploadSupplierDoc (change)="getMultipleImages($event)" class="form-control"   type="file">
+                    </div>
+                </ng-container>
+                <a href="{{documentPath}}" *ngIf="!disableRemark && documentPath" style="text-decoration: none;" download="{{documentPath}}" target="_blank"><button pButton pRipple type="button" icon="bx bx-download" class="p-button-rounded p-button-primary p-button-text"></button></a>
+                <select [disabled]="!disableRemark" class="form-control form-select mx-2" [(ngModel)]="extraInfo.taxId" id="status" placeholder="Select Tax Id" [disabled]="!disableRemark"   required>
+                    <option value="0">Select tax Id</option>
+                    <ng-container *ngFor="let status of tax_dropdown">
+                        <option [value]="status.id">{{status.value}}</option>
+                    </ng-container>
+                </select>
+                <input type="text" class="form-control" [disabled]="!disableRemark" class="form-control" [(ngModel)]="extraInfo.hsnName" placeholder="Enter HSN">
+            </div>
+        </div>
+        <p-table #dt3 [value]="costBreakupData"
+            dataKey="id" responsiveLayout="scroll" [rows]="10"
+            [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10,20,30,50]"
+            [paginator]="false" currentPageReportTemplate="Showing
+            {first} to {last} of {totalRecords} entries"
+            [globalFilterFields]="['name','country.name','status']">
+            <ng-template pTemplate="header">
+                <tr style="width: 100%;">
+                    <th style="min-width: 70px;">S. No.</th>
+                    <th style="min-width: 180px;">Cost Breakup Name</th>
+                    <th>Amount</th>
+                    <th>Supplier Remarks</th>
+                    <th>Checker Remarks</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-customer let-i="rowIndex">
+                <tr>
+                    <td style="min-width: 70px;">{{i+1}}</td>
+                    <td style="min-width: 180px;">
+                        <span>{{customer.costBreakupName}}</span>
+                    </td>
+                    <td>
+                        <p-inputNumber [(ngModel)]="customer.amount" min="1.00" [disabled]="!disableRemark" mode="currency" inputId="currency-india" currency="INR" currencyDisplay="code" locale="en-IN">
+                        </p-inputNumber>
+                    </td>
+                    <td>
+                        <span class="form-group"><input [disabled]="!disableRemark" type="text" class="form-control" [(ngModel)]="customer.checkerRemark" style="height:30px;"></span>
+                    </td>
+                    <td>
+                        <span class="form-group"><input [disabled]="disableRemark" type="text" class="form-control" [(ngModel)]="customer.remark" style="height:30px;"></span>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <div class="extra-wallet" >
+            <div class="row form-group">
+                <div class="col-lg-4 col-md-12" style="height: 100%;">
+                    <label>Payment Terms <span class="star_class">*</span></label>
+                    <textarea name="" id="" [disabled]="!disableRemark" cols="100" rows="3" [(ngModel)]="extraInfo.paymentTerms" class="form-control" placeholder="Enter Payment Terms"></textarea>
+                </div>
+                <div class="col-lg-4 col-md-12" style="height: 100%;">
+                    <label>Delivery Notes <span class="star_class">*</span></label>
+                    <textarea name="" id="" [disabled]="!disableRemark" cols="100" rows="3" [(ngModel)]="extraInfo.deliveryNotes" class="form-control" placeholder="Enter Delivery Notes"></textarea>
+                </div>
+                <div class="col-lg-4 col-md-12" style="height: 100%;">
+                    <label>Other Remarks</label>
+                    <textarea name="" id="" [disabled]="!disableRemark" cols="100" rows="3" class="form-control" [(ngModel)]="extraInfo.otherRemark" placeholder="Enter Other Remarks"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="add-listings-btn col-lg-4 col-md-6" *ngIf="!isClose">
+            <div class="form-group">
+                <button type="submit" class="submit_btn"
+                    (click)="submitCostData()">Submit</button>
+            </div>
+        </div>
+    </div>
+</p-dialog>
+
+
+<p-dialog header="Engineering Drawing" [(visible)]="displayDrawing" [modal]="true" [draggable]="false" [resizable]="false">
+    <ng-container *ngFor="let drawing of editUploadedDrawing; let index = index">
+        <span style="font-size: 12px;" class="mx-2">{{index+1}}.</span><a style="font-size: 12px;" [href]="drawing.engineeringDrawing"
+        [download]="drawing.engineeringDrawing" target="_blank"><img
+            [src]="drawing.engineeringDrawing" style="width: 100px;"
+            alt=""> Engg Drawing {{index+1}}</a>
+    </ng-container>
+</p-dialog>
+
+
+<div class="engg-drawings">
+    <p-dialog header="Other Drawing" [breakpoints]="{'960px': '75vw', '640px': '90vw'}" [draggable]="false" [modal]="true" [(visible)]="displayOtherDialog">
+        <p-carousel [value]="otherDocumentList">
+            <ng-template let-drawing pTemplate="item">
+                <a [href]="drawing.value" [download]="drawing.value" target="_blank"><img [src]="drawing.value" style="width: 120px;" alt=""></a>
+            </ng-template>
+        </p-carousel>
+    </p-dialog>
+</div>

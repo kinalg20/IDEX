@@ -1,0 +1,235 @@
+@import "../../../pages/dashboard/dashboard.component.scss";
+
+.add-listings-box1 {
+    margin-bottom: 30px;
+    background-color: var(--whiteColor);
+    box-shadow: 1px 5px 24px 0 rgba(68, 102, 242, .05);
+    border-radius: 5px;
+    padding: 10px 25px 10px 25px;
+
+    h3 {
+        padding: 10px 25px 10px;
+        border-bottom: 1px dashed #eeeeee;
+
+        font: {
+            size: 17px;
+            weight: 600;
+        }
+
+        margin: {
+            bottom: 25px;
+            left: -25px;
+            right: -25px;
+        }
+
+        ;
+    }
+
+    // form {
+        .form-group {
+            margin: 10px 0;    
+            .form-control {
+                border: 1px solid #d5d5d5 !important;
+                border-radius: 5px;
+                background-color: #f9f9f9 !important;
+                padding-top: 6px;
+            }
+        }
+
+        input , select{
+            height: 35px;
+        }
+
+        label{
+            display: block;
+            margin-bottom: 5px;
+            color: var(--blackColor);
+            position: relative;
+            padding-left: 2px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .radio-buttons{
+            display: flex;
+            justify-content: space-between;
+            width: 100px;
+            .radio-button{
+                display: flex;
+                align-items: center;
+                margin: 5px 0 0;
+                input{
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+    // }
+}
+
+.add-listings-btn {
+
+    // margin-bottom: 30px;
+    button {
+        display: inline-block;
+        padding: 8px 30px;
+        box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
+        border-radius: 5px;
+        transition: var(--transition);
+        border: none;
+        margin: 25px 0;
+        font: {
+            size: var(--fontSize);
+            weight: 600;
+        }
+
+        ;
+
+        &:hover {
+            background-color: #3b99ca;
+            color: var(--whiteColor);
+        }
+    }
+
+    .reset_btn{
+        background-color: var(--optionalColor);
+        color: var(--whiteColor);
+    }
+
+    .submit_btn{
+        background-color: var(--mainColor);
+        color: var(--whiteColor);
+    }
+
+}
+.cost-breakup {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 0 10px;
+    // justify-content: space-between;
+    input{
+        margin:0 8px 0 5px;
+    }
+}
+
+.cost-breakup-div{
+    display: flex;
+    // justify-content: space-between;
+    width: 900px;
+    flex-wrap: wrap;
+}
+
+.alert{
+    padding: 10px;
+    margin-top: 5px;
+}
+
+
+.star_class{
+    color: red;
+}
+
+.submit_btn{
+    margin-top: 0!important;
+}
+
+/* Max width 767px */
+@media only screen and (max-width: 767px) {
+
+    .add-listings-box {
+        padding: 0 20px 0 20px;
+
+        h3 {
+            padding: 15px 20px;
+
+            margin: {
+                bottom: 20px;
+                left: -20px;
+                right: -20px;
+            }
+
+            ;
+        }
+
+        .form-group {
+            .form-control {
+                height: 35px;
+                font-size: 13.5px;
+
+                padding: {
+                    right: 10px;
+                    left: 10px;
+                }
+
+                ;
+            }
+
+            select {
+                height: 35px;
+                line-height: 45px;
+                font-size: 13.5px;
+
+                padding: {
+                    right: 10px;
+                    left: 10px;
+                }
+            }
+        }
+    }
+
+}
+
+/* Min width 576px to Max width 767px */
+@media (max-width: 767px) and (min-width: 425px)  {
+    .add-listings-box {
+        button {
+            margin-top: 0;
+        }
+    }
+
+    .form-group {
+        label {
+            margin-bottom: 3px!important;
+        }
+    }
+
+    .submit-toggle , .submit_btn{
+        margin-top: 0!important;
+    }
+}
+
+/* Min width 768px to Max width 991px */
+@media (min-width: 768px) and (max-width: 991px) {
+
+    .add-listings-box {
+        button {
+            margin-top: 0;
+        }
+    }
+
+    .submit-toggle , .submit_btn{
+        margin-top: 13px;
+    }
+}
+
+::ng-deep{
+    .p-carousel-item , .p-carousel-item ,.p-carousel-item{
+        text-align: center!important;
+    }
+
+    .p-datatable .p-datatable-thead > tr > th{
+        white-space: nowrap;
+    }
+    
+
+    .submit-toggle{
+        margin-top: 45px;
+    }
+}
+
+.final_submit{
+    margin: 0 10px!important;
+}
+
+        

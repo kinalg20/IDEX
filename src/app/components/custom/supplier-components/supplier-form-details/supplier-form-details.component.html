@@ -1,0 +1,1026 @@
+<app-dashboard-sidemenu></app-dashboard-sidemenu>
+
+<!-- Start Main Content Wrapper Area -->
+<div class="main-content d-flex flex-column">
+
+    <app-dashboard-navbar></app-dashboard-navbar>
+
+    <!-- Breadcrumb Area -->
+    <div class="breadcrumb-area" *ngFor="let Content of breadcrumb;">
+        <h1>{{Content.title}}</h1>
+        <ol class="breadcrumb">
+            <li class="item"><a routerLink="/">Home</a></li>
+            <li class="item"><a routerLink="/dashboard">{{Content.subTitle}}</a></li>
+            <li class="item">{{Content.title}}</li>
+        </ol>
+    </div>
+    <!-- End Breadcrumb Area -->
+
+    <!-- supplier registration form -->
+    <form [formGroup]="supplierFormControl" autocomplete="false"
+        (ngSubmit)="registerSupplier()"
+        #register="ngForm">
+        <!-- Supplier / Vendor Master - Supplier Master -->
+        <!-- row-1 -->
+
+        <div class="row" *ngIf="(this.changeRequest.includes('Supplier Name')) && readonlyVariable || readonlyVariable && updateFieldFlag || showFieldFlag">
+            <div class="section-heading">
+                <h5>Supplier / Vendor Master - Supplier Master</h5>
+            </div>
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="first-name">Supplier Name<span
+                        class="star_class">*</span></label>
+                <input type="text" class="form-control" placeholder="Enter Supplier Name"
+                    [readonly]="!(this.changeRequest.includes('Supplier Name')) && !readonlyVariable || (!readonlyVariable && !updateFieldFlag)"
+                    [class.is-invalid]="register.submitted &&
+                    supplierFormControl.get('supplierName')?.invalid ||
+                    supplierFormControl.get('supplierName')?.invalid &&
+                    supplierFormControl.get('supplierName')?.touched"
+                    formControlName="supplierName" autocomplete="off"
+                    minlength="3" maxlength='35' required />
+                <div class="invalid-feedback">
+                    Name is Required
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-12 form-group">
+                <label for="address">Address with Pincode<span
+                        class="star_class">*</span></label>
+                <textarea name="" id="" cols="1" rows="1"
+                [readonly]="!(this.changeRequest.includes('Supplier Name')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag"
+                    [class.is-invalid]="register.submitted &&
+                    supplierFormControl.get('supplierAddress')?.invalid ||
+                    supplierFormControl.get('supplierAddress')?.invalid &&
+                    supplierFormControl.get('supplierAddress')?.touched"
+                    placeh older="Enter Your Address"
+                    formControlName="supplierAddress" class="form-control"
+                    type="text" required></textarea>
+                <div class="invalid-feedback"> Address is Required </div>
+            </div>
+
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="country">Country<span class="star_class">*</span></label>
+                <p-dropdown [options]="countryDropdown"
+                [class.is-invalid]="register.submitted &&
+                supplierFormControl.get('countryId')?.invalid ||
+                supplierFormControl.get('countryId')?.invalid &&
+                supplierFormControl.get('countryId')?.touched"
+                (onChange)="getStateDropdown($event)"
+                [readonly]="!(this.changeRequest.includes('Supplier Name')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag" [style]="{width : '100%', height
+                :'35px'}" optionLabel="value" optionValue="id"
+                formControlName="countryId"></p-dropdown>
+                <div class="invalid-feedback"> Country is Required </div>
+            </div>
+            <!-- </div> -->
+
+            <!-- row-2 -->
+            <!-- <div class="row"> -->
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="state">State<span class="star_class">*</span></label>
+                <p-dropdown [options]="stateDropdown"
+                    [class.is-invalid]="register.submitted &&
+                    supplierFormControl.get('stateId')?.invalid ||
+                    supplierFormControl.get('stateId')?.invalid &&
+                    supplierFormControl.get('stateId')?.touched"
+                    (change)="ShowOtherState($event)"
+                    [readonly]="!(this.changeRequest.includes('Supplier Name')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag" [style]="{width : '100%', height
+                    :'35px'}" optionLabel="value" optionValue="id"
+                    formControlName="stateId"></p-dropdown>
+                <div class="invalid-feedback"> State is Required </div>
+            </div>
+            <div class="col-lg-4 col-md-12 form-group"
+                *ngIf="showOtherCityBoolean">
+                <label for="">Other State<span class="star_class">*</span></label>
+                <input type="text" class="form-control"
+                    formControlName="otherState"
+                    [readonly]="!(this.changeRequest.includes('Supplier Name')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag"
+                    [class.is-invalid]="register.submitted &&
+                    supplierFormControl.get('otherState')?.invalid ||
+                    supplierFormControl.get('otherState')?.invalid &&
+                    supplierFormControl.get('otherState')?.touched"
+                    placeholder="Enter Other State">
+                <div class="invalid-feedback"> Other State is Required
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="city">Purpose<span class="star_class">*</span></label>
+                <p-dropdown [options]="purposeDropdown"
+                    [class.is-invalid]="register.submitted &&
+                    supplierFormControl.get('purposeId')?.invalid ||
+                    supplierFormControl.get('purposeId')?.invalid &&
+                    supplierFormControl.get('purposeId')?.touched"
+                    (change)="showState($event ,'')"
+                    [readonly]="!(this.changeRequest.includes('Supplier Name')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag" [style]="{width : '100%', height
+                    :'35px'}" optionLabel="value" optionValue="id"
+                    formControlName="purposeId"></p-dropdown>
+                <div class="invalid-feedback"> Purpose is Required </div>
+            </div>
+            <div class="col-lg-4 col-md-12 form-group"
+                *ngIf="showStateDropdown">
+                <label for="city">Service Provided<span class="star_class">*</span></label>
+                <input class="form-control" formControlName="services" [readonly]="!(this.changeRequest.includes('Supplier Name')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag"
+                    [class.is-invalid]="register.submitted &&
+                    supplierFormControl.get('services')?.invalid ||
+                    supplierFormControl.get('services')?.invalid &&
+                    supplierFormControl.get('services')?.touched"
+                    autocomplete="off" placeholder="Services"
+                    [required]="showStateDropdown" />
+                <div class="invalid-feedback"> Service is Required </div>
+            </div>
+            <!-- </div> -->
+
+            <!-- row-3 -->
+            <!-- <div class="row"> -->
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="city">In case of Intercompany correct Co. No. In GL off</label>
+                <input class="form-control"
+                [readonly]="!(this.changeRequest.includes('Supplier Name')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag"
+                    formControlName="interCompany"
+                    autocomplete="off" placeholder="Enter CO No." />
+                <div class="error" *ngIf="register.submitted &&
+                    supplierFormControl.get('interCompany')?.invalid
+                    ||
+                    supplierFormControl.get('interCompany')?.invalid
+                    &&
+                    supplierFormControl.get('interCompany')?.touched">
+                    inter company CorrectCONo is Required </div>
+            </div>
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="credit">Payment Terms<span class="star_class">*</span></label>
+                <input class="form-control" formControlName="payTermsId"
+                    [class.is-invalid]="register.submitted &&
+                    supplierFormControl.get('payTermsId')?.invalid ||
+                    supplierFormControl.get('payTermsId')?.invalid &&
+                    supplierFormControl.get('payTermsId')?.touched"
+                    autocomplete="off" placeholder="Enter Payment Terms"
+                    [readonly]="!(this.changeRequest.includes('Supplier Name')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag"
+                    />
+                <div class="invalid-feedback"> Payment Terms is Required
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="tds-applicable">TDS Applicable<span
+                        class="star_class">*</span></label>
+                <p-dropdown [options]="tdsApplicable"
+                    [class.is-invalid]="register.submitted &&
+                    supplierFormControl.get('tdsApplicable')?.invalid ||
+                    supplierFormControl.get('tdsApplicable')?.invalid &&
+                    supplierFormControl.get('tdsApplicable')?.touched"
+                    [readonly]="!(this.changeRequest.includes('Supplier Name')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag" [style]="{width : '100%', height
+                    :'35px'}" optionLabel="name" optionValue="value"
+                    formControlName="tdsApplicable"></p-dropdown>
+                <div class="invalid-feedback"> Please Select TDS yes/no</div>
+            </div>
+            <!-- </div> -->
+
+            <!-- row-4 -->
+            <div class="col-lg-4 col-md-12 form-group" *ngIf="!organizationProfileUrl">
+                <label for="">Organization Profile</label>
+                <input type="file" accept="image/jpeg, image/png ,
+                    application/jpeg" class="form-control" [class.is-invalid]="register.submitted &&
+                    supplierFormControl.get('documentsUploadPath')?.invalid ||
+                    supplierFormControl.get('documentsUploadPath')?.invalid &&
+                    supplierFormControl.get('documentsUploadPath')?.touched"
+                    (change)="upload_doc($event, 'organization_profile')" required>
+                <div class="invalid-feedback"> Please Upload Organization Profile</div>
+            </div>
+            <div class="col-lg-4 col-md-12 form-group" *ngIf="organizationProfileUrl">
+                <label for="">Organization Profile</label><br>
+                <span class="form-control" style="display: flex; justify-content: space-between;"><a [href]="organizationProfileUrl" target="_blank" [download]="organizationProfileUrl" style="cursor: pointer;">Preview</a><span style="font-size: 18px; margin-left: 5px; cursor: pointer;" 
+                        aria-hidden="true" (click)="showImageUploadInput('organizationProfile')" *ngIf="(this.changeRequest.includes('Supplier Name')) && readonlyVariable || readonlyVariable && updateFieldFlag">&times;</span></span>
+            </div>
+
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="email">Whether Domestic or Foreign<span
+                        class="star_class">*</span></label>
+                <span class="form-control">{{supplierFormControl.get('isDomestic').value ? 'Foreign' : 'Domestic'}}</span>
+            </div>
+            <div class="col-lg-4 col-md-12 form-group" *ngIf="showCurrency">
+                <label for="email">If Foreign give Currency<span
+                        class="star_class">*</span></label>
+                <input class="form-control" formControlName="currency"
+                [readonly]="!(this.changeRequest.includes('Supplier Name')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag"
+                    id="currency" [class.is-invalid]="register.submitted &&
+                    supplierFormControl.get('currency')?.invalid"
+                    placeholder="Enter Currency Type"
+                    [readonly]="!this.changeRequest.includes('Supplier Name')"
+                    />
+                <div class="invalid-feedback"> Please Enter Currency</div>
+            </div>
+        </div>
+
+
+        <!-- Tax Registration Details -->
+        <!-- row-5 -->
+        <ng-container *ngIf="(this.changeRequest.includes('Tax Details')) && readonlyVariable || readonlyVariable && updateFieldFlag || showFieldFlag">
+            <div class="section-heading">
+                <h5>Tax Registration Details</h5>
+            </div>
+            <div class="row" *ngIf="!showCurrency">
+                <div class="col-lg-4 col-md-12 form-group">
+                    <label for="city">GSTIN<span class="star_class">*</span></label>
+                    <input class="form-control" formControlName="gstinNo"
+                        style="text-transform:
+                        uppercase;" [readonly]="!(this.changeRequest.includes('Tax Details')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag"
+                        placeholder="Enter GSTIN" minlength="15"
+                        maxlength="15" [class.is-invalid]="register.submitted &&
+                        supplierFormControl.get('gstinNo')?.invalid ||
+                        supplierFormControl.get('gstinNo')?.touched &&
+                        supplierFormControl.get('gstinNo')?.invalid"
+                        autocomplete="off" [required]="showCurrency"/>
+                    <div class="invalid-feedback"
+                        *ngIf="supplierFormControl.controls.gstinNo?.errors?.required">
+                        Please Enter GSTIN No.</div>
+                    <div class="invalid-feedback"
+                        *ngIf="supplierFormControl.controls.gstinNo?.errors?.pattern">Enter
+                        Valid GSTIN No.</div>
+                </div>
+                <div class="col-lg-4 col-md-12 form-group">
+                    <label for="city">GSTIN Date<span class="star_class">*</span></label>
+                    <p-calendar formControlName="gstinDate"
+                        [disabled]="true"
+                        placeholder="Select GSTIN Date" [readonlyInput]="true"
+                        [maxDate]="myDate"
+                        [showIcon]="true"
+                        [class.is-invalid]="register.submitted &&
+                        supplierFormControl.get('gstinDate')?.invalid ||
+                        supplierFormControl.get('gstinDate')?.invalid &&
+                        supplierFormControl.get('gstinDate')?.touched"
+                        [required]="showCurrency"></p-calendar>
+                    <div class="invalid-feedback"> Please Select Date</div>
+                </div>
+                <div class="col-lg-4 col-md-12 form-group">
+                    <label for="city">PAN<span class="star_class">*</span></label>
+                    <input class="form-control" formControlName="panNo"
+                        style="text-transform: uppercase;"
+                        [readonly]="!(this.changeRequest.includes('Tax Details')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag"
+                        minlength="10" maxlength="10"
+                        [class.is-invalid]="register.submitted &&
+                        supplierFormControl.get('panNo')?.invalid ||
+                        supplierFormControl.get('panNo')?.touched &&
+                        supplierFormControl.get('panNo')?.invalid"
+                        placeholder="Enter PAN"
+                        autocomplete="off" [required]="showCurrency" />
+                    <div class="invalid-feedback"
+                        *ngIf="supplierFormControl.controls.panNo?.errors?.required">
+                        Please Enter PAN No.</div>
+                    <span class="error"
+                        *ngIf="supplierFormControl.controls.panNo?.errors?.pattern">Enter
+                        Valid PAN No.</span>
+                </div>
+            </div>
+    
+            <!-- row-6 -->
+            <div class="row">
+                <div class="col-lg-4 col-md-12 form-group">
+                    <label for="city">TAN</label>
+                    <input class="form-control" formControlName="tanNo"
+                        placeholder="Enter TAN"
+                        [readonly]="!(this.changeRequest.includes('Tax Details')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag"
+                        maxlength="10" autocomplete="off" />
+                    <div class="error" *ngIf="register.submitted &&
+                        supplierFormControl.get('tanNo')?.invalid ||
+                        supplierFormControl.get('tanNo')?.invalid &&
+                        supplierFormControl.get('tanNo')?.touched">
+                        Please Enter Valid TAN
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-12 form-group">
+                    <label for="email">MSME Applicable<span class="star_class">*</span></label><br>
+                    <span class="form-control">{{supplierFormControl.get('msmeApplicable')?.value ? 'Yes' : 'No'}}</span>
+                    <div class="invalid-feedback"> MSME is Required </div>
+                </div>
+            </div>
+        </ng-container>
+
+
+
+        <!-- Vendor Contact Details -->
+
+        <ng-container *ngIf="(this.changeRequest.includes('Contact Details')) && readonlyVariable || readonlyVariable && updateFieldFlag || showFieldFlag">
+            <div class="section-heading">
+                <h5>Supplier Contact Details</h5>
+            </div>
+    
+            <!-- row-7 -->
+            <div class="row">
+                <div class="col-lg-3 form-group">
+                    <label for="contact">Contact Person<span class="star_class">*</span></label>
+                    <input class="form-control"
+                        [readonly]="!(this.changeRequest.includes('Contact Details')) && !readonlyVariable"
+                        [class.is-invalid]="register.submitted &&
+                        supplierFormControl.get('contactPerson')?.invalid ||
+                        supplierFormControl.get('contactPerson')?.invalid &&
+                        supplierFormControl.get('contactPerson')?.touched"
+                        placeholder="Enter Contact Person"
+                        [readonly]="!(this.changeRequest.includes('Contact
+                        Details'))
+                        && !readonlyVariable"
+                        formControlName="contactPerson"
+                        autocomplete="off" required/>
+                    <div class="invalid-feedback">
+                        Contact Person is Required
+                    </div>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label for="tel">Contact Number<span class="star_class">*</span></label>
+                    <input class="form-control"
+                        (keydown)="_utility.inputMobile($event)"
+                        formControlName="mobileNo"
+                        [readonly]="!(this.changeRequest.includes('Contact Details')) && !readonlyVariable
+                        && !readonlyVariable"
+                        [class.is-invalid]="register.submitted &&
+                        supplierFormControl.get('mobileNo')?.invalid ||
+                        supplierFormControl.get('mobileNo')?.invalid &&
+                        supplierFormControl.get('mobileNo')?.touched"
+                        placeholder="Enter Contact Number" minlength="10"
+                        maxlength="15"
+                        autocomplete="off" required/>
+                    <div class="invalid-feedback"
+                        *ngIf="this.supplierFormControl.get('mobileNo').errors?.required">
+                        Enter Contact Number
+                    </div>
+                    <div class="error"
+                        *ngIf="this.supplierFormControl.get('mobileNo').errors?.minlength">
+                        Enter Contact Number with Country Code Atleast 10 digit
+                    </div>
+                    <div class="error"
+                        *ngIf="this.supplierFormControl.get('mobileNo').errors?.pattern">
+                        Enter Valid Mobile Number </div>
+    
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label for="fax">Alternate Number</label>
+                    <input class="form-control" type="text"
+                        [readonly]="!(this.changeRequest.includes('Contact Details')) && !readonlyVariable"
+                        (keydown)="_utility.inputMobile($event)"
+                        formControlName="faxNo" placeholder="Enter Alternate Number"
+                        autocomplete="off" minlength="10" maxlength="15" />
+                    <div class="error" *ngIf="register.submitted &&
+                        supplierFormControl.get('faxNo')?.invalid ||
+                        supplierFormControl.get('faxNo')?.invalid &&
+                        supplierFormControl.get('faxNo')?.touched">
+                        Enter Contact Number
+                    </div>
+                    <div class="error"
+                        *ngIf="this.supplierFormControl.get('faxNo').errors?.minlength">
+                        Enter Contact Number with Country Code Atleast 10 digit
+                    </div>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label>Email Address<span class="star_class">*</span></label>
+                    <div class="form-control">
+                        <span>{{supplierFormControl.value.emailAddress}}</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label>Alternet Email Address</label>
+                    <input type="text" class="form-control" placeholder="Enter Alternet Email Address"
+                        [readonly]="!(this.changeRequest.includes('Contact Details')) && !readonlyVariable" formControlName="alternateEmail">
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- Vendor Bank Details -->
+
+        <ng-container *ngIf="(this.changeRequest.includes('Bank Details')) && readonlyVariable  || readonlyVariable && updateFieldFlag || showFieldFlag">
+            <div class="section-heading">
+                <h5>Bank Details</h5>
+            </div>
+            <!-- row-8-->
+            <div class="row">
+                <div class="col-lg-3 form-group">
+                    <label for="ifscCode">Account Type<span class="star_class">*</span></label><br>
+                    <div style="display: flex;" *ngIf="!showFieldFlag">
+                        <div style="display: flex; align-items: center; margin: 0 5px;">
+                            <input type="radio" value="C"
+                                formControlName="accountType" placeholder="Enter Bank Address" 
+                                autocomplete="off" /> <span style="margin: 0 2px;">Current
+                                Account</span>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <input type="radio"
+                                formControlName="accountType" value="S"
+                                placeholder="Enter Bank Address"
+                                [class.is-invalid]="register.submitted &&
+                                supplierFormControl.get('accountType')?.invalid"
+                                autocomplete="off" /><span style="margin: 0 2px;">Saving
+                                Account</span>
+                        </div>
+                    </div>
+    
+                    <div *ngIf="showFieldFlag">
+                        <span class="form-control">{{supplierFormControl.get('accountType').value == 'S' ? 'Saving Account' : 'Current Account'}}</span>
+                    </div>
+                    <div class="error" *ngIf="register.submitted &&
+                        supplierFormControl.get('accountType')?.invalid">Please
+                        select Account Type</div>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label for="bankName">Bank Name<span class="star_class">*</span></label>
+                    <input class="form-control" type="text"
+                        [readonly]="!(this.changeRequest.includes('Bank Details')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag"
+                        formControlName="bankName" placeholder="Enter Bank Name"
+                        [class.is-invalid]="register.submitted &&
+                        supplierFormControl.get('bankName')?.invalid ||
+                        supplierFormControl.get('bankName')?.invalid &&
+                        supplierFormControl.get('bankName')?.touched"
+                        autocomplete="off" />
+                    <div class="invalid-feedback">Please enter bank name</div>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label for="account">Account No.<span class="star_class">*</span></label>
+                    <input class="form-control" type="text"
+                        [readonly]="(this.changeRequest.includes('Bank Details')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag"
+                        (keydown)="_utility.inputMobile($event)"
+                        [class.is-invalid]="register.submitted &&
+                        supplierFormControl.get('accountNo')?.invalid ||
+                        supplierFormControl.get('accountNo')?.touched &&
+                        supplierFormControl.get('accountNo')?.invalid"
+                        formControlName="accountNo" maxlength="25"
+                        minlength="1"
+                        placeholder="Enter Account No."
+                        autocomplete="off" />
+                    <div class="invalid-feedback"
+                        *ngIf="supplierFormControl.get('accountNo')?.errors?.required">Please
+                        Enter Account no</div>
+                    <div class="invalid-feedback"
+                        *ngIf="supplierFormControl.get('accountNo')?.errors?.minlength">Please
+                        Enter Valid Account Number</div>
+    
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label for="ifscCode">IFSC Code or Swift Code <span
+                            class="star_class">*</span></label>
+                    <input class="form-control" type="text"
+                        [readonly]="(this.changeRequest.includes('Bank Details')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag"
+                        [class.is-invalid]="register.submitted &&
+                        supplierFormControl.get('ifscCode')?.invalid ||
+                        supplierFormControl.get('ifscCode')?.touched &&
+                        supplierFormControl.get('ifscCode')?.invalid"
+                        formControlName="ifscCode" placeholder="Enter IFSC Code"
+                        autocomplete="off" />
+                    <div class="invalid-feedback"
+                        *ngIf="supplierFormControl.get('ifscCode')?.errors?.required">Please
+                        enter ifsc code or swift code</div>
+                    <div class="invalid-feedback"
+                        *ngIf="supplierFormControl.get('ifscCode')?.errors?.pattern">Enter
+                        Valid IFSC Code</div>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label for="ifscCode">MICR No.</label>
+                    <input class="form-control" type="text"
+                        [readonly]="(this.changeRequest.includes('Bank Details')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag"
+                        formControlName="micrNo" placeholder="Enter MICR no."
+                        autocomplete="off" />
+                    <div class="error" *ngIf="register.submitted &&
+                        supplierFormControl.get('micrNo')?.invalid ||
+                        supplierFormControl.get('micrNo')?.touched &&
+                        supplierFormControl.get('micrNo')?.invalid">
+                        Enter MICR No.
+                    </div>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label for="ifscCode">Bank Address</label>
+                    <input class="form-control" type="text"
+                        [readonly]="!(this.changeRequest.includes('Bank Details')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag"
+                        formControlName="bankAddress" placeholder="Enter Bank
+                        Address"
+                        autocomplete="off" />
+                    <div class="error" *ngIf="register.submitted &&
+                        supplierFormControl.get('bankAddress')?.invalid ||
+                        supplierFormControl.get('bankAddress')?.touched &&
+                        supplierFormControl.get('bankAddress')?.invalid">
+                        Enter Bank Address
+                    </div>
+                </div>
+                <div class="col-lg-3 form-group" *ngIf="!cancelChequeUrl">
+                    <label for="account">Cancel Cheque<span class="star_class">*</span></label>
+                    <input class="form-control" [class.is-invalid]="register.submitted &&
+                    supplierFormControl.get('cancelledCheque')?.invalid ||
+                    supplierFormControl.get('cancelledCheque')?.touched &&
+                    supplierFormControl.get('cancelledCheque')?.invalid" type="file" required #cancelledCheque (change)="upload_doc($event , 'cancelledCheque')" autocomplete="off" />
+                    <div class="invalid-feedback">Please Upload Cancel Cheque</div>
+                </div>
+                <div class="col-lg-3 col-md-12 form-group" *ngIf="cancelChequeUrl">
+                    <label for="">Cancel Cheque</label><br>
+                    <span class="form-control" style="display: flex; justify-content: space-between; align-items: center;"><a [href]="cancelChequeUrl" target="_blank" [download]="cancelChequeUrl" style="cursor: pointer;">Preview</a><span style="font-size: 18px; margin-left: 5px; cursor: pointer;" 
+                        aria-hidden="true" (click)="showImageUploadInput('cancelledCheque')" *ngIf="(this.changeRequest.includes('Bank Details')) && readonlyVariable || readonlyVariable && updateFieldFlag">&times;</span></span>
+                </div>
+            </div>
+        </ng-container>
+
+
+        <!-- previous 3 years Turnover -->
+        
+        <!-- row-9 -->
+        <ng-container *ngIf="readonlyVariable && updateFieldFlag || (this.changeRequest.includes('Turn Over')) && readonlyVariable || showFieldFlag">
+            <div class="section-heading">
+                <h5>Turnover Details</h5>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 form-group">
+                    <label for="city">Year of Establishment:<span class="star_class">*</span></label>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <p-calendar autocomplete="off" view="year"
+                        formControlName="yearofEstablishment" dateFormat="yy"
+                        [maxDate]="myDate" [readonlyInput]="true" 
+                        [disabled]="true"
+                        [showIcon]="true" [class.is-invalid]="register.submitted
+                        && supplierFormControl.get('yearofEstablishment')?.invalid
+                        || supplierFormControl.get('yearofEstablishment')?.invalid
+                        &&
+                        supplierFormControl.get('yearofEstablishment')?.touched"
+                        placeholder="year of Establishment"></p-calendar>
+                    <div class="invalid-feedback">Please Select year</div>
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class="col-lg-2 form-group" style="display: flex;
+                    justify-content:left; align-items: center; text-align:
+                    center;">
+                    <label for="city">Turnover (Year 1)</label>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <p-calendar autocomplete="off" view="year"
+                        [disabled]="!readonlyVariable && !updateFieldFlag || !(this.changeRequest.includes('Turn Over')) && !readonlyVariable"
+                        (onSelect)="setYears('year1')" dateFormat="yy"
+                        [maxDate]="myDate" [readonlyInput]="true"
+                        [showIcon]="true" formControlName="year1"
+                        placeholder="Please Select Year"></p-calendar>
+                    <div class="error" *ngIf="register.submitted &&
+                        supplierFormControl.get('year1')?.invalid ||
+                        supplierFormControl.get('year1')?.touched &&
+                        supplierFormControl.get('year1')?.invalid">
+                        Please Select Year
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 form-group">
+                    <div style="display: flex; ">
+                        <select class="form-select form-control select-currency"
+                            (change)="setCurrencyId($event , 'year1')"
+                            style="width: 70px; line-height : 22px; display: flex; align-items:
+                            center; border-right: none!important;
+                            border-bottom-right-radius: 0;
+                            border-top-right-radius: 0; background-color:
+                            #f1f1f1!important;"  formControlName="currencyId">
+                            <option value=""></option>
+                            <ng-container *ngFor="let currency of
+                                currencyDropdown">
+                                <option [value]="currency.id">{{currency.value}}</option>
+                            </ng-container>
+                        </select>
+                        <input type="text" class="form-control"
+                            style="border-left:
+                            none!important;
+                            border-top-left-radius: 0;
+                            border-bottom-left-radius: 0"
+                            [readonly]="!readonlyVariable && !updateFieldFlag || !(this.changeRequest.includes('Turn Over')) && !readonlyVariable" 
+                            (keydown)="_utility.inputMobile($event)"
+                            formControlName="turnover1" placeholder="Enter Year Turnover">
+                        <div class="error" *ngIf="register.submitted &&
+                            supplierFormControl.get('turnover1')?.invalid ||
+                            supplierFormControl.get('turnover1')?.touched &&
+                            supplierFormControl.get('turnover1')?.invalid">
+                            Enter Turnover
+                        </div>
+                    </div>
+                </div>
+                <!-- <div style=""> -->
+                <div class="col-lg-2 form-group d-flex align-items-center">
+                    <label for="city" style="margin: 0;">Upload Balance Sheet :</label>
+                </div>
+                <div class="col-lg-2 form-group" *ngIf="!year1Url">
+                    <input class="form-control" type="file" #year1File
+                        accept="image/jpeg, image/png , application/jpeg"
+                        (change)="upload_doc($event , 'year1')"
+                        autocomplete="off" />
+                </div>
+                <div class="col-lg-2 col-md-6 form-group" *ngIf="year1Url">
+                    <span class="form-control" style="display: flex; justify-content: space-between; align-items: center;"><a [href]="year1Url" target="_blank" [download]="year1Url" style="cursor: pointer;">Preview</a>
+                    <span style="font-size: 18px; margin-left: 5px; cursor: pointer;" (click)="showImageUploadInput('year1')" *ngIf="(this.changeRequest.includes('Bank Details')) && readonlyVariable || readonlyVariable && updateFieldFlag">&times;</span></span>
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class="col-lg-2 form-group" style="display: flex;
+                    justify-content:left; align-items: center; text-align:
+                    center;">
+                    <label for="city">Turnover (Year 2)</label>
+                </div>
+    
+                <div class="col-lg-3 form-group">
+                    <p-calendar autocomplete="off" view="year"
+                        (onSelect)="setYears('year2')" dateFormat="yy"
+                        [maxDate]="myDate" [readonlyInput]="true" [disabled]="!readonlyVariable && !updateFieldFlag || !(this.changeRequest.includes('Turn Over')) && !readonlyVariable"
+                        [showIcon]="true" formControlName="year2"
+                        placeholder="Please Select Year"></p-calendar>
+                </div>
+                <div class="col-lg-3 col-md-6 form-group">
+                    <div style="display: flex; ">
+                        <select class="form-select form-control select-currency"
+                            (change)="setCurrencyId($event , 'year2')"
+                            style="width: 70px;
+                            line-height : 22px; display: flex; align-items:
+                            center; border-right: none!important;
+                            border-bottom-right-radius: 0; background-color:
+                            #f1f1f1!important;
+                            border-top-right-radius: 0;"
+                            formControlName="currencyId" [disabled]="!readonlyVariable && !updateFieldFlag || !(this.changeRequest.includes('Turn Over')) && !readonlyVariable">
+                            <option value=""></option>
+                            <ng-container *ngFor="let currency of
+                                currencyDropdown">
+                                <option [value]="currency.id">{{currency.value}}</option>
+                            </ng-container>
+                        </select>
+                        <input type="text" class="form-control"
+                            style="border-left:
+                            none!important;
+                            border-top-left-radius: 0;
+                            border-bottom-left-radius: 0" [readonly]="!readonlyVariable && !updateFieldFlag || !(this.changeRequest.includes('Turn Over')) && !readonlyVariable"
+                            (keydown)="_utility.inputMobile($event)"
+                            formControlName="turnover2" placeholder="Enter Year Turnover">
+                        <div class="error" *ngIf="register.submitted &&
+                            supplierFormControl.get('turnover2')?.invalid ||
+                            supplierFormControl.get('turnover2')?.touched &&
+                            supplierFormControl.get('turnover2')?.invalid">
+                            Enter Turnover
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 form-group d-flex align-items-center">
+                    <label for="city" style="margin: 0;">Upload Balance Sheet :</label>
+                </div>
+                <div class="col-lg-2 form-group" *ngIf="!year2Url">
+                    <input class="form-control" type="file" #year2File
+                        accept="image/jpeg, image/png , application/jpeg"
+                        (change)="upload_doc($event , 'year2')" autocomplete="off"
+                        />
+                </div>
+                <div class="col-lg-2 col-md-6 form-group" *ngIf="year2Url">
+                    <span class="form-control" style="display: flex; justify-content: space-between; align-items: center;"><a [href]="year2Url" target="_blank" [download]="year2Url" style="cursor: pointer;">Preview</a>
+                    <span style="font-size: 18px; margin-left: 5px; cursor: pointer;" (click)="showImageUploadInput('year2')" *ngIf="(this.changeRequest.includes('Bank Details')) && readonlyVariable || readonlyVariable && updateFieldFlag">&times;</span></span>
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class="col-lg-2 form-group" style="display: flex;
+                    justify-content:left; align-items: center; text-align:
+                    center;">
+                    <label for="city">Turnover (Year 3)</label>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <p-calendar autocomplete="off" view="year"
+                        (onSelect)="setYears('year3')" dateFormat="yy"
+                        [maxDate]="myDate" [readonlyInput]="true" [disabled]="!readonlyVariable && !updateFieldFlag || !(this.changeRequest.includes('Turn Over')) && !readonlyVariable"
+                        [showIcon]="true" formControlName="year3"
+                        placeholder="Please Select Year"></p-calendar>
+                </div>
+                <div class="col-lg-3 col-md-6 form-group">
+                    <div style="display: flex; ">
+                        <select class="form-select form-control select-currency"
+                            (change)="setCurrencyId($event , 'year3')"
+                            formControlName="currencyId" style="width: 70px;
+                            line-height : 22px; display: flex; align-items:
+                            center; border-right: none!important;
+                            border-bottom-right-radius: 0; background-color:
+                            #f1f1f1!important;
+                            border-top-right-radius: 0;">
+                            <option value=""></option>
+                            <ng-container *ngFor="let currency of
+                                currencyDropdown">
+                                <option [value]="currency.id">{{currency.value}}</option>
+                            </ng-container>
+                        </select>
+                        <input type="text" class="form-control"
+                            style="border-left:
+                            none!important;
+                            border-top-left-radius: 0;
+                            border-bottom-left-radius: 0" [readonly]="!readonlyVariable && !updateFieldFlag || !(this.changeRequest.includes('Turn Over')) && !readonlyVariable"
+                            (keydown)="_utility.inputMobile($event)"
+                            formControlName="turnover3" placeholder="Enter Year Turnover">
+                        <div class="error" *ngIf="register.submitted &&
+                            supplierFormControl.get('turnover3')?.invalid ||
+                            supplierFormControl.get('turnover3')?.touched &&
+                            supplierFormControl.get('turnover3')?.invalid">
+                            Enter Turnover
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 form-group d-flex align-items-center">
+                    <label for="city" style="margin: 0;">Upload Balance Sheet :</label>
+                </div>
+                <div class="col-lg-2 form-group" *ngIf="!year3Url">
+                    <input class="form-control" type="file" #year3File
+                        accept="image/jpeg, image/png , application/jpeg"
+                        (change)="upload_doc($event , 'year3')" autocomplete="off"
+                        />
+                </div>
+                <div class="col-lg-2 col-md-6 form-group" *ngIf="year3Url">
+                    <span class="form-control" style="display: flex; justify-content: space-between; align-items: center;"><a [href]="year3Url" target="_blank" [download]="year3Url" style="cursor: pointer;">Preview</a>
+                    <span style="font-size: 18px; margin-left: 5px; cursor: pointer;" (click)="showImageUploadInput('year3')" *ngIf="(this.changeRequest.includes('Bank Details')) && readonlyVariable || readonlyVariable && updateFieldFlag">&times;</span></span>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-container *ngIf="this.changeRequest.includes('Authorized Signatory Details') && readonlyVariable || readonlyVariable && updateFieldFlag || showFieldFlag">
+            
+        <div class="section-heading">
+            <h5>Authorized Signatory</h5>
+        </div>
+
+        <!-- row-10 -->
+        <div class="row director_section global-director">
+            <div class="">
+                <label for="">Name<span class="star_class">*</span></label>
+            </div>
+            <div class="">
+                <label for="">Contact Number<span
+                        class="star_class">*</span></label>
+            </div>
+            <div class="">
+                <label for="">Email Address<span class="star_class">*</span></label>
+            </div>
+        </div>
+            <div formArrayName="supplierDirectorsDetails">
+                <ng-container *ngFor="let certificate of
+                    getDirectorArray().controls; index as idx; last as last">
+                    <div class="row director_section" [formGroupName]="idx">
+                        <div class="form-group" style="margin-top:
+                            0!important;">
+                            <label for="" class="inner-director"
+                                style="margin-bottom: 0!important;">Name<span
+                                    class="star_class">*</span></label>
+                            <input class="form-control" type="text"
+                                [readonly]="!(this.changeRequest.includes('Authorized Signatory Details')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag"
+                                [class.is-invalid]="(register.submitted &&
+                                this.supplierFormControl.get('supplierDirectorsDetails').controls[idx].controls['directorName'].invalid)
+                                || (
+                                this.supplierFormControl.get('supplierDirectorsDetails').controls[idx].touched
+                                &&  
+                                this.supplierFormControl.get('supplierDirectorsDetails').controls[idx].controls['directorName'].invalid)
+                                ||
+                                (this.supplierFormControl.get('supplierDirectorsDetails').controls[idx].controls['directorName'].invalid
+                                && directorBoolean)" placeholder="Enter Authorized
+                                Signatory Name"
+                                formControlName="directorName"
+                                autocomplete="off" />
+                            <div class="invalid-feedback"> Enter Your Name
+                            </div>
+                        </div>
+                        <div class=" form-group" style="margin-top:
+                            0!important;">
+                            <label for="" class="inner-director"
+                                style="margin-bottom: 0!important;"> Contact Number<span
+                                    class="star_class">*</span></label>
+                            <input class="form-control" type="text"
+                                [readonly]="!(this.changeRequest.includes('Authorized Signatory Details')) && !readonlyVariable || readonlyVariable && updateFieldFlag"
+                                placeholder="Enter Authorized Signatory Contact"
+                                [class.is-invalid]="(register.submitted &&
+                                this.supplierFormControl.get('supplierDirectorsDetails').controls[idx].controls['mobileNo'].invalid)
+                                || (
+                                this.supplierFormControl.get('supplierDirectorsDetails').controls[idx].controls['mobileNo'].touched
+                                &&
+                                this.supplierFormControl.get('supplierDirectorsDetails').controls[idx].controls['mobileNo'].invalid)
+                                ||
+                                (this.supplierFormControl.get('supplierDirectorsDetails').controls[idx].controls['mobileNo'].invalid
+                                && directorBoolean)"
+                                formControlName="mobileNo"
+                                (keydown)="_utility.inputMobile($event)"
+                                maxlength="15" minlength="10" autocomplete="off"
+                                />
+                            <div class="invalid-feedback"
+                                *ngIf="this.supplierFormControl.get('supplierDirectorsDetails').controls[idx].controls['mobileNo'].errors?.required">
+                                Enter Contact Number
+                            </div>
+                            <div class="error"
+                                *ngIf="this.supplierFormControl.get('supplierDirectorsDetails').controls[idx].controls['mobileNo'].errors?.minlength">
+                                Enter Contact Number with Country Code Atleast
+                                10 digit
+                            </div>
+                            <div class="error"
+                                *ngIf="this.supplierFormControl.get('supplierDirectorsDetails').controls[idx].controls['mobileNo'].errors?.pattern">
+                                Enter Valid Mobile Number </div>
+                        </div>
+                        <div class="form-group" style="margin-top:
+                            0!important;">
+                            <label for="" class="inner-director"
+                                style="margin-bottom: 0!important;">Email Address<span
+                                    class="star_class">*</span></label>
+                            <input class="form-control" type="text"
+                                formControlName="email"
+                                [readonly]="!(this.changeRequest.includes('Authorized Signatory Details')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag"
+                                [class.is-invalid]="(register.submitted &&
+                                this.supplierFormControl.get('supplierDirectorsDetails').controls[idx].controls['email'].invalid)
+                                || (
+                                this.supplierFormControl.get('supplierDirectorsDetails').controls[idx].controls['email'].touched
+                                &&
+                                this.supplierFormControl.get('supplierDirectorsDetails').controls[idx].controls['email'].invalid)
+                                ||
+                                (this.supplierFormControl.get('supplierDirectorsDetails').controls[idx].controls['email'].invalid
+                                && directorBoolean)"
+                                placeholder="Enter Authorized Signatory Email"
+                                autocomplete="off" />
+                            <div class="invalid-feedback"
+                                *ngIf="this.supplierFormControl.get('supplierDirectorsDetails').controls[idx].controls['email'].errors?.required">
+                                Enter Email Address </div>
+                            <div class="invalid-feedback"
+                                *ngIf="this.supplierFormControl.get('supplierDirectorsDetails').controls[idx].controls['email'].errors?.pattern">
+                                Enter Valid Email Address </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </ng-container>
+
+        <ng-container *ngIf="getMajorCustomerArray().value.length> 0 && readonlyVariable && updateFieldFlag || showFieldFlag">
+            <div class="section-heading">
+                <h5>Major Customers</h5>
+            </div>
+            <p><b>NOTE : Please Enter Atleast 3 Domestic and 5 Export Customers
+                    Details</b></p>
+            <!-- row-11 -->
+            <div class="row">
+                <div class="col-lg-3 col-md-12">
+                    <label for="">Organization Name</label>
+                </div>
+                <div class="col-lg-2 col-md-12">
+                    <label for="">Contact Person</label>
+                </div>
+                <div class="col-lg-2 col-md-12">
+                    <label for="">Designation</label>
+                </div>
+                <div class="col-lg-3 col-md-12">
+                    <label for="">Email Address</label>
+                </div>
+                <div class="col-lg-2 col-md-12">
+                    <label for="">Contact Number</label>
+                </div>
+            </div>
+            <div class="row" formArrayName="majorCustomerArray"
+                *ngIf="getMajorCustomerArray().value.length> 0">
+                <ng-container *ngFor="let certificate of
+                    getMajorCustomerArray().controls; index as idx; last as
+                    last">
+                    <ng-container [formGroupName]="idx">
+                        <div class="form-group col-lg-3 col-md-12"
+                            style="margin-top: 0!important;">
+                            <input class="form-control" type="text"
+                                placeholder="Enter Organization Name"
+                                formControlName="organizationName"  [readonly]="!this.changeRequest.includes('Authorized Signatory Details') && !readonlyVariable || readonlyVariable && updateFieldFlag"
+                                [class.is-invalid]="(register.submitted &&
+                                this.supplierFormControl.get('majorCustomerArray').controls[idx].controls['organizationName'].invalid)
+                                ||
+                                (
+                                this.supplierFormControl.get('majorCustomerArray').controls[idx].controls['organizationName'].touched
+                                &&
+                                this.supplierFormControl.get('majorCustomerArray').controls[idx].controls['organizationName'].invalid)"
+                                autocomplete="off" />
+                            <div class="invalid-feedback"> Enter Organization
+                                Name
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-2 col-md-12"
+                            style="margin-top: 0!important;">
+                            <input class="form-control" type="text" [readonly]="!this.changeRequest.includes('Authorized Signatory Details') && !readonlyVariable || readonlyVariable && updateFieldFlag"
+                                placeholder="Enter Contact Person Name"
+                                formControlName="contactPerson"
+                                [class.is-invalid]="(register.submitted &&
+                                this.supplierFormControl.get('majorCustomerArray').controls[idx].controls['contactPerson'].invalid)
+                                ||
+                                (
+                                this.supplierFormControl.get('majorCustomerArray').controls[idx].controls['contactPerson'].touched
+                                &&
+                                this.supplierFormControl.get('majorCustomerArray').controls[idx].controls['contactPerson'].invalid)
+                                "
+                                autocomplete="off" />
+                            <div class="invalid-feedback"> Enter Contact Person
+                                Name
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-2 col-md-12"
+                            style="margin-top: 0!important;">
+                            <input class="form-control" type="text"
+                                placeholder="Enter Your Designation"
+                                formControlName="designation" [readonly]="!(this.changeRequest.includes('Authorized Signatory Details')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag"
+                                [class.is-invalid]="(register.submitted &&
+                                this.supplierFormControl.get('majorCustomerArray').controls[idx].controls['designation'].invalid)
+                                ||
+                                (
+                                this.supplierFormControl.get('majorCustomerArray').controls[idx].controls['designation'].touched
+                                &&
+                                this.supplierFormControl.get('majorCustomerArray').controls[idx].controls['designation'].invalid)
+                                "
+                                autocomplete="off" />
+                            <div class="invalid-feedback"> Enter Your
+                                Designation
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-3 col-md-12"
+                            style="margin-top: 0!important;">
+                            <input class="form-control" type="text"
+                                placeholder="Enter Email Address"
+                                formControlName="email" [readonly]="!(this.changeRequest.includes('Authorized Signatory Details')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag"
+                                [class.is-invalid]="(register.submitted &&
+                                this.supplierFormControl.get('majorCustomerArray').controls[idx].controls['email'].invalid)
+                                ||
+                                (
+                                this.supplierFormControl.get('majorCustomerArray').controls[idx].controls['email'].touched
+                                &&
+                                this.supplierFormControl.get('majorCustomerArray').controls[idx].controls['email'].invalid)
+                                "
+                                autocomplete="off" />
+                            <div class="invalid-feedback" *ngIf=""> Enter Email
+                                Address </div>
+                            <div class="invalid-feedback"
+                                *ngIf="this.supplierFormControl.get('majorCustomerArray').controls[idx].controls['email'].errors?.pattern">
+                                Enter Valid Email Address </div>
+                        </div>
+                        <div class="form-group col-lg-2 col-md-12"
+                            style="margin-top: 0!important;">
+                            <input class="form-control" type="text"
+                                placeholder="Enter Mobile No."
+                                formControlName="mobileNo" [readonly]="!(this.changeRequest.includes('Authorized Signatory Details')) && !readonlyVariable || !readonlyVariable && !updateFieldFlag"
+                                [class.is-invalid]="(register.submitted &&
+                                this.supplierFormControl.get('majorCustomerArray').controls[idx].controls['mobileNo'].invalid)
+                                ||
+                                (
+                                this.supplierFormControl.get('majorCustomerArray').controls[idx].controls['mobileNo'].touched
+                                &&
+                                this.supplierFormControl.get('majorCustomerArray').controls[idx].controls['mobileNo'].invalid)
+                                "
+                                autocomplete="off" />
+                            <div class="invalid-feedback"> Enter Mobile No.
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </ng-container>
+
+
+        <!-- row-11 -->
+        <div class="row"  *ngIf="readonlyVariable && updateFieldFlag || showFieldFlag">
+            <div class="section-heading">
+                <h5>Manufacturing Scope</h5>
+            </div>
+            <div class="col-lg-3 col-md-12 form-group">
+                <label for="">Manufacturing List</label>
+                <div formArrayName="manufacturingProcess">
+                    <p-multiSelect [filter]="false"
+                        [ngModelOptions]="{standalone: true}"
+                        [showToggleAll]="false" [disabled]="!readonlyVariable"
+                        [(ngModel)]="manufacturingProcessList"
+                        class="multiselect-custom-virtual-scroll"
+                        [options]="getManufacturingArray().value"
+                        placeholder="Select manufacture name" optionValue="id"
+                        optionLabel="value"></p-multiSelect>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-12 form-group">
+                <label for="">Material Construction List</label>
+                <div formArrayName="materialOfConstruction">
+                    <p-multiSelect [filter]="false" disabled
+                        [ngModelOptions]="{standalone: true}"
+                        [showToggleAll]="false" [disabled]="!readonlyVariable"
+                        [(ngModel)]="materialOfConstructionList"
+                        class="multiselect-custom-virtual-scroll"
+                        [options]="getMaterialofConstruction().value"
+                        optionValue="id" placeholder="Select Material of
+                        Constructions" optionLabel="value"></p-multiSelect>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-12 form-group">
+                <label for="">Other Category</label>
+                    <select class="form-control form-select" formControlName="otherCategoryId"
+                        (change)="getSelectOtherCategory($event)">
+                        <option value="">Select Other Category</option>
+                        <ng-container *ngFor="let dropdown of selectedOtherCategory">
+                            <option [value]="dropdown.id">{{dropdown.value}}</option>
+                        </ng-container>
+                    </select>
+            </div>
+            <div class="col-lg-3 col-md-12 form-group" *ngIf="otherRemark">
+                <label for="">Other Remarks<span
+                        class="star_class">*</span></label>
+                <input type="text" class="form-control"
+                    formControlName="otherRemarks" [required]="otherRemark"
+                    [class.is-invalid]="register.submitted &&
+                    supplierFormControl.get('otherRemarks')?.invalid"
+                    placeholder="Enter Other Remarks">
+                <div class="invalid-feedback"> Other Remarks is Required
+                </div>
+            </div>
+        </div>
+
+
+        <!-- action-button -->
+        <div style="justify-content: right; display: flex;" *ngIf="!showFieldFlag">
+            <button type="submit" class="mx-2 btn" style="background: var(--mainColor); color: #fff;">Submit</button>
+        </div>
+    </form>
+
+    <app-copyrights></app-copyrights>
+
+</div>

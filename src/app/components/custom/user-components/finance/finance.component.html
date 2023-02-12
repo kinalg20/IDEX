@@ -1,0 +1,552 @@
+
+<div class="container authentication">
+    <!-- registerform -->
+    <div class="signup-form">
+        <!-- supplier registration form -->
+        <div class="section-heading">
+            <h5>Supplier Certificates</h5>
+        </div>
+        <div class="row">
+            <ng-container *ngFor="let doc of supplierList.supplierCertificatesDetails">
+                <ng-container *ngIf="doc.documentPath != '' &&
+                    doc.documentName != ''">
+                    <div class="col-lg-4 col-md-6 col-sm-12 form-group">
+                        <a [href]="doc.documentPath" style="font-size:13px;
+                            font-weight: 600; color: var(--mainColor);"
+                            target="_blank"
+                            [download]="doc.documentPath">{{doc.documentName}}</a>
+                    </div>
+                </ng-container>
+            </ng-container>
+            <div class="col-lg-4 col-md-6 col-sm-12 form-group">
+                <a [href]="supplierList.cancelledCheque"
+                    target="_blank" style="font-size:13px; font-weight: 600;
+                    color: var(--mainColor);"
+                    [download]="supplierList.cancelledCheque">Cancelled
+                    Cheque Preview</a>
+            </div>
+        </div>
+        <!-- row-1 -->
+        <div class="section-heading">
+            <h6 style="margin: 0;">Supplier Details</h6>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="first-name">JDE No.</label>
+                <span>{{supplierList?.jdeNo}}</span>
+            </div>
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="first-name">Supplier Name</label>
+                <span>{{supplierList.supplierName}}</span>
+            </div>
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="address">Address with Pincode</label>
+                <span>{{supplierList.supplierAddress}}</span>
+            </div>
+        </div>
+
+        <!-- row-2 -->
+        <div class="row">
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="state">State</label>
+                <!-- <select class="form-control form-select"
+                    
+                    [(ngModel)]="supplierList.stateId"
+                    minlength="3"
+                    maxlength="35" required>
+                </select> -->
+                <ng-container *ngFor="let value of stateDropdown">
+                    <span *ngIf="supplierList.stateId == value.id">{{value.value}}</span>
+                </ng-container>
+            </div>
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="city">Purpose</label>
+                <ng-container *ngFor="let value of purposeDropdown">
+                    <span *ngIf="supplierList.purposeId == value.id">{{value.value}}</span>
+                </ng-container>
+                <!-- <select class="form-control form-select"
+                    
+                    [(ngModel)]="supplierList.purposeId"
+                    minlength="3"
+                    maxlength="35" required>
+                    <ng-container *ngFor="let value of
+                        purposeDropdown">
+                        <option [value]="value.id"
+                            >{{value.value}}</option>
+                    </ng-container>
+                </select> -->
+            </div>
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="city">Service Provided</label>
+                <span>{{supplierList.services}}</span>
+                <!-- <input type="text" class="form-control"
+                    [(ngModel)]="supplierList.services"
+                    autocomplete="off"
+                    placeholder="Services" required /> -->
+            </div>
+
+        <!-- row-3 -->
+        <!-- <div class="row"> -->
+            <div class="col-lg-4 col-md-12 form-group" *ngIf="supplierList.interCompany">
+                <label for="city">In case of Intercompany
+                    correct Co. No. In GL off</label>
+                <span>{{supplierList.interCompany}}</span>
+                <!-- <input class="form-control"
+                    [(ngModel)]="supplierList.interCompany"
+                    autocomplete="off" placeholder="Enter CO
+                    No." /> -->
+            </div>
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="credit">Payment Terms</label>
+                <span>{{supplierList.payTermsId}}</span>
+                <!-- <input class="form-control"
+                    [(ngModel)]="supplierList.payTermsId"
+                    autocomplete="off" placeholder="Enter CO
+                    No." /> -->
+            </div>
+
+            <div class="col-lg-4 col-md-12 form-group"
+                *ngIf="supplierList.documentUploadPath">
+                <label for="">Organization Profile</label>
+                <label><a [href]="supplierList.documentUploadPath"
+                        target="_blank"
+                        [download]="supplierList.documentUploadPath">Preview</a></label>
+            </div>
+
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="tds-applicable">TDS Applicable</label>
+                <span>{{supplierList.tdsApplicable ? 'Yes' : 'No' }}</span>
+                <!-- <input type="text" class="form-control"
+                    *ngIf="supplierList.tdsApplicable"
+                    value="Yes"
+                    autocomplete="off"
+                    placeholder="Services" required />
+                <input type="text" class="form-control"
+                    *ngIf="!supplierList.tdsApplicable"
+                    value="No"
+                    autocomplete="off"
+                    placeholder="Services" required /> -->
+            </div>
+
+
+
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="email">Whether Domestic or Foreign </label>
+                <span>{{supplierList.isDomestic ? 'Foreign' : 'Domestic' }}</span>
+                <!-- <select class="form-control form-select"
+                    [disabled]="true"
+                    [(ngModel)]="supplierList.isDomestic"
+                    minlength="3"
+                    maxlength="35" required>
+                    <option value="false" selected>Domestic</option>
+                    <option value="true">Foreign</option>
+                </select> -->
+            </div>
+            <div class="col-lg-4 col-md-12 form-group"
+                *ngIf="supplierList.isDomestic">
+                <label for="email">If Foreign give Currency</label>
+                {{supplierList.currency}}
+                <!-- <input class="form-control"
+                    [(ngModel)]="supplierList.currency"
+                    id="currency"
+                    placeholder="Enter Currency Type" /> -->
+            </div>
+        <!-- </div> -->
+
+        <!-- Tax Registration Details -->
+
+
+        <!-- <div class="section-heading">
+            <h5>Tax Registration Details</h5>
+        </div> -->
+
+        <!-- row-5 -->
+        <ng-container *ngIf="!supplierList.isDomestic">
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="city">GSTIN </label>
+                <span>{{supplierList.gstinNo}}</span>
+                <!-- <input class="form-control"
+                    [(ngModel)]="supplierList.gstinNo"
+                    placeholder="Enter GSTIN"
+                    minlength="15"
+                    maxlength="15" autocomplete="off"
+                    required/> -->
+            </div>
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="city">GSTIN Date</label>
+                <span>{{supplierList.gstinDate | date}}</span>
+                <!-- <p-calendar 
+                    [(ngModel)]="supplierList.date"
+                    placeholder="Select
+                    GSTIN Date" required></p-calendar> -->
+            </div>
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="city">PAN </label>
+                <span>{{supplierList.panNo}}</span>
+                <!-- <input class="form-control" type="text"
+                    [(ngModel)]="supplierList.panNo"
+                    minlength="10"
+                    maxlength="10" required
+                    autocomplete="off" /> -->
+            </div>
+        </ng-container>
+
+        <!-- row-6 -->
+        <!-- <div class="row"> -->
+            <div class="col-lg-4 col-md-12 form-group" *ngIf="supplierList.tanNo">
+                <label for="city">TAN Number</label>
+                <span>{{supplierList.tanNo}}</span>
+                <!-- <input class="form-control"
+                    [(ngModel)]="supplierList.tanNo"
+                    placeholder="Enter
+                    TAN Number" minlength="10"
+                    maxlength="10"
+                    autocomplete="off" /> -->
+            </div>
+            <div class="col-lg-4 col-md-12 form-group">
+                <label for="msme">MSME Applicable</label>
+                <span>{{supplierList.msmeApplicable ? 'Yes' : 'No'}}</span>
+                <!-- <input class="form-control"
+                    *ngIf="supplierList.msmeApplicable"
+                    value="Yes"
+                    placeholder="Enter TAN Number"
+                    minlength="10"
+                    maxlength="10" autocomplete="off" />
+                <input class="form-control"
+                    *ngIf="!supplierList.msmeApplicable"
+                    value="No"
+                    placeholder="Enter TAN Number"
+                    minlength="10"
+                    maxlength="10" autocomplete="off" /> -->
+            </div>
+            <div class="col-lg-4 form-group">
+                <label for="contact">Contact Person</label>
+                <span>{{supplierList.contactPerson}}</span>
+                <!-- <input class="form-control"
+                    placeholder="Enter
+                    Contact Person"
+                    [(ngModel)]="supplierList.contactPerson"
+                    autocomplete="off" required/> -->
+            </div>
+            <div class="col-lg-4 form-group">
+                <label for="tel">Contact Number</label>
+                <span>{{supplierList.mobileNo}}</span>
+                <!-- <input class="form-control" maxlength="10"
+                    [(ngModel)]="supplierList.mobileNo"
+                    maxlength="10"
+                    placeholder="Enter Contact Number"
+                    autocomplete="off"
+                    required/> -->
+            </div>
+            <div class="col-lg-4 form-group" *ngIf="supplierList.faxNo">
+                <label for="fax">FAX Number</label>
+                <span>{{supplierList.faxNo}}</span>
+                <!-- <input class="form-control"
+                    maxlength="10"
+                    [(ngModel)]="supplierList.faxNo"
+                    placeholder="Enter Fax Number"
+                    autocomplete="off" /> -->
+            </div>
+            <div class="col-lg-4 form-group">
+                <label for="email">Email Address</label>
+                <span>{{supplierList.emailAddress}}</span>
+            </div>
+            <div class="col-lg-4 form-group" *ngIf="supplierList.alternetEmail">
+                <label for="email">Alternet Email Address</label>
+                <span>{{supplierList.alternetEmail}}</span>
+                <!-- <input class="form-control" type="text"
+                    
+                    [(ngModel)]="supplierList.alternetEmail"
+                    placeholder="Enter Email Address"
+                    autocomplete="off" required/> -->
+            </div>
+        <!-- </div> -->
+
+
+
+        <!-- Vendor Contact Details -->
+
+        <!-- <div class="section-heading">
+            <h5>Supplier Contact Details</h5>
+        </div> -->
+
+        <!-- row-7 -->
+
+        <!-- Vendor Bank Details -->
+        <div class="section-heading">
+            <h6 style="margin: 0;">Bank Details</h6>
+        </div>
+        <!-- row-8-->
+        <div class="row">
+            <div class="col-lg-3 form-group">
+                <label for="ifscCode">Account Type</label>
+                <span>{{supplierList.accountType == 'C' ? 'Current Account' : 'Saving Account'}}</span>
+            </div>
+            <div class="col-lg-3 form-group">
+                <label for="bankName">Bank Name</label>
+                <span>{{supplierList.bankName}}</span>
+                <!-- <input class="form-control"
+                    type="text"
+                    [(ngModel)]="supplierList.bankName"
+                    placeholder="Enter Bank Name"
+                    autocomplete="off" /> -->
+            </div>
+            <div class="col-lg-3 form-group">
+                <label for="account">Account No.</label>
+                <span>{{supplierList.accountNo}}</span>
+                <!-- <input class="form-control"
+                    type="text"
+                    [(ngModel)]="supplierList.accountNo"
+                    maxlength="16"
+                    placeholder="Enter Account No."
+                    autocomplete="off" /> -->
+
+            </div>
+            <div class="col-lg-3 form-group">
+                <label for="ifscCode">IFSC Code or Swift Code </label>
+                <span>{{supplierList.ifscCode}}</span>
+                <!-- <input class="form-control"
+                    type="text"
+                    [(ngModel)]="supplierList.ifscCode"
+                    placeholder="Enter IFSC Code"
+                    autocomplete="off" /> -->
+            </div>
+
+            <div class="col-lg-3 form-group" *ngIf="supplierList.micrNo">
+                <label for="ifscCode">MICR No.</label>
+                <span>{{supplierList.micrNo}}</span>
+                <!-- <input class="form-control"
+                    type="text"
+                    maxlength="10"
+                    [(ngModel)]="supplierList.micrNo"
+                    placeholder="Enter MICR No."
+                    autocomplete="off" /> -->
+            </div>
+
+            <div class="col-lg-3 form-group" *ngIf="supplierList.bankAddress">
+                <label for="ifscCode">Bank Address</label>
+                <span>{{supplierList.bankAddress}}</span>
+            </div>
+        </div>
+
+        <!-- previous 3 years Turnover -->
+        <div class="section-heading">
+            <h6>Turnover Details</h6>
+        </div>
+
+        <!-- row-9 -->
+        <div class="row">
+            <div class="col-lg-3 form-group">
+                <label for="city">Year of Establishment:</label>
+            </div>
+            <div class="col-lg-3 form-group">
+                <span>{{supplierList.yearofEstablishment}}</span>
+            </div>
+            <div class="col-lg-3"></div>
+            <div class="col-lg-3 form-group d-flex
+                align-items-center">
+                <label for="city" style="margin: 0;">Upload Balance Sheet</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3 form-group" style="display:
+                flex;
+                justify-content:left; align-items: center;
+                text-align:
+                center;">
+                <label for="city">Turnover (Year 1)</label>
+            </div>
+            <div class="col-lg-3 form-group">
+                <span>{{supplierList.year1}}</span>
+            </div>
+            <div class="col-lg-3 form-group" *ngIf="supplierList?.turnover1">
+                <div class="d-flex">
+                    <ng-container *ngFor="let currency of currencyDropdown">
+                        <span *ngIf="currency.id == supplierList.currencyId">{{currency.value}}</span>
+                    </ng-container>
+                    <span>{{supplierList?.turnover1}}</span>
+                </div>
+            </div>
+            <div class="col-lg-3 form-group"
+                *ngIf="supplierList.balanceSheet1">
+                <label><a
+                        [href]="_utility.getImageUrl(supplierList.balanceSheet1)"
+                        target="_blank"
+                        [download]="_utility.getImageUrl(supplierList.balanceSheet1)">Preview</a></label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3 form-group" style="display:
+                flex;
+                justify-content:left; align-items: center;
+                text-align:
+                center;">
+                <label for="city">Turnover (Year 2)</label>
+            </div>
+            <div class="col-lg-3 form-group">
+                <span>{{supplierList.year2}}</span>
+            </div>
+            <div class="col-lg-3 form-group" *ngIf="supplierList?.turnover2">
+                <div class="d-flex">
+                    <ng-container *ngFor="let currency of currencyDropdown">
+                        <span *ngIf="currency.id == supplierList.currencyId">{{currency.value}}</span>
+                    </ng-container>
+                    <span>{{supplierList?.turnover2}}</span>
+                </div>
+            </div>
+            <div class="col-lg-3 form-group"
+                *ngIf="supplierList.balanceSheet2">
+                <label><a [href]="_utility.getImageUrl(supplierList.balanceSheet2)"
+                        target="_blank"
+                        [download]="_utility.getImageUrl(supplierList.balanceSheet2)">Preview</a></label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3 form-group" style="display:
+                flex;
+                justify-content:left; align-items: center;
+                text-align:
+                center;">
+                <label for="city">Turnover (Year 3)</label>
+            </div>
+            <div class="col-lg-3 form-group">
+                <span>{{supplierList.year3}}</span>
+            </div>
+            <div class="col-lg-3 form-group">
+                <div class="d-flex">
+                    <ng-container *ngFor="let currency of currencyDropdown">
+                        <span *ngIf="supplierList.currencyId == currency.id && supplierList.currencyId">{{currency.value}}</span>
+                    </ng-container>
+                    <span>{{supplierList.turnover3}}</span>
+                </div>
+            </div>
+            <div class="col-lg-3 form-group"
+                *ngIf="supplierList.balanceSheet3">
+                <label><a
+                        [href]="_utility.getImageUrl(supplierList.balanceSheet3)"
+                        target="_blank"
+                        [download]="_utility.getImageUrl(supplierList.balanceSheet3)">Preview</a></label>
+            </div>
+        </div>
+
+
+        <div class="section-heading"*ngIf="supplierList.supplierDirectorsDetails?.length>
+            0" >
+            <h6>Authorized Signatory Details</h6>
+        </div>
+
+        <!-- row-10 -->
+
+        <ng-container *ngFor="let director of
+            supplierList.supplierDirectorsDetails; index
+            as idx; last as
+            last">
+            <div class="row">
+                <div class="form-group col-lg-4 col-md-4"
+                    style="margin-top:
+                    0.3rem!important;">
+                    <label for="" style="margin-bottom:
+                        0.3rem!important;"> Name</label>
+                        <span>{{director.directorName}}</span>
+                </div>
+                <div class=" form-group col-lg-4 col-md-4"
+                    style="margin-top: 0.3rem!important;">
+                    <label for="" style="margin-bottom:
+                        0.3rem!important;"> Contact Number</label>
+                    <span>{{director.mobileNo}}</span>
+                </div>
+                <div class="form-group col-lg-4 col-md-4"
+                    style="margin-top:
+                    0.3rem!important;">
+                    <label for="" style="margin-bottom:
+                        0.3rem!important;">Email Address</label>
+                    <span>{{director.email}}</span>
+                </div>
+            </div>
+        </ng-container>
+        <div class="section-heading"
+            *ngIf="supplierList.supplierMajorCustomersDetails?.length>0">
+            <h5>Major Customer</h5>
+        </div>
+        <div class="row">
+            <ng-container *ngFor="let majorCustomer of
+                supplierList.supplierMajorCustomersDetails;
+                index as
+                idx; last as last">
+                <div class="form-group col-lg-3 col-md-12"
+                    style="margin-top: 0.3rem!important;">
+                    <label for="" style="margin-bottom: 0.3rem!important;">Organization Name</label>
+                    <span>{{majorCustomer.organizationName}}</span>
+                </div>
+                <div class="form-group col-lg-2 col-md-12"
+                    style="margin-top: 0.3rem!important;">
+                    <label for="" style="margin-bottom: 0.3rem!important;">Designation</label>
+                    <span>{{majorCustomer.designation}}</span>
+                </div>
+                <div class="form-group col-lg-3 col-md-12"
+                    style="margin-top: 0.3rem!important;">
+                    <label for="" style="margin-bottom: 0.3rem!important;">Contact Person</label>
+                    <span>{{majorCustomer.contactPerson}}</span>
+                </div>
+                <div class="form-group col-lg-2 col-md-12"
+                    style="margin-top: 0.3rem!important;">
+                    <label for="" style="margin-bottom:
+                        0.3rem!important;">Email Address</label>
+                    <span>{{majorCustomer.email}}</span>
+                </div>
+                <div class="form-group col-lg-2 col-md-12"
+                    style="margin-top: 0.3rem!important;">
+                    <label for="" style="margin-bottom: 0.3rem!important;">Mobile no.</label>
+                    <span>{{majorCustomer.mobileNo}}</span>
+                </div>
+            </ng-container>
+        </div>
+        <div class="section-heading">
+            <h6>Manufacturing Scope</h6>
+        </div>
+        <!-- row-11 -->
+        <div class="row">
+            <div class="col-lg-3 col-md-12 form-group">
+                <label for="">Manufacturing List</label>
+                <span>{{supplierList?.manufacturingProcessList}}</span>
+                <!-- <p-multiSelect [filter]="false"
+                    [showToggleAll]="false"
+                    [options]="manufacturingArray"
+                    [(ngModel)]="supplierList.supplierManufacturingDropdown"
+                    class="multiselect-custom-virtual-scroll"
+                    placeholder="Select manufacture name"
+                    optionLabel="value" optionValue="id"></p-multiSelect> -->
+            </div>
+            <div class="col-lg-3 col-md-12 form-group">
+                <label for="">Material Construction List</label>
+                <span>{{supplierList?.materialofconstructionList}}</span>
+                <!-- <p-multiSelect [filter]="false"
+                    [ngModelOptions]="{standalone: true}"
+                    [showToggleAll]="false"
+                    [(ngModel)]="supplierList.supplierMaterialDropdown"
+                    class="multiselect-custom-virtual-scroll"
+                    [options]="materialConstructionArray"
+                    placeholder="Select material name"
+                    optionValue="id"
+                    optionLabel="value"></p-multiSelect> -->
+            </div>
+
+            <div class="col-lg-3 col-md-12 form-group">
+                <label for="">Other Category</label>
+                <ng-container *ngFor="let dropdown of otherCategoryArray">
+                    <span [value]="dropdown.id" *ngIf="supplierList.otherCategoryId == dropdown.id">{{dropdown.value}}</span>
+                </ng-container>
+                <!-- <select class="form-control form-select" [(ngModel)]="supplierList.otherCategoryId">
+                    <option value="0">Select Other Category</option>
+                </select> -->
+            </div>
+            <div class="col-lg-3 col-md-12 form-group">
+                <label for="">Other Remarks</label>
+                <span>{{supplierList.otherRemark}}</span>
+            </div>
+        </div>
+    </div>
+</div>

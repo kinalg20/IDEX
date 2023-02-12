@@ -1,0 +1,319 @@
+<app-dashboard-sidemenu></app-dashboard-sidemenu>
+
+<!-- Start Main Content Wrapper Area -->
+<div class="main-content d-flex flex-column">
+
+    <app-dashboard-navbar></app-dashboard-navbar>
+
+    <!-- Breadcrumb Area -->
+    <div class="breadcrumb-area" *ngFor="let Content of breadcrumb;">
+        <h1>{{Content.title}}</h1>
+        <ol class="breadcrumb">
+            <li class="item"><a routerLink="/">Home</a></li>
+            <li class="item"><a routerLink="/dashboard">{{Content.subTitle}}</a></li>
+            <li class="item">{{Content.title}}</li>
+        </ol>
+    </div>
+    <!-- End Breadcrumb Area -->
+
+    <!-- Start -->
+    <div class="add-listings-box1">
+        <form [formGroup]="apqpGroup" (ngSubmit)="getPartDetails()"
+            #apqpForm="ngForm">
+            <div class="row">
+                <div class="col-lg-4 col-md-12 form-group">
+                    <label for="status">Enquiry No.<span class="star_class">*</span></label>
+                    <select class="form-control form-select" required
+                        formControlName="enquiryId" (change)="callFunctionBasedOnRole($event)"
+                        [class.is-invalid]="apqpForm.submitted &&
+                        apqpGroup.get('enquiryId').invalid"
+                        autocomplete="off" required>
+                        <option value="" disabled>Select Enquiry No</option>
+                        <ng-container *ngFor="let enquiry of enquiry_dropdown">
+                            <option [value]="enquiry.id">{{enquiry.value}}</option>
+                        </ng-container>
+                    </select>
+                    <div class="invalid-feedback">Enquiry no is required!</div>
+                </div>
+                <div class="col-lg-4 col-md-12 form-group" *ngIf="roleName !=
+                    'Supplier'">
+                    <label for="status">Suppliers<span class="star_class">*</span></label>
+                    <p-dropdown [options]="supplierList"
+                        [filter]="true" filterBy="value" placeholder="Enter
+                        Supplier Name"
+                        [class.is-invalid]="apqpForm.submitted &&
+                        apqpGroup.get('supplierId2').invalid"
+                        optionId="supplierId" formControlName="supplierId2"
+                        optionLabel="value" required></p-dropdown>
+                    <div class="invalid-feedback">Supplier is required</div>
+                </div>
+                <div class="add-listings-btn col-lg-4 col-md-12 form-group" *ngIf="roleName != 'Supplier'">
+                    <div class="submit_form_group">
+                        <button type="submit">Submit</button>
+                    </div>
+                </div>
+
+                <ng-container *ngIf="apqpGroup.get('enquiryId').value && apqpData.length > 0">
+                    <div class="col-lg-4 form-group" *ngIf="apqpData[0]?.docUrl">
+                        <label for="account">Sample APQP Document</label>
+                        <label><a [href]="apqpData[0]?.docUrl" target="_blank"
+                                [download]="apqpData[0]?.docUrl">download Apqp</a></label>
+                    </div>
+                    <div class="col-lg-4 col-md-12 form-group" *ngIf="apqpData[0]?.documentPath">
+                        <label for="account">APQP Document<span
+                                class="star_class">*</span></label>
+                        <label><a [href]="apqpData[0]?.documentPath"
+                                target="_blank"
+                                [download]="apqpData[0]?.documentPath">Preview</a><span
+                                style="cursor: pointer;" *ngIf="roleName != 'Admin' && roleName != 'User'" (click)="updateFile()">&nbsp; x</span></label>
+                    </div>
+                    <div class="col-lg-4 col-md-12 form-group"  *ngIf="!(apqpData[0]?.documentPath) && apqpGroup.get('supplierId').value">
+                        <label for="account">APQP Document<span
+                                class="star_class">*</span></label>
+                        <input class="form-control" type="file"
+                            (change)="upload_doc($event , apqpData)"
+                            accept="image/jpeg,image/gif,image/png,application/pdf"
+                            autocomplete="off" required />
+                    </div>
+                </ng-container>
+            </div>
+        </form>
+    </div>
+    <!-- End -->
+
+    <div class="add-listings-box1" *ngIf="enquiryItemDetails.length > 0">
+        <div class="card">
+            <p-table #dt3 [value]="enquiryItemDetails"
+                dataKey="id" responsiveLayout="scroll" [rows]="10"
+                [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[10,20,30,50]"
+                [paginator]="false" currentPageReportTemplate="Showing
+                {first} to {last} of {totalRecords} entries"
+                [globalFilterFields]="['name','country.name','status']">
+                <ng-template pTemplate="header">
+                    <tr style="width: 100%;">
+                        <th>S.No.</th>
+                        <th>Part Name</th>
+                        <th>MOQ</th>
+                        <th style="min-width: 200px;">Material of Construction</th>
+                        <th>Raw Weight (Kg)</th>
+                        <th>Finish Weight (Kg)</th>
+                        <th>Volume</th>
+                        <th>Engineering Drawing</th>
+                        <th>View APQP List</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-customer let-i="rowIndex">
+                    <tr>
+                        <td>{{i+1}}</td>
+                        <td><span>{{customer.itemName}}</span></td>
+                        <td>
+                            <span class="image-text">{{customer.quantity}}</span>
+                        </td>
+                        <td style="min-width: 200px;">
+                            <span class="image-text">{{customer.materialofconstructionList}}</span>
+                        </td>
+                        <td>
+                            <span class="image-text">{{customer?.rawPartWeight}}</span>
+                        </td>
+                        <td>
+                            <span class="image-text">{{customer?.finishPartWeight}}</span>
+                        </td>
+                        <td>
+                            <span class="image-text">{{customer.volume}}</span>
+                        </td>
+                        <td>
+                            <button pButton pRipple type="button"
+                            icon="bx bx-show" (click)="getAllItemDrawing(customer.itemId)" class="p-button-rounded p-button-primary
+                            p-button-text"></button>
+                        </td>
+                        <td>
+                            <button pButton pRipple type="button"
+                            icon="bx bx-show" (click)="getAPQPList(customer)" class="p-button-rounded p-button-primary
+                            p-button-text"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="5">No item found.</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <h6 style="text-align: center;" *ngIf="apqpData.length> 0"><span>Part Name : {{ this.showItemName}}</span></h6>
+    <span style="text-align: right;">{{lastUploaded}}</span>
+    <div class="card px-3 py-2" *ngIf="apqpData.length> 0">
+        <h5>APQP List</h5>
+        <p-table [value]="apqpData" dataKey="0" editMode="row"
+            responsiveLayout="scroll">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>S.No</th>
+                    <th style="min-width: 250px;">Requirement</th>
+                    <th>Required (Y/N)</th>
+                    <th style="min-width: 200px;">Target Date</th>
+                    <th >Document Req (Y/N)</th>
+                    <th style="min-width: 200px;">Doc Status (Inprocess /
+                        Uploaded)</th>
+                    <th style="min-width: 200px;">Verification (Verified /
+                        Rework)</th>
+                    <th style="min-width: 200px;">Comments</th>
+                    <!-- <th></th> -->
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-product let-editing="editing"
+                let-ri="rowIndex">
+                <tr [pEditableRow]="product">
+                    <td>{{ri+1}}</td>
+                    <td style="min-width: 200px;">
+                        {{product.requirement}}
+                    </td>
+                    <td style="text-align: center!important;" class="form-group">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input type="checkbox" [(ngModel)]="product.required" [disabled]="roleName == 'Supplier'">
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                <input type="checkbox" [(ngModel)]="product.required" [disabled]="roleName == 'Supplier'">
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td style="min-width: 150px;">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-calendar [(ngModel)]="product.targetDate"
+                                    [showIcon]="true" placeholder="Please Select
+                                    Target Dates" [disabled]="roleName !=
+                                    'Supplier'" appendTo="body"
+                                    [style]="{'width':'100%'}"></p-calendar>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                <p-calendar [(ngModel)]="product.targetDate"
+                                    [showIcon]="true" placeholder="Please Select
+                                    Target Dates" [disabled]="roleName !=
+                                    'Supplier'" appendTo="body"
+                                    [style]="{'width':'100%'}"></p-calendar>
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td style="text-align: center!important;">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input type="checkbox" [(ngModel)]="product.docReq" [disabled]="roleName == 'Supplier'">
+                                <!-- <select class="form-control form-select"
+                                    [disabled]="roleName == 'Supplier'"
+                                    [(ngModel)]="product.docReq">
+                                    <option value="" disabled>Select</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select> -->
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                <input type="checkbox" [(ngModel)]="product.docReq" [disabled]="roleName == 'Supplier'">
+                                <!-- <select class="form-control form-select"
+                                    [disabled]="roleName == 'Supplier'"
+                                    [(ngModel)]="product.docReq">
+                                    <option value="" disabled>Select</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select> -->
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <select class="form-control form-select"
+                                    [disabled]="roleName != 'Supplier'"
+                                    [(ngModel)]="product.docStatus">
+                                    <option value="" disabled>Select</option>
+                                    <option value="In process">In process</option>
+                                    <option value="Uploaded">Uploaded</option>
+                                </select>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                <select class="form-control form-select"
+                                    [disabled]="roleName != 'Supplier'"
+                                    [(ngModel)]="product.docStatus">
+                                    <option value="" disabled>Select</option>
+                                    <option value="In process">In process</option>
+                                    <option value="Uploaded">Uploaded</option>
+                                </select>
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <select class="form-control form-select"
+                                    [disabled]="roleName == 'Supplier'"
+                                    [(ngModel)]="product.verification">
+                                    <option value="" disabled>Select</option>
+                                    <option value="Verified">Verified</option>
+                                    <option value="Rework">Rework</option>
+                                </select>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                <select class="form-control form-select"
+                                    [disabled]="roleName == 'Supplier'"
+                                    [(ngModel)]="product.verification">
+                                    <option value="" disabled>Select</option>
+                                    <option value="Verified">Verified</option>
+                                    <option value="Rework">Rework</option>
+                                </select>
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <textarea name="" id="" cols="30" rows="10"
+                                    class="form-control"
+                                    [(ngModel)]="product.comments"></textarea>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                <textarea name="" id="" cols="30" rows="10"
+                                    class="form-control"
+                                    [(ngModel)]="product.comments"></textarea>
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td  style="text-align: right!important;">
+                        <div class="add-listings-btn m-0">
+                            <button class="submit_btn m-0"
+                                *ngIf="apqpData.length-1 == ri"
+                                (click)="onRowEditSave()" type="submit">Submit</button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+        </p-table>
+    </div>
+
+    <div class="flex-grow-1"></div>
+
+    <app-copyrights></app-copyrights>
+
+</div>
+<!-- End Main Content Wrapper Area -->
+
+
+<p-dialog header="Engineering Drawing" [style]="{width : '30vw'}" [modal]="true" [(visible)]="displayDialog">
+    <p-carousel [value]="editUploadedDrawing">
+        <ng-template let-drawing pTemplate="item">
+            <img [src]="drawing.engineeringDrawing" style="width: 100px;" alt="">
+        </ng-template>
+    </p-carousel>
+</p-dialog>

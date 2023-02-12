@@ -1,0 +1,47 @@
+<!-- verification form  -->
+<app-navbar-style-one></app-navbar-style-one>
+<div class="login-page">
+    <div class="overlay"></div>
+    <div style="min-height: 100vh; overflow-y: hidden; display: flex; align-items: center; justify-content: center;">
+        <div class="vesax-login">
+            <form [formGroup]="verificationFormControl"
+                (ngSubmit)="verifyPhoneEmail(signin)" #signin="ngForm">
+                <div class="signin-head">
+                    <span id="auth-head">
+                        <h2>Supplier Verification</h2>
+                    </span>
+                </div>
+    
+                <div class="form-group">
+                    <label for="emailAddress">Email Address <span
+                            class="star_class">*</span></label>
+                    <input class="form-control" type="text"
+                        formControlName="emailAddress"
+                        [class.is-invalid]="signin.submitted &&
+                        verificationFormControl.get('emailAddress')?.invalid || verificationFormControl.get('emailAddress')?.invalid && verificationFormControl.get('emailAddress')?.touched"
+                        autocomplete="off" placeholder="Enter Your Email Address"
+                        required/>
+                    <div class="invalid-feedback" *ngIf="verificationFormControl.get('emailAddress').errors?.required">
+                        Email Address is Required
+                    </div>
+                    <div class="invalid-feedback" *ngIf="verificationFormControl.get('emailAddress').errors?.pattern">
+                        Enter Valid Email Address
+                    </div>
+                </div>
+    
+    
+                <!-- <div class="form-group">
+                    <label for="phone">Mobile Number</label>
+                    <input class="form-control" type="text" formControlName="phone" (keydown)="_utility.inputMobile($event)" [class.is-invalid]="signin.submitted && verificationFormControl.get('phone')?.invalid" placeholder="Enter Your Mobile Number">
+                    <div class="invalid-feedback">
+                        Phone Number is Required
+                    </div>  
+                    <h6 class="text-danger" *ngIf="invalidMobile">
+                        {{ invalidMobile ? "Invalid Mobile" : "" }}
+                    </h6>
+                </div> -->
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+<app-footer-style-one></app-footer-style-one>

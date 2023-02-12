@@ -1,0 +1,39 @@
+.error-content {
+  text-align: center;
+}
+.error-content h3 {
+  font-size: 35px;
+  margin-bottom: 20px;
+  margin-top: 45px;
+}
+.error-content p {
+  max-width: 550px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0;
+}
+.error-content .default-btn {
+  margin-top: 30px;
+}
+
+/* Max width 767px */
+@media only screen and (max-width: 767px) {
+  .error-content h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    margin-top: 35px;
+  }
+  .error-content .default-btn {
+    margin-top: 20px;
+  }
+}
+/* Min width 576px to Max width 767px */
+/* Min width 768px to Max width 991px */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  .error-content h3 {
+    font-size: 30px;
+  }
+}
+/* Min width 992px to Max width 1199px */
+/* Min width 1200px to Max width 1355px */
+/* Min width 1550px *//*# sourceMappingURL=not-found.component.css.map */

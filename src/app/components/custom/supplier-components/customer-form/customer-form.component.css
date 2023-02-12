@@ -1,0 +1,112 @@
+.authentication {
+  margin-top: 100px;
+}
+.authentication .signup-form {
+  width: 100%;
+  margin: 30px auto;
+  padding: 30px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border-radius: 10px;
+}
+.authentication .signup-form .fa-close:hover {
+  cursor: pointer;
+}
+.authentication .signup-form form .form-group {
+  margin: 10px 0;
+}
+.authentication .signup-form form .form-group .form-control {
+  border: 1px solid #d5d5d5 !important;
+  border-radius: 5px;
+  background-color: var(--whiteColor) !important;
+  padding-top: 6px;
+  height: 33px;
+}
+.authentication .signup-form input,
+.authentication .signup-form select {
+  height: 35px;
+}
+.authentication .signup-form label {
+  font-size: 13px;
+}
+.authentication .signup-form .radio-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 100px;
+}
+.authentication .signup-form .radio-buttons .radio-button {
+  display: flex;
+  align-items: center;
+  margin: 5px 0 0;
+}
+.authentication .signup-form .radio-buttons .radio-button input {
+  margin-bottom: 0;
+}
+.authentication button {
+  display: block;
+  background-color: var(--mainColor);
+  color: var(--whiteColor);
+  border: none;
+  border-radius: 5px;
+  padding: 8px 30px 8px;
+  transition: var(--transition);
+  font-size: 14px;
+}
+.authentication button:hover {
+  background-color: var(--blackColor);
+  color: var(--whiteColor);
+}
+
+.major-customer {
+  display: grid;
+  grid-template-columns: 20% 20% 20% 20% 20%;
+}
+
+.director_section {
+  display: grid;
+  grid-template-columns: 30% 30% 30% 10%;
+}
+
+.error {
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
+
+.inner-director {
+  display: none;
+}
+
+::ng-deep .p-datepicker .p-yearpicker .p-yearpicker-year.p-highlight {
+  background: var(--mainColor) !important;
+}
+::ng-deep .p-multiselect {
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 13px !important;
+}
+::ng-deep .p-button-icon-only .p-button-label {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .director_section {
+    display: grid;
+    grid-template-columns: 100%;
+  }
+  .global-director {
+    display: none;
+  }
+  .inner-director {
+    display: block;
+  }
+}
+.select-currency {
+  background-color: #f1f1f1 !important;
+}
+
+.doc-button {
+  padding: 0 !important;
+  border-radius: 50% !important;
+}/*# sourceMappingURL=customer-form.component.css.map */

@@ -1,0 +1,6 @@
+<router-outlet></router-outlet>
+
+<prime-toast></prime-toast>
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000"></p-confirmDialog>
+
+<div class="loading" *ngIf="_utility.getloaderValue()">Loading&#8230;</div>

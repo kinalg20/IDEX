@@ -1,0 +1,176 @@
+<app-dashboard-sidemenu></app-dashboard-sidemenu>
+
+<!-- Start Main Content Wrapper Area -->
+<div class="main-content d-flex flex-column">
+
+    <app-dashboard-navbar ></app-dashboard-navbar>
+
+    <!-- Breadcrumb Area -->
+    <div class="breadcrumb-area" *ngFor="let Content of breadcrumb;">
+        <h1>{{Content.title}}</h1>
+        <ol class="breadcrumb">
+            <li class="item"><a routerLink="/">Home</a></li>
+            <li class="item"><a routerLink="dashboard">{{Content.subTitle}}</a></li>
+            <li class="item">{{Content.title}}</li>
+        </ol>
+    </div>
+    <!-- End Breadcrumb Area -->    
+
+    <div class="row">
+        
+    </div>
+    <!-- Start -->
+    <div class="add-listings-box-report">
+        <h3>RFQ List</h3>    
+        <div class="row">
+            <app-common-fields (getFormValue)="getFormInput($event , 'list')"></app-common-fields>
+            <div class="add-listings-btn col-lg-4 col-md-6">
+                <div class="form-group">
+                    <button type="submit" class="submit_btn" (click)="getValue('list')">Download</button>
+                    <!-- <button type="reset" class="reset_btn mx-2">Reset</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End -->
+
+    <!-- Start -->
+    <div class="add-listings-box-report">
+        <h3>RFQ List Details</h3>
+        <div class="row">
+            <app-common-fields (getFormValue)="getFormInput($event , 'detail')"></app-common-fields>
+            <div class="col-lg-4 col-md-6">
+                <div class="form-group">
+                    <label>Part Name</label>
+                    <select class="form-control form-select" [(ngModel)]="RFQDetailreportObject.itemId">
+                        <option value="">Select Part Name</option>
+                        <ng-container *ngFor="let item of itemList">
+                            <option [value]="item.id">{{item.value}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+            </div>
+            <div class="add-listings-btn col-lg-4 col-md-6">
+                <div class="form-group">
+                    <button type="submit" class="submit_btn my-4" (click)="getValue('details')">Download</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End -->
+
+    <!-- Start -->
+    <div class="add-listings-box-report">
+        <h3>RFQ Supplier</h3>
+        <div class="row">
+            <app-common-fields (getFormValue)="getFormInput($event , 'supplier')"></app-common-fields>
+            <div class="col-lg-4 col-md-6">
+                <div class="form-group">
+                    <label>Part Name</label>
+                    <select class="form-control form-select" [(ngModel)]="RFQSupplierreportObject.itemId">
+                        <option value="">Select Part Name</option>
+                        <ng-container *ngFor="let item of itemList">
+                            <option [value]="item.id">{{item.value}}{{item.id}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="form-group">
+                    <label>Supplier Name</label>
+                    <select class="form-control form-select" [(ngModel)]="RFQSupplierreportObject.supplierId" [disabled]="enableSupplierDropdown">
+                        <option value="">Select Supplier Name</option>
+                        <ng-container *ngFor="let supplier of supplierList">
+                            <option [value]="supplier.id">{{supplier.value}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+            </div>
+            <div class="add-listings-btn col-lg-4 col-md-6">
+                <div class="form-group">
+                    <button type="submit" class="submit_btn my-4" (click)="getValue('supplier')">Download</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End -->
+
+    <!-- Start -->
+    <div class="add-listings-box-report">
+        <h3>Order Report</h3>
+        <div class="row">
+            <app-common-fields (getFormValue)="getFormInput($event , 'order_list')"></app-common-fields>
+            <div class="col-lg-4 col-md-6">
+                <div class="form-group">
+                    <label>Part Name</label>
+                    <select class="form-control form-select" [(ngModel)]="RFQOrderreportObject.itemId">
+                        <option value="">Select Part Name</option>
+                        <ng-container *ngFor="let item of itemList">
+                            <option [value]="item.id">{{item.value}}{{item.id}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="form-group">
+                    <label>Supplier Name</label>
+                    <select class="form-control form-select" [(ngModel)]="RFQOrderreportObject.supplierId" [disabled]="enableSupplierDropdown">
+                        <option value="">Select Supplier Name</option>
+                        <ng-container *ngFor="let supplier of supplierList">
+                            <option [value]="supplier.id">{{supplier.value}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+            </div>
+            <div class="add-listings-btn col-lg-4 col-md-6">
+                <div class="form-group">
+                    <button type="submit" class="submit_btn my-4" (click)="getValue('order_list')">Download</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End -->
+
+    <!-- Start -->
+    <div class="add-listings-box-report">
+        <h3>Supplier Report</h3>
+        <div class="row">
+              <div class="col-lg-3 col-md-12">
+                <div class="form-group">
+                    <label>Supplier Name</label>
+                    <select class="form-select form-control" [(ngModel)]="RFQSupplierreportObject.supplierId" [disabled]="enableSupplierDropdown" required>
+                        <option value="" >Select Supplier Name</option>
+                        <option value="0">All Supplier</option>
+                        <ng-container *ngFor="let status of supplierList">
+                            <option [value]="status.id">{{status.value}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+              </div>
+            <!-- <div class="col-lg-4 col-md-6">
+                <div class="form-group">
+                    <label>Supplier Name</label>
+                    <select [(ngModel)]="RFQSupplierreportObject.supplierId" [disabled]="enableSupplierDropdown">
+                        <option value="">Select Supplier Name</option>
+                        <option value="0">All Supplier</option>
+                        <ng-container *ngFor="let supplier of supplierList">
+                            <option [value]="supplier.id">{{supplier.value}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+            </div> -->
+            <div class="add-listings-btn col-lg-4 col-md-6">
+                <div class="form-group">
+                    <button type="submit" class="submit_btn my-4" (click)="getValue('supplier_list')">Download</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End -->
+
+    <div class="flex-grow-1"></div>
+    
+    <app-copyrights></app-copyrights>
+
+</div>
+<!-- End Main Content Wrapper Area -->
