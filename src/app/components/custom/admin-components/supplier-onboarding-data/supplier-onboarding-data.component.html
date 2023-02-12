@@ -80,10 +80,15 @@
                             label="Rejected"
                             class="p-button-rounded status_button p-button-danger"
                             ></button>
+                        <button pButton pRipple type="button"
+                            *ngIf="customer.statusName == 'Rework'"
+                            label="Rework"
+                            class="p-button-rounded status_button"
+                            ></button>
                     </td>
                     <td style="display: flex;" *ngIf="this.userDetails.roleName != 'Finance'">
-                            <button pbutton pRipple type="button" icon="bx bx-check-circle" *ngIf="customer.statusName == 'Pending' || customer.statusName == 'Approved'" class="p-element p-button-rounded p-button-success p-button-text p-button p-component p-button-icon-only ng-star-inserted" ng-reflect-icon="bx bx-check-circle"  (click)="updateStatus(customer , 'Approved')"><span class="p-button-icon bx bx-check-circle" aria-hidden="true"></span><span aria-hidden="true" class="p-button-label">&nbsp;</span></button>
-                            <button pButton pRipple type="button" icon="pi pi-times-circle" *ngIf="customer.statusName == 'Pending' || customer.statusName == 'Rejected'" class="p-button-rounded p-button-danger p-button-text" (click)="updateStatus(customer , 'Rejected')"></button>
+                            <button pbutton pRipple type="button" icon="bx bx-check-circle" *ngIf="customer.statusName == 'Pending' || customer.statusName == 'Approved' || customer.statusName == 'Rework'" class="p-element p-button-rounded p-button-success p-button-text p-button p-component p-button-icon-only ng-star-inserted" ng-reflect-icon="bx bx-check-circle"  (click)="updateStatus(customer , 'Approved')"><span class="p-button-icon bx bx-check-circle" aria-hidden="true"></span><span aria-hidden="true" class="p-button-label">&nbsp;</span></button>
+                            <button pButton pRipple type="button" icon="pi pi-times-circle" *ngIf="customer.statusName == 'Pending' || customer.statusName == 'Rejected' || customer.statusName == 'Rework'" class="p-button-rounded p-button-danger p-button-text" (click)="updateStatus(customer , 'Rejected')"></button>
                     </td>
                     <td>
                         <a  href="{{customer.documentPath}}" style="text-decoration: none;" download="{{customer.documentPath}}" target="_blank"><button  pButton pRipple type="button" icon="bx bx-download" class="p-button-rounded p-button-primary p-button-text"></button></a>

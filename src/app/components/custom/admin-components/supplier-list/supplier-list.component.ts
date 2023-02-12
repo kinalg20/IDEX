@@ -155,6 +155,10 @@ export class SupplierListComponent implements OnInit {
               if (this.supplierListById.isVerify == 'Pending') {
                 this.userCapture = true;
               }
+              else if(this.supplierListById.isApproved == 'Rework'){
+                this.supplierRemark = this.supplierListById.isApprovedRemark
+              }
+
               else {
                 this.userCapture = false;
               }
@@ -168,6 +172,9 @@ export class SupplierListComponent implements OnInit {
           else if (this.userroleName.checker1 == true) {
             this.supplierListById.statusCapture = this.supplierListById.isVerify;
             this.userCapture = this.supplierListById.isVerify == 'Pending' || this.supplierListById.isVerify == 'Rework' ? false : true;
+            if(this.supplierListById.isVerify == 'Rework'){
+              this.supplierRemark = this.supplierListById.isVerifyRemark
+            }
           }
 
           else {

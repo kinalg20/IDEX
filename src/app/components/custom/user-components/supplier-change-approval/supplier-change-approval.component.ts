@@ -26,10 +26,13 @@ export class SupplierChangeApprovalComponent implements OnInit{
     this.getStatic();
     this.userroleName = this._utility.getLocalStorageDetails();
     if (this.userroleName.checker1 == true) {
-      this.approvalStatus.push({ name: 'Pending', value: "Pending" }, { name: 'Verified', value: "Verified" })
+      this.approvalStatus.push({ name: 'Pending', value: "Pending" }, { name: 'Verified', value: "Verified" }, { name: 'Rework', value: "Rework" })
+    }
+    else if (this.userroleName.roleName == 'Finance') {
+      this.approvalStatus.push({ name: 'Pending', value: "Pending" }, { name: 'Registered', value: "Registered" })
     }
     else if (this.userroleName.checker2 == true) {
-      this.approvalStatus.push({ name: 'Pending', value: "Pending" }, { name: 'Approved', value: "Approved" })
+      this.approvalStatus.push({ name: 'Pending', value: "Pending" }, { name: 'Approved', value: "Approved" }, { name: 'Rework', value: "Rework" })
     }
     else {
       this.approvalStatus.push({ name: 'Pending', value: "Pending" }, { name: 'Approved', value: "Approved" }, { name: 'Verified', value: "Verified" })
@@ -93,13 +96,11 @@ export class SupplierChangeApprovalComponent implements OnInit{
 
   userCapture: any;
   readonly: boolean = false;
-  showString : any;
   supplierId : any;
   supplierListById : any = {};
   supplierJsonData : any = {};
   certificates: any = [];
   async openModal(supplierId: any, string: any) {
-    // debugger;
     this.supplierId = supplierId;
     this._utility.loader(true);
     await this._apiService.getSupplier(supplierId).then((res)=>{
@@ -114,13 +115,18 @@ export class SupplierChangeApprovalComponent implements OnInit{
         else{
           this.supplierJsonData = {};
         }
-        console.log(this.supplierListById , this.supplierJsonData);
         if ((this.userroleName.checker2 == true)) {
           if (this.supplierListById.raiseApproved == 'Pending' || this.supplierListById.raiseApproved == 'Rework' || this.supplierListById.raiseApproved == '') {
             this.supplierListById.statusCapture = this.supplierListById.raiseApproved == '' ? 'Pending' : this.supplierListById.raiseApproved;
             if (this.supplierListById.raiseVerify == 'Pending') {
               this.userCapture = true;
             }
+
+            if(this.supplierListById.raiseApproved == 'Rework'){
+              this.remarkBoolean = true;
+              this.remarkInput = this.supplierListById.changeRemark;
+            }
+            
             else {
               this.userCapture = false;
             }
@@ -134,6 +140,14 @@ export class SupplierChangeApprovalComponent implements OnInit{
         else if (this.userroleName.checker1 == true) {
           this.supplierListById.statusCapture = this.supplierListById.raiseVerify;
           this.userCapture = this.supplierListById.raiseVerify == 'Pending' || this.supplierListById.raiseVerify == 'Rework' ? false : true;
+          if(this.supplierListById.raiseVerify == 'Rework'){
+            this.remarkBoolean = true;
+            this.remarkInput = this.supplierListById.raiseRemark;
+          }
+        }
+        else if (this.userroleName.roleName == 'Finance') {
+          this.supplierListById.statusCapture = this.supplierListById.raiseApproved;
+          this.userCapture = this.supplierListById.raiseApproved == 'Pending' ||  this.supplierListById.raiseApproved == 'Approved'? false : true;
         }
 
         else {
@@ -155,16 +169,21 @@ export class SupplierChangeApprovalComponent implements OnInit{
         this._utility.loader(true);
         this.display = false;
 
-        console.log(object);
-        // debugger;
         if (this.userroleName.checker1 == true) {
           object['raiseVerify'] = supplierListById.statusCapture;
+          object['raiseRemark'] = this.remarkInput;
           object['checker1'] = this.userroleName.checker1;
         }
-        else if (this.userroleName.checker2 == true) {
+        else if (this.userroleName.roleName == 'Finance') {
           object['raiseApproved'] = supplierListById.statusCapture;
           object['checker2'] = this.userroleName.checker2;
         }
+        else if (this.userroleName.checker2 == true) {
+          object['raiseApproved'] = supplierListById.statusCapture;
+          object['raiseRemark'] = this.remarkInput;
+          object['checker2'] = this.userroleName.checker2;
+        }
+        console.log(object);
         let formData = new FormData(); 
         formData.append('jsonData', JSON.stringify(object))
         this._apiService.putRaiseRequest(formData)
@@ -173,7 +192,6 @@ export class SupplierChangeApprovalComponent implements OnInit{
           console.log(res);
           if (res.success == true) {
             this._apiService.showMessage(res.message, "success");
-            // this.assessmentBoolean = false;
             this.getAllSupplierDetail();
           }
           else {
@@ -193,6 +211,19 @@ export class SupplierChangeApprovalComponent implements OnInit{
     dt2.reset();
     this.filterval = '';
     this.dateFilterVal = ''
+  }
+
+  remarkBoolean : boolean = false;
+  remarkInput : string = '';
+  showRemark(event:any){
+    console.log(event.target.value);
+    if(event.target.value == 'Rework'){
+      this.remarkBoolean = true;
+    }
+
+    else{
+      this.remarkBoolean = false;
+    }
   }
 
   confirm1(customer: any) {

@@ -279,7 +279,6 @@ export class UserAccountComponent implements OnInit {
 
         this._utility.loader(true);
         let localData = localStorage.getItem('supplier');
-        console.log(JSON.parse(localData)?.supplierId);
         if (JSON.parse(localData)?.supplierId) {
           if(this.registerSupplierBoolean != 'Next'){
             this._apiService.supplierUpdate(formData).then((res: any) => {
@@ -288,6 +287,18 @@ export class UserAccountComponent implements OnInit {
               }
               else {
                 this._apiService.showMessage(res.message, 'success');
+                let object = {
+                  supplierId : res.returnValue
+                }
+                localStorage.setItem('already' , JSON.stringify(object));
+
+                let localStorageObject = {
+                  supplierId: res.returnValue,
+                  supplierName: this.supplierFormControl.controls['supplierName'].value,
+                  emailAddress: this.supplierFormControl.controls['emailAddress'].value
+                }
+                localStorage.setItem('supplier', JSON.stringify(localStorageObject))
+
                 this.getApiCertificates();
                 this.nextWizard = true;
               }
@@ -297,6 +308,16 @@ export class UserAccountComponent implements OnInit {
 
           else{
             this._utility.loader(false);
+            let id : any;
+            if(localStorage.getItem('already')){
+              id = JSON.parse(localStorage.getItem('already')).supplierId;
+            }
+            let localStorageObject = {
+              supplierId: id,
+              supplierName: this.supplierFormControl.controls['supplierName'].value,
+              emailAddress: this.supplierFormControl.controls['emailAddress'].value
+            }
+            localStorage.setItem('supplier', JSON.stringify(localStorageObject))
             this.getApiCertificates();
             this.nextWizard = true;
           }
@@ -317,6 +338,7 @@ export class UserAccountComponent implements OnInit {
                 emailAddress: this.supplierFormControl.controls['emailAddress'].value
               }
               localStorage.setItem('supplier', JSON.stringify(localStorageObject))
+
               let object = {
                 supplierId : res.returnValue
               }
@@ -348,7 +370,7 @@ export class UserAccountComponent implements OnInit {
         let certificateName: any = [];
         let onboardingId: any = [];
         let formData = new FormData();  
-        this.certificateDetails.map((res: any, index: any) => {
+        this.certificateDetails.map((res: any) => {
           if (res.certificateName != '' && res.certificateUploadPath != '') {
             if(typeof res.certificateUploadPath == 'object'){
               certificateName.push(res.certificateName);
@@ -528,6 +550,7 @@ export class UserAccountComponent implements OnInit {
       }
       else {
         this.certificateDetails[idx].certificateUploadPath = file;
+        // this.certificateDetails[idx].uploaded = true;
       }
     }
 
@@ -581,14 +604,14 @@ export class UserAccountComponent implements OnInit {
   addCertificate(string?: any, indexat?: any) {
     console.log(indexat, this.certificateDetails);
     if (string == 'add') {
-      if (!this.boolean) {
+      // if (!this.boolean) {
         this.certificateBoolean = false;
         this.certificateDetails.push({ certificateName: '', certificateUploadPath: null, onboardingId: 0, isMandatory: false, readonly: false })
         console.log(this.certificateDetails);
-      }
-      else {
-        this._apiService.showMessage('Please fill form fields', 'error');
-      }
+      // }
+      // else {
+      //   this._apiService.showMessage('Please fill form fields', 'error');
+      // }
 
     }
 
@@ -645,7 +668,8 @@ export class UserAccountComponent implements OnInit {
     this.boolean = false;
     this.certificateDetails.forEach((res: any) => {
       if (res.isMandatory == true) {
-        if (res.certificateName == '' || (res.certificateUploadPath == '' || res.certificateUploadPath == undefined)) {
+        debugger;
+        if(res.certificateUploadPath == '' || res.certificateUploadPath == undefined) {
           console.log(res);
           this.boolean = true;
         }
@@ -677,22 +701,18 @@ export class UserAccountComponent implements OnInit {
         
 
         console.log(this.certificateDetails);
-
         formData.append('certificateName', certificateName);
         formData.append('onboardingIdList', onboardingId);
+        formData.append('isActive', JSON.stringify(true));
         formData.append('emailAddress', JSON.parse(localStorage.getItem('supplier')).emailAddress);
         formData.append('supplierName', JSON.parse(localStorage.getItem('supplier')).supplierName);
         formData.append('supplierId', JSON.parse(localStorage.getItem('supplier')).supplierId);
-        if(certificateName.length > 0){
         this._apiService.certificateUpload(formData).then((res: any) => {
           if (res.success == true) {
             this._utility.loader(false);
             this._apiService.showMessage(res.message, 'success');
             this.showSuccess = true;
             localStorage.clear();
-            // localStorage.removeItem('showRegister');
-            // localStorage.removeItem('supplier');
-            // localStorage.removeItem('already');
 
             setTimeout(() => {
                this.route.navigateByUrl('/login');
@@ -704,18 +724,17 @@ export class UserAccountComponent implements OnInit {
               this._apiService.showMessage(res.message, 'error');
           }
         })
-      }
 
-      else {
-            this._utility.loader(false);
-            this.showSuccess = true;
-            localStorage.removeItem('showRegister');
-            localStorage.removeItem('supplier');
+      // else {
+      //       this._utility.loader(false);
+      //       this.showSuccess = true;
+      //       localStorage.removeItem('showRegister');
+      //       localStorage.removeItem('supplier');
 
-            setTimeout(() => {
-                this.route.navigateByUrl('/login');
-            }, 3000);
-        }
+      //       setTimeout(() => {
+      //           this.route.navigateByUrl('/login');
+      //       }, 3000);
+      //   }
       }
       else {
         this.nextWizard = false;
@@ -852,7 +871,7 @@ export class UserAccountComponent implements OnInit {
         this.default = res.returnValue.length;
         if (res.success == true) {
           res.returnValue.map((resp: any) => {
-            this.certificateDetails.push({ certificateName: resp.documentName, certificateUploadPath: resp.documentPath, uploaded : resp.documentPath ? true : false, path: resp.path, note: resp.note, onboardingId: resp.onboardingId, isMandatory: resp.isMandatory ?? true, readonly: true })
+            this.certificateDetails.push({ certificateName: resp.documentName, certificateUploadPath: resp.documentPath, uploaded : resp.documentPath ? true : false, path: resp.path, note: resp.note, onboardingId: resp.onboardingId, isMandatory: resp.isMandatory ?? true, readonly: true})
           })
 
           window.scroll(0, 0);
@@ -935,6 +954,10 @@ export class UserAccountComponent implements OnInit {
   manufacturingList : any = [];
   async getSupplierById(){
    let updatesupplierForm : any;
+   if(localStorage.getItem('already')){
+    let supplierId = JSON.parse(localStorage.getItem('already')).supplierId;
+    this.supplierGetById = supplierId;
+   }
    await this._apiService.supplierById(this.supplierGetById).then((res:any)=>{
       if(res.success){
         console.log(res.returnValue);

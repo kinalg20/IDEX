@@ -117,6 +117,7 @@
                             [label]="customer.isApproved"
                             class="p-button-rounded p-button-danger
                             status_button"></button>
+                        <span *ngIf="customer.isVerify == '' || customer.isVerify == 'Pending' || customer.isVerify == 'Rework'">-</span>
                     </td>
                     <td style="min-width: 200px;">
                         <span>{{customer.supplierName }}</span>

@@ -64,8 +64,7 @@
                     <th style="min-width: 200px;">Uploaded Date</th>
                     <th style="min-width: 180px;">Document Upload</th>
                     <th style="min-width: 200px;">Status Name</th>
-                    <th style="min-width: 180px;">Document</th>
-                    <th>Action</th>
+                    <th >Document</th>
                 </tr>
                 <!-- <tr>
                     <th></th>
@@ -95,10 +94,6 @@
                     </td>
                     <td style="padding: 0.5rem 1rem!important;">
                         <span class="image-text" *ngIf="customer.documentPath?.length>0"><a href="{{customer.documentPath}}" download="{{customer.documentPath}}" target="_blank">Preview</a></span>
-                    </td>
-                    <td class="d-flex">
-                        <button pButton pRipple type="button"  icon="bx bx-trash" class="p-button-rounded p-button-danger p-button-text" (click)="confirm1(customer.onboardingId)"></button>
-                        <!-- <button pButton pRipple type="button" *ngIf="!(customer.isApproved)" icon="bx bx-pencil" class="p-button-rounded p-button-primary p-button-text" (click)="editItem(customer)"></button> -->
                     </td>
                 </tr>
             </ng-template>

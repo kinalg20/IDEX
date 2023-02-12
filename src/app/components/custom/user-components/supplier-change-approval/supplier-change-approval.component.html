@@ -54,7 +54,7 @@
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-customer let-i="rowIndex">
-                <ng-container >
+                <ng-container>
                     <tr class="p-selectable-row">
                         <td>{{i+1}}</td>
                         <td>
@@ -65,7 +65,7 @@
                                 'show')"></button>
                         </td>
                         <td>{{customer.jdeNo ? customer.jdeNo : '-'}}</td>
-                        <td>
+                        <td style="white-space: nowrap;">
                             <button pButton pRipple type="button"
                                 (click)="openModal(customer.supplierId)"
                                 *ngIf="customer.raiseVerify == 'Verified'"
@@ -94,8 +94,7 @@
                                 p-button-danger status_button"></button>
                         </td>
                         <td style="white-space: nowrap;">
-                            <ng-container *ngIf="customer.raiseVerify ==
-                                'Verified'">
+                            <ng-container *ngIf="customer.raiseVerify == 'Verified'">
                                 <button pButton pRipple type="button"
                                     *ngIf="customer.raiseApproved == 'Approved'"
                                     (click)="jdeWindow(customer)"
@@ -131,6 +130,11 @@
                                 <button pButton pRipple type="button"
                                     (click)="openModal(customer.supplierId ,
                                     'show')"
+                                    *ngIf="customer.raiseApproved == 'Rejected'"
+                                    [label]="customer.raiseApproved"
+                                    class="p-button-rounded p-button-danger
+                                    status_button"></button>
+                                <button pButton pRipple type="button"
                                     *ngIf="customer.raiseApproved == 'Rejected'"
                                     [label]="customer.raiseApproved"
                                     class="p-button-rounded p-button-danger
@@ -183,12 +187,15 @@
             <div class="row">
                 <div class="col-lg-3 col-md-12 form-group">
                     <select class="form-control form-select" id="applicable"
-                        required [disabled]="userCapture"
+                        required [disabled]="userCapture" (change)="showRemark($event)"
                         [(ngModel)]="supplierListById.statusCapture">
                         <ng-container *ngFor="let approvalStatus of approvalStatus">
                             <option [value]='approvalStatus.value'>{{approvalStatus.name}}</option>
                         </ng-container>
                     </select>
+                </div>
+                <div class="col-lg-3 col-md-12 form-group" *ngIf="remarkBoolean">
+                    <input class="form-control" [(ngModel)]="remarkInput" type="text" placeholder="Remarks">
                 </div>
                 <div class="add-listings-btn col-lg-2 col-md-12 form-group"
                     *ngIf="!userCapture">
@@ -204,7 +211,7 @@
                 <h5>Supplier Certificates</h5>
             </div>
             <div class="row"> -->
-                <!-- <ng-container *ngFor="let doc of certificates">
+            <!-- <ng-container *ngFor="let doc of certificates">
                     <ng-container *ngIf="doc.documentPath != '' &&
                         doc.documentName != ''">
                         <div class="col-lg-3 col-md-6 col-sm-12 form-group">
@@ -214,8 +221,8 @@
                                 [download]="doc.documentPath">{{doc.documentName}}</a>
                         </div>
                     </ng-container> -->
-                <!-- </ng-container> -->
-                <!-- <div class="col-lg-3 col-md-6 col-sm-12 form-group">
+            <!-- </ng-container> -->
+            <!-- <div class="col-lg-3 col-md-6 col-sm-12 form-group">
                     <a [href]="supplierListById.cancelledCheque"
                         target="_blank" style="font-size:13px; font-weight: 600;
                         color: var(--mainColor);"
@@ -227,9 +234,8 @@
             <div class="row">
                 <div class="col-lg-6">
                     <h3 style="text-align: center;">Previous Data</h3>
-
-                    <ng-container *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Supplier Name')">
-                        <div class="row">
+                    <div class="row" style="padding-right: 0!important;">
+                        <ng-container *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Supplier Name')">
                             <div class="col-lg-4 col-md-12 form-group">
                                 <label for="first-name">Supplier Name</label>
                                 <span class="form-control">{{supplierListById.supplierName}}</span>
@@ -245,11 +251,9 @@
                                         required></textarea>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- row-2 -->
-                        <div class="row">
-                            <div class="col-lg-4 col-md-12 form-group">
+                            <!-- row-2 -->
+                            <div class="col-lg-6 col-md-12 form-group">
                                 <label for="state">State</label>
                                 <ng-container *ngFor="let value of
                                     stateDropdown">
@@ -258,7 +262,7 @@
                                             class="form-control">{{value.value}}</span></ng-container>
                                 </ng-container>
                             </div>
-                            <div class="col-lg-5 col-md-12 form-group">
+                            <div class="col-lg-6 col-md-12 form-group">
                                 <label for="city">Purpose</label>
                                 <ng-container *ngFor="let value of
                                     purposeDropdown">
@@ -267,30 +271,26 @@
                                             class="form-control">{{value.value}}</span></ng-container>
                                 </ng-container>
                             </div>
-                            <div class="col-lg-3 col-md-12 form-group">
+                            <div class="col-lg-4 col-md-12 form-group">
                                 <label for="city">Service Provided</label>
                                 <span class="form-control">{{supplierListById.services}}</span>
                             </div>
-                        </div>
 
-                        <!-- row-3 -->
-                        <div class="row">
+                            <!-- row-3 -->
                             <div class="col-lg-8 col-md-12 form-group">
                                 <label for="city">In case of Intercompany
                                     correct Co. No. In GL off</label>
                                 <span class="form-control">{{supplierListById.interCompany}}</span>
                             </div>
-                            <div class="col-lg-4 col-md-12 form-group">
+                            <div class="col-lg-3 col-md-12 form-group">
                                 <label for="credit">Payment Terms</label>
                                 <span class="form-control">{{supplierListById.payTermsId}}</span>
                             </div>
-                            <div class="col-lg-6 col-md-12 form-group">
+                            <div class="col-lg-3 col-md-12 form-group">
                                 <label for="tds-applicable">TDS Applicable</label>
                                 <span class="form-control">{{supplierListById.tdsApplicable
                                     ? 'Yes' : 'No'}}</span>
                             </div>
-
-
 
                             <div class="col-lg-6 col-md-12 form-group">
                                 <label for="email">Whether Domestic or Foreign
@@ -302,61 +302,57 @@
                                 *ngIf="supplierListById.isDomestic">
                                 <label for="email">If Foreign give Currency
                                     <span class="star_class">*</span></label>
-                                    <span class="form-control">{{supplierListById.currency}}</span>
+                                <span class="form-control">{{supplierListById.currency}}</span>
                             </div>
-                        </div>
-                    </ng-container>
+                        </ng-container>
 
 
-                    <ng-container *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Tax Details')">
-                        <!-- Tax Registration Details -->
-                        <div class="section-heading">
-                            <h6 class="m-0">Tax Registration Details</h6>
-                        </div>
+                        <ng-container *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Tax Details')">
+                            <!-- Tax Registration Details -->
+                            <div class="section-heading">
+                                <h6 class="m-0">Tax Registration Details</h6>
+                            </div>
 
-                        <!-- row-5 -->
-                        <div class="row" *ngIf="! supplierListById.isDomestic">
-                            <div class="col-lg-4 col-md-12 form-group">
-                                <label for="city">GSTIN <span class="star_class">*</span></label>
-                                <span class="form-control">{{supplierListById.gstinNo}}</span>
-                            </div>
-                            <div class="col-lg-4 col-md-12 form-group">
-                                <label for="city">GSTIN Date</label>
-                                <span class="form-control">{{supplierListById.gstinDate | date : 'MM/dd/YYYY'}}</span>
-                                <!-- <p-calendar
-                                    [(ngModel)]="supplierListById.date"
-                                    placeholder="Select
-                                    GSTIN Date" required></p-calendar> -->
-                            </div>
-                            <div class="col-lg-4 col-md-12 form-group">
-                                <label for="city">PAN <span class="star_class">*</span></label>
-                                <span class="form-control">{{supplierListById.panNo}}</span>
-                            </div>
-                        </div>
+                            <!-- row-5 -->
+                            <ng-container *ngIf="! supplierListById.isDomestic">
+                                <div class="col-lg-4 col-md-12 form-group">
+                                    <label for="city">GSTIN <span
+                                            class="star_class">*</span></label>
+                                    <span class="form-control">{{supplierListById.gstinNo}}</span>
+                                </div>
+                                <div class="col-lg-4 col-md-12 form-group">
+                                    <label for="city">GSTIN Date</label>
+                                    <span class="form-control">{{supplierListById.gstinDate
+                                        | date : 'MM/dd/YYYY'}}</span>
+                                </div>
+                                <div class="col-lg-4 col-md-12 form-group">
+                                    <label for="city">PAN <span
+                                            class="star_class">*</span></label>
+                                    <span class="form-control">{{supplierListById.panNo}}</span>
+                                </div>
+                            </ng-container>
 
-                        <!-- row-6 -->
-                        <div class="row">
+                            <!-- row-6 -->
                             <div class="col-lg-4 col-md-12 form-group">
                                 <label for="city">TAN Number</label>
                                 <span class="form-control">{{supplierListById.tanNo}}</span>
                             </div>
                             <div class="col-lg-4 col-md-12 form-group">
                                 <label for="email">MSME Applicable</label>
-                                <span class="form-control">{{supplierListById.msmeApplicable ? 'Yes' : 'No'}}</span>
+                                <span class="form-control">{{supplierListById.msmeApplicable
+                                    ? 'Yes' : 'No'}}</span>
                             </div>
-                        </div>
-                    </ng-container>
+                        </ng-container>
 
 
-                    <ng-container *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Contact Details')">
-                        <!-- Vendor Contact Details -->
+                        <ng-container *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Contact Details')">
+                            <!-- Vendor Contact Details -->
 
-                        <div class="section-heading">
-                            <h6 class="m-0">Supplier Contact Details</h6>
-                        </div>
+                            <div class="section-heading">
+                                <h6 class="m-0">Supplier Contact Details</h6>
+                            </div>
 
-                        <!-- row-7 -->
-                        <div class="row">
+                            <!-- row-7 -->
                             <div class="col-lg-4 form-group">
                                 <label for="contact">Contact Person</label>
                                 <span class="form-control">{{supplierListById.contactPerson}}</span>
@@ -374,30 +370,28 @@
                                 <span class="form-control">{{supplierListById.emailAddress}}</span>
                             </div>
                             <div class="col-lg-4 form-group">
-                                <label for="email">Alternet Email Address</label>
-                                <span class="form-control">{{supplierListById.alternetEmail}}</span>
+                                <label for="email">Alternate Email Address</label>
+                                <span class="form-control">{{supplierListById.alternateEmail}}</span>
                             </div>
-                        </div>
-                    </ng-container>
+                        </ng-container>
 
 
-                    <ng-container  *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Bank Details')">
-                        <!-- Vendor Bank Details -->
-                        <div class="section-heading">
-                            <h6 class="m-0">Bank Details</h6>
-                        </div>
-                        <!-- row-8-->
-                        <div class="row">
+                        <ng-container *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Bank Details')">
+                            <!-- Vendor Bank Details -->
+                            <div class="section-heading">
+                                <h6 class="m-0">Bank Details</h6>
+                            </div>
+                            <!-- row-8-->
                             <div class="col-lg-4 form-group">
                                 <label for="ifscCode">Account Type</label>
 
-                                        <span class="form-control">{{supplierListById.accountType
-                                            == 'C' ? 'Current Account' : 'Saving
-                                            Account'}}</span>
+                                <span class="form-control">{{supplierListById.accountType
+                                    == 'C' ? 'Current Account' : 'Saving
+                                    Account'}}</span>
                             </div>
                             <div class="col-lg-4 form-group">
                                 <label for="bankName">Bank Name</label>
-                                        <span class="form-control">{{supplierListById.bankName}}</span>
+                                <span class="form-control">{{supplierListById.bankName}}</span>
                             </div>
                             <div class="col-lg-4 form-group">
                                 <label for="account">Account No.</label>
@@ -418,36 +412,36 @@
                                 <span class="form-control">{{supplierListById.bankAddress}}</span>
                             </div>
                             <div class="col-lg-4 col-md-6 col-sm-12 form-group">
-                            <span class="form-control">
-                                <a [href]="supplierListById.cancelledCheque"
-                                target="_blank" style="font-size:13px; font-weight: 600;
-                                color: var(--mainColor);"
-                                [download]="supplierListById.cancelledCheque">Cancelled Cheque</a>
-                            </span>
+                                <span class="form-control" *ngIf="supplierListById.cancelledCheque">
+                                    <a [href]="supplierListById.cancelledCheque"
+                                        target="_blank" style="font-size:13px;
+                                        font-weight: 600;
+                                        color: var(--mainColor);"
+                                        [download]="supplierListById.cancelledCheque">Cancelled Cheque</a>
+                                </span>
                             </div>
-                        </div>
-                    </ng-container>
+                        </ng-container>
 
-                    <ng-container  *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Authorized Signatory Details')">
-                        <div
-                            class="section-heading"*ngIf="supplierListById.supplierDirectorsDetails?.length>
-                            0" >
-                            <h6 style="margin: 0;">Authorized Signatory Details</h6>
-                        </div>
+                        <ng-container *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Authorized Signatory Details')">
+                            <div
+                                class="section-heading"*ngIf="supplierListById.supplierDirectorsDetails?.length>
+                                0" >
+                                <h6 style="margin: 0;">Authorized Signatory
+                                    Details</h6>
+                            </div>
 
-                        <!-- row-10 -->
-                        <ng-container *ngFor="let director of
-                            supplierListById.supplierDirectorsDetails; index
-                            as idx; last as
-                            last">
-                            <div class="row">
+                            <!-- row-10 -->
+                            <ng-container *ngFor="let director of
+                                supplierListById.supplierDirectorsDetails; index
+                                as idx; last as
+                                last">
                                 <div class="form-group col-lg-4 col-md-4"
                                     style="margin-top:
                                     0.3rem!important;">
                                     <label for="" style="margin-bottom:
                                         0.3rem!important;">
                                         Name<span class="star_class">*</span></label>
-                                        <span class="form-control">{{director.directorName}}</span>
+                                    <span class="form-control">{{director.directorName}}</span>
                                 </div>
                                 <div class=" form-group col-lg-4 col-md-4"
                                     style="margin-top: 0.3rem!important;">
@@ -455,7 +449,7 @@
                                         0.3rem!important;">
                                         Contact Number<span
                                             class="star_class">*</span></label>
-                                        <span class="form-control">{{director.mobileNo}}</span>
+                                    <span class="form-control">{{director.mobileNo}}</span>
                                 </div>
                                 <div class="form-group col-lg-4 col-md-4"
                                     style="margin-top:
@@ -463,37 +457,32 @@
                                     <label for="" style="margin-bottom:
                                         0.3rem!important;">Email
                                         Address<span class="star_class">*</span></label>
-                                        <span class="form-control">{{director.email}}</span>
+                                    <span class="form-control">{{director.email}}</span>
                                 </div>
-                            </div>
+                            </ng-container>
                         </ng-container>
-                    </ng-container>
+                    </div>
                 </div>
                 <div class="col-lg-6" style="border-left: 1px dashed #dedede;">
                     <h3 style="text-align: center;">New Data</h3>
 
                     <!-- row-1 -->
-                    <ng-container *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Supplier Name')">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-12 form-group">
-                                <label for="first-name">Supplier Name</label>
-                                <span class="form-control">{{supplierJsonData.supplierName}}</span>
+                    <div class="row">
+                        <ng-container *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Supplier Name')">
+                            <div class="row" style="padding-right: 0!important;">
+                                <div class="col-lg-4 col-md-12 form-group">
+                                    <label for="first-name">Supplier Name</label>
+                                    <span class="form-control">{{supplierJsonData.supplierName}}</span>
+                                </div>
+                                <div class="col-lg-8 col-md-12 form-group" style="padding-right: 0!important;">
+                                    <label for="address">Address with Pincode</label>
+                                    <!-- <span class="form-control">{{supplierJsonData.supplierAddress}}</span> -->
+                                    <textarea class="form-control" disabled [(ngModel)]="supplierJsonData.supplierAddress"  cols="30" rows="10"></textarea>
+                                </div>
                             </div>
-                            <div class="col-lg-8 col-md-12 form-group">
-                                <label for="address">Address with Pincode</label>
-                                <span class="form-control">{{supplierJsonData.supplierAddress}}</span>
-                                    <!-- <textarea name="" id="" cols="1" rows="1"
-                                        placeholder="Enter Your Address"
-                                        [(ngModel)]="supplierJsonData.supplierAddress"
-                                        class="form-control" type="text"
-                                        readonly
-                                        required></textarea> -->
-                            </div>
-                        </div>
-
-                        <!-- row-2 -->
-                        <div class="row">
-                            <div class="col-lg-4 col-md-12 form-group">
+    
+                            <!-- row-2 -->
+                            <div class="col-lg-6 col-md-12 form-group">
                                 <label for="state">State</label>
                                 <ng-container *ngFor="let value of stateDropdown">
                                     <ng-container *ngIf="value.id ==
@@ -501,7 +490,7 @@
                                             class="form-control">{{value.value}}</span></ng-container>
                                 </ng-container>
                             </div>
-                            <div class="col-lg-5 col-md-12 form-group">
+                            <div class="col-lg-6 col-md-12 form-group">
                                 <label for="city">Purpose</label>
                                 <ng-container *ngFor="let value of
                                     purposeDropdown">
@@ -510,122 +499,83 @@
                                             class="form-control">{{value.value}}</span></ng-container>
                                 </ng-container>
                             </div>
-                            <div class="col-lg-3 col-md-12 form-group">
+                            <div class="col-lg-4 col-md-12 form-group">
                                 <label for="city">Service Provided</label>
                                 <span class="form-control">{{supplierJsonData.services}}</span>
                             </div>
-                        </div>
-
-                        <!-- row-3 -->
-                        <div class="row">
                             <div class="col-lg-8 col-md-12 form-group">
                                 <label for="city">In case of Intercompany
                                     correct Co. No. In GL off</label>
                                 <span class="form-control">{{supplierJsonData.interCompany}}</span>
                             </div>
-                            <div class="col-lg-4 col-md-12 form-group">
+                            <div class="col-lg-3 col-md-12 form-group">
                                 <label for="credit">Payment Terms</label>
                                 <span class="form-control">{{supplierJsonData.payTermsId}}</span>
                             </div>
                             <div class="col-lg-3 col-md-12 form-group">
                                 <label for="tds-applicable">TDS Applicable</label>
-                                <span class="form-control">{{supplierJsonData.tdsApplicable ? 'Yes' : 'No'}}</span>
+                                <span class="form-control">{{supplierJsonData.tdsApplicable  ? 'Yes' : 'No'}}</span>
                             </div>
-
-
-
+    
                             <div class="col-lg-6 col-md-12 form-group">
                                 <label for="email">Whether Domestic or Foreign
                                     <span class="star_class">*</span></label>
-                                <input type="text" class="form-control"
-                                    *ngIf="supplierJsonData.isDomestic"
-                                    value="Foreign">
-                                <input type="text" class="form-control"
-                                    *ngIf="!supplierJsonData.isDomestic"
-                                    value="Domestic">
+                                    <span class="form-control">{{supplierJsonData.isDomestic ? 'Foreign' : 'Domestic'}}</span>
                             </div>
                             <div class="col-lg-4 col-md-12 form-group"
                                 *ngIf="supplierJsonData.isDomestic">
                                 <label for="email">If Foreign give Currency
                                     <span class="star_class">*</span></label>
-                                    <span class="form-control">{{supplierJsonData.currency}}</span>
+                                <span class="form-control">{{supplierJsonData.currency}}</span>
                             </div>
-                        </div>
-                    </ng-container>
-
-
-                    <ng-container
-                        *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Tax Details')">
-                        <!-- Tax Registration Details -->
-                        <div class="section-heading">
-                            <h6 class="m-0">Tax Registration Details</h6>
-                        </div>
-
-                        <!-- row-5 -->
-                        <div class="row" *ngIf="! supplierJsonData.isDomestic">
-                            <div class="col-lg-4 col-md-12 form-group">
-                                <label for="city">GSTIN </label>
-                                <input class="form-control"
-                                    [(ngModel)]="supplierJsonData.gstinNo"
-                                    placeholder="Enter GSTIN"
-                                    minlength="15"
-                                    maxlength="15" autocomplete="off"
-                                    required/>
+    
+                            <!-- row-3 -->
+                        </ng-container>
+    
+    
+                        <ng-container *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Tax Details')">
+                            <!-- Tax Registration Details -->
+                            <div class="section-heading">
+                                <h6 class="m-0">Tax Registration Details</h6>
                             </div>
-                            <div class="col-lg-4 col-md-12 form-group">
-                                <label for="city">GSTIN Date</label>
-                                <span class="form-control">{{supplierJsonData.gstinDate | date : 'MM/dd/YYYY'}}</span>
-                            </div>
-                            <div class="col-lg-4 col-md-12 form-group">
-                                <label for="city">PAN </label>
-                                <input class="form-control" type="text"
-                                    [(ngModel)]="supplierJsonData.panNo"
-                                    minlength="10"
-                                    maxlength="10" required
-                                    autocomplete="off" />
-                            </div>
-                        </div>
-
-                        <!-- row-6 -->
-                        <div class="row">
+    
+                            <!-- row-5 -->
+                            <ng-container *ngIf="! supplierJsonData.isDomestic">
+                                <div class="col-lg-4 col-md-12 form-group">
+                                    <label for="city">GSTIN </label>
+                                    <span class="form-control">{{supplierJsonData.gstinNo}}</span>
+                                </div>
+                                <div class="col-lg-4 col-md-12 form-group">
+                                    <label for="city">GSTIN Date</label>
+                                    <span class="form-control">{{supplierJsonData.gstinDate
+                                        | date : 'MM/dd/YYYY'}}</span>
+                                </div>
+                                <div class="col-lg-4 col-md-12 form-group">
+                                    <label for="city">PAN </label>
+                                    <span class="form-control">{{supplierJsonData.panNo}}</span>
+                                </div>
+                            </ng-container>
+    
+                            <!-- row-6 -->
                             <div class="col-lg-4 col-md-12 form-group">
                                 <label for="city">TAN Number</label>
-                                <input class="form-control"
-                                    [(ngModel)]="supplierJsonData.tanNo"
-                                    placeholder="Enter
-                                    TAN Number" minlength="10"
-                                    maxlength="10"
-                                    autocomplete="off" />
+                                <span class="form-control">{{supplierJsonData.tanNo}}</span>
                             </div>
                             <div class="col-lg-4 col-md-12 form-group">
                                 <label for="email">MSME Applicable</label>
-                                <input class="form-control"
-                                    *ngIf="supplierJsonData.msmeApplicable"
-                                    value="Yes"
-                                    placeholder="Enter TAN Number"
-                                    minlength="10"
-                                    maxlength="10" autocomplete="off" />
-                                <input class="form-control"
-                                    *ngIf="!supplierJsonData.msmeApplicable"
-                                    value="No"
-                                    placeholder="Enter TAN Number"
-                                    minlength="10"
-                                    maxlength="10" autocomplete="off" />
+                                <span>{{supplierJsonData.msmeApplicable ? 'Yes' : 'No'}}</span>
                             </div>
-                        </div>
-                    </ng-container>
-
-
-                    <ng-container
-                        *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Contact Details')">
-                        <!-- Vendor Contact Details -->
-
-                        <div class="section-heading">
-                            <h6 class="m-0">Supplier Contact Details</h6>
-                        </div>
-
-                        <!-- row-7 -->
-                        <div class="row">
+                        </ng-container>
+    
+    
+                        <ng-container *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Contact Details')">
+                            <!-- Vendor Contact Details -->
+    
+                            <div class="section-heading">
+                                <h6 class="m-0">Supplier Contact Details</h6>
+                            </div>
+    
+                            <!-- row-7 -->
                             <div class="col-lg-4 form-group">
                                 <label for="contact">Contact Person</label>
                                 <span class="form-control">{{supplierJsonData.contactPerson}}</span>
@@ -643,21 +593,18 @@
                                 <span class="form-control">{{supplierJsonData.emailAddress}}</span>
                             </div>
                             <div class="col-lg-4 form-group">
-                                <label for="email">Alternet Email Address</label>
-                                <span class="form-control">{{supplierJsonData.alternetEmail}}</span>
+                                <label for="email">Alternate Email Address</label>
+                                <span class="form-control">{{supplierJsonData.alternateEmail}}</span>
                             </div>
-                        </div>
-                    </ng-container>
-
-
-                    <ng-container
-                        *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Bank Details')">
-                        <!-- Vendor Bank Details -->
-                        <div class="section-heading">
-                            <h6 class="m-0">Bank Details</h6>
-                        </div>
-                        <!-- row-8-->
-                        <div class="row">
+                        </ng-container>
+    
+    
+                        <ng-container *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Bank Details')">
+                            <!-- Vendor Bank Details -->
+                            <div class="section-heading">
+                                <h6 class="m-0">Bank Details</h6>
+                            </div>
+                            <!-- row-8-->
                             <div class="col-lg-4 form-group">
                                 <label for="ifscCode">Account Type</label>
                                 <div>
@@ -668,117 +615,70 @@
                             </div>
                             <div class="col-lg-4 form-group">
                                 <label for="bankName">Bank Name</label>
-                                <input class="form-control"
-
-                                    type="text"
-                                    [(ngModel)]="supplierJsonData.bankName"
-                                    placeholder="Enter Bank Name"
-                                    autocomplete="off" />
+                                <span class="form-control">{{supplierJsonData.bankName}}</span>
                             </div>
                             <div class="col-lg-4 form-group">
                                 <label for="account">Account No.</label>
-                                <input class="form-control"
-
-                                    type="text"
-                                    [(ngModel)]="supplierJsonData.accountNo"
-                                    maxlength="16"
-                                    placeholder="Enter Account No."
-                                    autocomplete="off" />
-
+                                <span class="form-control">{{supplierJsonData.bankName}}</span>
                             </div>
                             <div class="col-lg-4 form-group">
-                                <label for="ifscCode">IFSC Code or Swift Code </label>
-                                <input class="form-control"
-
-                                    type="text"
-                                    [(ngModel)]="supplierJsonData.ifscCode"
-                                    placeholder="Enter IFSC Code"
-                                    autocomplete="off" />
+                                <label for="ifscCode">IFSC Code or Swift Code</label>
+                                <span class="form-control">{{supplierJsonData.ifscCode}}</span>
                             </div>
-
+    
                             <div class="col-lg-4 form-group">
                                 <label for="ifscCode">MICR No.</label>
-                                <input class="form-control"
-                                    type="text"
-                                    maxlength="10"
-                                    [(ngModel)]="supplierJsonData.micrNo"
-                                    placeholder="Enter MICR No."
-                                    autocomplete="off" />
+                                <span class="form-control">{{supplierJsonData.micrNo}}</span>
                             </div>
-
+    
                             <div class="col-lg-4 form-group">
                                 <label for="ifscCode">Bank Address</label>
-                                <input class="form-control"
-
-                                    type="text"
-                                    maxlength="10"
-                                    [(ngModel)]="supplierJsonData.bankAddress"
-                                    placeholder="Enter Bank Address"
-                                    autocomplete="off" />
+                                <span class="form-control">{{supplierJsonData.bankAddress}}</span>
                             </div>
                             <div class="col-lg-4 col-md-6 col-sm-12 form-group">
-                                <span class="form-control"><a [href]="supplierJsonData.cancelledCheque"
-                                    target="_blank" style="font-size:13px; font-weight: 600;
-                                    color: var(--mainColor);"
-                                    [download]="supplierJsonData.cancelledCheque">Cancelled Cheque </a></span>
-                            </div>
-                        </div>
-                    </ng-container>
-
-                    <ng-container
-                        *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Authorized Signatory Details')">
-                        <div
-                            class="section-heading"*ngIf="supplierJsonData.supplierDirectorsDetails?.length>
-                            0" >
-                            <h6 style="margin: 0;">Authorized Signatory Details</h6>
-                        </div>
-
-                        <!-- row-10 -->
-                        <ng-container *ngFor="let director of
-                            supplierJsonData.supplierDirectorsDetails; index
-                            as idx; last as
-                            last">
-                            <div class="row">
-                                <div class="form-group col-lg-4 col-md-4"
-                                    style="margin-top:
-                                    0.3rem!important;">
-                                    <label for="" style="margin-bottom:
-                                        0.3rem!important;">
-                                        Name<span class="star_class">*</span></label>
-                                    <input class="form-control" type="text"
-                                        placeholder="Enter Authorized
-                                        Signatory Name"
-                                        [(ngModel)]="director.directorName"
-                                        autocomplete="off" />
-                                </div>
-                                <div class=" form-group col-lg-4 col-md-4"
-                                    style="margin-top: 0.3rem!important;">
-                                    <label for="" style="margin-bottom:
-                                        0.3rem!important;">
-                                        Contact Number<span
-                                            class="star_class">*</span></label>
-                                    <input class="form-control" type="text"
-                                        placeholder="Enter Authorized
-                                        Signatory Contact"
-                                        [(ngModel)]="director.mobileNo"
-                                        maxlength="10"
-                                        minlength="10" autocomplete="off" />
-                                </div>
-                                <div class="form-group col-lg-4 col-md-4"
-                                    style="margin-top:
-                                    0.3rem!important;">
-                                    <label for="" style="margin-bottom:
-                                        0.3rem!important;">Email
-                                        Address<span class="star_class">*</span></label>
-                                    <input class="form-control" type="text"
-                                        [(ngModel)]="director.email"
-                                        placeholder="Enter
-                                        Director Email Address"
-                                        autocomplete="off" />
-                                </div>
+                                <span class="form-control">
+                                    <a *ngIf="supplierJsonData.cancelledCheque" [href]="supplierJsonData.cancelledCheque"
+                                        target="_blank" style="font-size:13px;
+                                        font-weight: 600;
+                                        color: var(--mainColor);"
+                                        [download]="supplierJsonData.cancelledCheque">Cancelled Cheque</a>
+                                    
+                                    <span *ngIf="!supplierJsonData.cancelledCheque">No Cancelled Cheque</span>
+                                    </span>
                             </div>
                         </ng-container>
-                    </ng-container>
+    
+                        <ng-container *ngIf="supplierListById.supplierRaiseRequestList1?.includes('Authorized Signatory Details')">
+                            <div class="section-heading"*ngIf="supplierJsonData.supplierDirectorsDetails?.length>0" >
+                                <h6 style="margin: 0;">Authorized Signatory Details</h6>
+                            </div>
+                            <!-- row-10 -->
+                            <ng-container *ngFor="let director of
+                                supplierJsonData.supplierDirectorsDetails; index
+                                as idx; last as
+                                last">
+                                <div class="row">
+                                    <div class="form-group col-lg-4 col-md-4"
+                                        style="margin-top:
+                                        0.3rem!important;">
+                                        <label for="" style="margin-bottom: 0.3rem!important;">Name<span class="star_class">*</span></label>
+                                        <span class="form-control">{{director.directorName}}</span>
+                                    </div>
+                                    <div class=" form-group col-lg-4 col-md-4"
+                                        style="margin-top: 0.3rem!important;">
+                                        <label for="" style="margin-bottom: 0.3rem!important;">Contact Number<span class="star_class">*</span></label>
+                                        <span class="form-control">{{director.mobileNo}}</span>
+                                    </div>
+                                    <div class="form-group col-lg-4 col-md-4"
+                                        style="margin-top:
+                                        0.3rem!important;">
+                                        <label for="" style="margin-bottom: 0.3rem!important;">Email Address<span class="star_class">*</span></label>
+                                        <span class="form-control">{{director.email}}</span>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </div>
                 </div>
             </div>
         </div>

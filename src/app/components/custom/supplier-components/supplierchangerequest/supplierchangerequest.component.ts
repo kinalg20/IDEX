@@ -12,6 +12,7 @@ import { md5 } from 'src/md5';
 })
 
 export class SupplierchangerequestComponent implements OnInit {
+  supplierId: any;
 
   constructor(private _apiService: ApiServiceService, private router : Router , private activate: ActivatedRoute, private route: Router, public _utility: AppUtility) { }
   errorMessage: string = ''
@@ -28,8 +29,9 @@ export class SupplierchangerequestComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.supplierId = this._utility.getLocalStorageDetails().supplierId;
+    this.getChangeRequest();
     this.getBankDetails();
-    let supplierId = this._utility.getLocalStorageDetails().supplierId;
   }
 
   supplierList : any;
@@ -41,43 +43,44 @@ export class SupplierchangerequestComponent implements OnInit {
     }
   ]
 
-  //Login Supplier
-  // registerUser(signup: FormGroupDirective) {
-  //   if (this.userRegisterFormControl.valid) {
-  //     this._utility.loader(true);
-  //     let localStorageObject = this._utility.getLocalStorageDetails();
-  //     let object = {
-  //       raiseRemark: this.userRegisterFormControl.value.changeRequest,
-  //       emailAddress: localStorageObject.loginName,
-  //       supplierId: localStorageObject.supplierId
-  //     }
-  //     this._apiService.raiseRequest(object).then((res: any) => {
-  //       console.log(res);
-  //       if (res.success == true) {
-  //         this._utility.loader(false);
-  //         this._apiService.showMessage(res.message, 'success')
-  //         this.userRegisterFormControl.reset();
-  //         Object.keys(this.userRegisterFormControl.controls).forEach(key => {
-  //           this.userRegisterFormControl.controls[key].setErrors(null)
-  //         });
-  //         signup.resetForm();
-  //       }
-
-  //       else {
-  //         this._apiService.showMessage(res.message, 'error');
-  //       }
-  //     })
-  //   }
-  // }
-
-  ChangeRequest: any = [];
-  getBankDetails() {
-    this._apiService.dropdowndata('CRChangeList').then((res: any) => {
+  getChangeRequest(){
+    let object = {
+      Cond3 : this.supplierId,
+      Mode : 'SupplierRaiseRequest'
+    }
+    this._apiService.dropdowndata('',object).then((res: any) => {
       console.log(res);
       this.ChangeRequest = res.returnValue;
     })
   }
 
+  ChangeRequest: any = [];
+  async getBankDetails() {
+    this._utility.loader(true);
+    let object = {
+      Cond3 : this.supplierId,
+      Mode : 'CRChangeList'
+    }
+    await this._apiService.dropdowndata('',object).then((res: any) => {
+      if(res.success){
+        console.log(res);
+        if(res.success){
+          this.ChangeRequest = res.returnValue;
+        }
+      }
+    })
+
+    if(this.ChangeRequest[0].approved){
+      this.showChangeList = false;
+    }
+    else{
+      this.showChangeList = true;
+    }
+
+    this._utility.loader(false);
+  }
+
+  showChangeList : boolean = true;
   submitRequest() {
     if(this.selectedRequest.length > 0){
       let supplierId = this._utility.getLocalStorageDetails()?.supplierId;
@@ -86,14 +89,11 @@ export class SupplierchangerequestComponent implements OnInit {
         res.CRChangeId = res.id,
         res.name = res.value
       })
-
-      console.log(this.selectedRequest);
       let object : any = {};
       object['raiseRequestDetails'] = this.selectedRequest;
       object['supplierId'] = this.selectedRequest[0].supplierId;
       this._apiService.supplierRaiseRequest(object).then((res:any)=>{
         if(res.success){
-          console.log(res);
           this._apiService.showMessage(res.message , 'success');
           this.ChangeRequest = [];
           this.getBankDetails();

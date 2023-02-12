@@ -108,9 +108,9 @@ const routes: Routes = [
     {path: 'enquiryPurchase', component: EnquiryComparisonComponent , pathMatch: 'full', canActivate : [AuthGuardGuard] , data: {roles: ['SuperAdmin' , 'Admin' , 'User' ,'Normal User' , 'Bussiness head']}},    
     {path: 'enquiryPurchase/:enquiryId', component: EnquiryComparisonByIdComponent , pathMatch: 'full', canActivate : [AuthGuardGuard] , data: {roles: ['SuperAdmin' , 'Admin' , 'User' ,'Normal User' , 'Bussiness head']}},    
     {path: 'report', component: ReportsComponent , pathMatch: 'full', canActivate : [AuthGuardGuard] , data: {roles: ['SuperAdmin' , 'Admin' , 'User' , 'Supplier' , 'Normal User' , 'Bussiness head']}},    
-    {path: 'supplierAssignList', component: SupplierAssignListComponent , pathMatch: 'full' , data: {roles: ['SuperAdmin' , 'Admin' , 'User' , 'Normal User' , 'Bussiness head']}},    
-    {path: 'documentMaster', component: DocumentMasterComponent , pathMatch: 'full' , data: {roles: ['SuperAdmin' , 'Admin' , 'User' , 'Normal User' , 'Bussiness head']}},    
-    {path: 'supplierChangeRequests', component: SupplierChangeApprovalComponent , pathMatch: 'full'},    
+    {path: 'supplierAssignList', component: SupplierAssignListComponent , pathMatch: 'full', canActivate : [AuthGuardGuard] , data: {roles: ['SuperAdmin' , 'Admin' , 'User' , 'Normal User' , 'Bussiness head']}},    
+    {path: 'documentMaster', component: DocumentMasterComponent , pathMatch: 'full' , canActivate : [AuthGuardGuard] , data: {roles: ['SuperAdmin' , 'Admin' , 'User' , 'Normal User' , 'Bussiness head']}},    
+    {path: 'supplierChangeRequests', component: SupplierChangeApprovalComponent , pathMatch: 'full', canActivate : [AuthGuardGuard] , data: {roles: ['SuperAdmin' , 'Admin' , 'User' , 'Normal User' , 'Finance']}},    
     {path: 'successPage', component: SuccessPageComponent , pathMatch: 'full'},    
     {path: '**', component: NotFoundComponent}, // This line will remain down from the whole pages component list
 ];
