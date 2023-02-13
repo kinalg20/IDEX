@@ -1058,5 +1058,10 @@ export class UserAccountComponent implements OnInit {
 
   }
 
+  removeImage(idx){
+    this.certificateDetails[idx].uploaded = false;
+    this.certificateDetails[idx].certificateUploadPath = null;
+  }
+
   
 }

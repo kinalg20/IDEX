@@ -1004,7 +1004,7 @@
                                         (change)="upload_doc($event ,'certificate' , idx, 'id'+idx)" autocomplete="off" />
                                         <span class="form-control" *ngIf="this.certificateDetails[idx].uploaded" style="display: flex; justify-content: space-between;">
                                             <a [href]="this.certificateDetails[idx].certificateUploadPath" [download]="this.certificateDetails[idx].certificateUploadPath" target="_blank" *ngIf="this.certificateDetails[idx].uploaded">Preview</a>
-                                            <span *ngIf="this.certificateDetails[idx].uploaded" style="cursor: pointer;" (click)="this.certificateDetails[idx].uploaded = false">x</span>
+                                            <span *ngIf="this.certificateDetails[idx].uploaded" style="cursor: pointer;" (click)="removeImage(idx)">x</span>
                                         </span>
                                 </div>
                                 <div class="invalid-feedback">Please Upload

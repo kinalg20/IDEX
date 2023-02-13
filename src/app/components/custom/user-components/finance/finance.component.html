@@ -49,12 +49,6 @@
         <div class="row">
             <div class="col-lg-4 col-md-12 form-group">
                 <label for="state">State</label>
-                <!-- <select class="form-control form-select"
-                    
-                    [(ngModel)]="supplierList.stateId"
-                    minlength="3"
-                    maxlength="35" required>
-                </select> -->
                 <ng-container *ngFor="let value of stateDropdown">
                     <span *ngIf="supplierList.stateId == value.id">{{value.value}}</span>
                 </ng-container>
@@ -64,25 +58,10 @@
                 <ng-container *ngFor="let value of purposeDropdown">
                     <span *ngIf="supplierList.purposeId == value.id">{{value.value}}</span>
                 </ng-container>
-                <!-- <select class="form-control form-select"
-                    
-                    [(ngModel)]="supplierList.purposeId"
-                    minlength="3"
-                    maxlength="35" required>
-                    <ng-container *ngFor="let value of
-                        purposeDropdown">
-                        <option [value]="value.id"
-                            >{{value.value}}</option>
-                    </ng-container>
-                </select> -->
             </div>
             <div class="col-lg-4 col-md-12 form-group">
                 <label for="city">Service Provided</label>
                 <span>{{supplierList.services}}</span>
-                <!-- <input type="text" class="form-control"
-                    [(ngModel)]="supplierList.services"
-                    autocomplete="off"
-                    placeholder="Services" required /> -->
             </div>
 
         <!-- row-3 -->
@@ -91,18 +70,10 @@
                 <label for="city">In case of Intercompany
                     correct Co. No. In GL off</label>
                 <span>{{supplierList.interCompany}}</span>
-                <!-- <input class="form-control"
-                    [(ngModel)]="supplierList.interCompany"
-                    autocomplete="off" placeholder="Enter CO
-                    No." /> -->
             </div>
             <div class="col-lg-4 col-md-12 form-group">
                 <label for="credit">Payment Terms</label>
                 <span>{{supplierList.payTermsId}}</span>
-                <!-- <input class="form-control"
-                    [(ngModel)]="supplierList.payTermsId"
-                    autocomplete="off" placeholder="Enter CO
-                    No." /> -->
             </div>
 
             <div class="col-lg-4 col-md-12 form-group"
@@ -116,16 +87,6 @@
             <div class="col-lg-4 col-md-12 form-group">
                 <label for="tds-applicable">TDS Applicable</label>
                 <span>{{supplierList.tdsApplicable ? 'Yes' : 'No' }}</span>
-                <!-- <input type="text" class="form-control"
-                    *ngIf="supplierList.tdsApplicable"
-                    value="Yes"
-                    autocomplete="off"
-                    placeholder="Services" required />
-                <input type="text" class="form-control"
-                    *ngIf="!supplierList.tdsApplicable"
-                    value="No"
-                    autocomplete="off"
-                    placeholder="Services" required /> -->
             </div>
 
 
@@ -133,61 +94,34 @@
             <div class="col-lg-4 col-md-12 form-group">
                 <label for="email">Whether Domestic or Foreign </label>
                 <span>{{supplierList.isDomestic ? 'Foreign' : 'Domestic' }}</span>
-                <!-- <select class="form-control form-select"
-                    [disabled]="true"
-                    [(ngModel)]="supplierList.isDomestic"
-                    minlength="3"
-                    maxlength="35" required>
-                    <option value="false" selected>Domestic</option>
-                    <option value="true">Foreign</option>
-                </select> -->
             </div>
             <div class="col-lg-4 col-md-12 form-group"
                 *ngIf="supplierList.isDomestic">
                 <label for="email">If Foreign give Currency</label>
-                {{supplierList.currency}}
-                <!-- <input class="form-control"
-                    [(ngModel)]="supplierList.currency"
-                    id="currency"
-                    placeholder="Enter Currency Type" /> -->
+                <span>{{supplierList.currency}}</span>
             </div>
         <!-- </div> -->
 
         <!-- Tax Registration Details -->
 
 
-        <!-- <div class="section-heading">
+        <div class="section-heading">
             <h5>Tax Registration Details</h5>
-        </div> -->
+        </div>
 
         <!-- row-5 -->
         <ng-container *ngIf="!supplierList.isDomestic">
             <div class="col-lg-4 col-md-12 form-group">
                 <label for="city">GSTIN </label>
                 <span>{{supplierList.gstinNo}}</span>
-                <!-- <input class="form-control"
-                    [(ngModel)]="supplierList.gstinNo"
-                    placeholder="Enter GSTIN"
-                    minlength="15"
-                    maxlength="15" autocomplete="off"
-                    required/> -->
             </div>
             <div class="col-lg-4 col-md-12 form-group">
                 <label for="city">GSTIN Date</label>
                 <span>{{supplierList.gstinDate | date}}</span>
-                <!-- <p-calendar 
-                    [(ngModel)]="supplierList.date"
-                    placeholder="Select
-                    GSTIN Date" required></p-calendar> -->
             </div>
             <div class="col-lg-4 col-md-12 form-group">
                 <label for="city">PAN </label>
                 <span>{{supplierList.panNo}}</span>
-                <!-- <input class="form-control" type="text"
-                    [(ngModel)]="supplierList.panNo"
-                    minlength="10"
-                    maxlength="10" required
-                    autocomplete="off" /> -->
             </div>
         </ng-container>
 
@@ -196,56 +130,22 @@
             <div class="col-lg-4 col-md-12 form-group" *ngIf="supplierList.tanNo">
                 <label for="city">TAN Number</label>
                 <span>{{supplierList.tanNo}}</span>
-                <!-- <input class="form-control"
-                    [(ngModel)]="supplierList.tanNo"
-                    placeholder="Enter
-                    TAN Number" minlength="10"
-                    maxlength="10"
-                    autocomplete="off" /> -->
             </div>
             <div class="col-lg-4 col-md-12 form-group">
                 <label for="msme">MSME Applicable</label>
                 <span>{{supplierList.msmeApplicable ? 'Yes' : 'No'}}</span>
-                <!-- <input class="form-control"
-                    *ngIf="supplierList.msmeApplicable"
-                    value="Yes"
-                    placeholder="Enter TAN Number"
-                    minlength="10"
-                    maxlength="10" autocomplete="off" />
-                <input class="form-control"
-                    *ngIf="!supplierList.msmeApplicable"
-                    value="No"
-                    placeholder="Enter TAN Number"
-                    minlength="10"
-                    maxlength="10" autocomplete="off" /> -->
             </div>
             <div class="col-lg-4 form-group">
                 <label for="contact">Contact Person</label>
                 <span>{{supplierList.contactPerson}}</span>
-                <!-- <input class="form-control"
-                    placeholder="Enter
-                    Contact Person"
-                    [(ngModel)]="supplierList.contactPerson"
-                    autocomplete="off" required/> -->
             </div>
             <div class="col-lg-4 form-group">
                 <label for="tel">Contact Number</label>
                 <span>{{supplierList.mobileNo}}</span>
-                <!-- <input class="form-control" maxlength="10"
-                    [(ngModel)]="supplierList.mobileNo"
-                    maxlength="10"
-                    placeholder="Enter Contact Number"
-                    autocomplete="off"
-                    required/> -->
             </div>
             <div class="col-lg-4 form-group" *ngIf="supplierList.faxNo">
                 <label for="fax">FAX Number</label>
                 <span>{{supplierList.faxNo}}</span>
-                <!-- <input class="form-control"
-                    maxlength="10"
-                    [(ngModel)]="supplierList.faxNo"
-                    placeholder="Enter Fax Number"
-                    autocomplete="off" /> -->
             </div>
             <div class="col-lg-4 form-group">
                 <label for="email">Email Address</label>
@@ -254,11 +154,6 @@
             <div class="col-lg-4 form-group" *ngIf="supplierList.alternetEmail">
                 <label for="email">Alternet Email Address</label>
                 <span>{{supplierList.alternetEmail}}</span>
-                <!-- <input class="form-control" type="text"
-                    
-                    [(ngModel)]="supplierList.alternetEmail"
-                    placeholder="Enter Email Address"
-                    autocomplete="off" required/> -->
             </div>
         <!-- </div> -->
 
@@ -285,48 +180,33 @@
             <div class="col-lg-3 form-group">
                 <label for="bankName">Bank Name</label>
                 <span>{{supplierList.bankName}}</span>
-                <!-- <input class="form-control"
-                    type="text"
-                    [(ngModel)]="supplierList.bankName"
-                    placeholder="Enter Bank Name"
-                    autocomplete="off" /> -->
             </div>
             <div class="col-lg-3 form-group">
                 <label for="account">Account No.</label>
                 <span>{{supplierList.accountNo}}</span>
-                <!-- <input class="form-control"
-                    type="text"
-                    [(ngModel)]="supplierList.accountNo"
-                    maxlength="16"
-                    placeholder="Enter Account No."
-                    autocomplete="off" /> -->
 
             </div>
             <div class="col-lg-3 form-group">
                 <label for="ifscCode">IFSC Code or Swift Code </label>
                 <span>{{supplierList.ifscCode}}</span>
-                <!-- <input class="form-control"
-                    type="text"
-                    [(ngModel)]="supplierList.ifscCode"
-                    placeholder="Enter IFSC Code"
-                    autocomplete="off" /> -->
             </div>
 
             <div class="col-lg-3 form-group" *ngIf="supplierList.micrNo">
                 <label for="ifscCode">MICR No.</label>
                 <span>{{supplierList.micrNo}}</span>
-                <!-- <input class="form-control"
-                    type="text"
-                    maxlength="10"
-                    [(ngModel)]="supplierList.micrNo"
-                    placeholder="Enter MICR No."
-                    autocomplete="off" /> -->
             </div>
 
             <div class="col-lg-3 form-group" *ngIf="supplierList.bankAddress">
                 <label for="ifscCode">Bank Address</label>
                 <span>{{supplierList.bankAddress}}</span>
             </div>
+            <div class="col-lg-4 col-md-12 form-group"
+            *ngIf="supplierList.cancelledCheque">
+            <label for="">cancelled Cheque</label>
+            <label><a [href]="supplierList.cancelledCheque"
+                    target="_blank"
+                    [download]="supplierList.cancelledCheque">Preview</a></label>
+        </div>
         </div>
 
         <!-- previous 3 years Turnover -->
@@ -512,26 +392,10 @@
             <div class="col-lg-3 col-md-12 form-group">
                 <label for="">Manufacturing List</label>
                 <span>{{supplierList?.manufacturingProcessList}}</span>
-                <!-- <p-multiSelect [filter]="false"
-                    [showToggleAll]="false"
-                    [options]="manufacturingArray"
-                    [(ngModel)]="supplierList.supplierManufacturingDropdown"
-                    class="multiselect-custom-virtual-scroll"
-                    placeholder="Select manufacture name"
-                    optionLabel="value" optionValue="id"></p-multiSelect> -->
             </div>
             <div class="col-lg-3 col-md-12 form-group">
                 <label for="">Material Construction List</label>
                 <span>{{supplierList?.materialofconstructionList}}</span>
-                <!-- <p-multiSelect [filter]="false"
-                    [ngModelOptions]="{standalone: true}"
-                    [showToggleAll]="false"
-                    [(ngModel)]="supplierList.supplierMaterialDropdown"
-                    class="multiselect-custom-virtual-scroll"
-                    [options]="materialConstructionArray"
-                    placeholder="Select material name"
-                    optionValue="id"
-                    optionLabel="value"></p-multiSelect> -->
             </div>
 
             <div class="col-lg-3 col-md-12 form-group">
@@ -539,11 +403,8 @@
                 <ng-container *ngFor="let dropdown of otherCategoryArray">
                     <span [value]="dropdown.id" *ngIf="supplierList.otherCategoryId == dropdown.id">{{dropdown.value}}</span>
                 </ng-container>
-                <!-- <select class="form-control form-select" [(ngModel)]="supplierList.otherCategoryId">
-                    <option value="0">Select Other Category</option>
-                </select> -->
             </div>
-            <div class="col-lg-3 col-md-12 form-group">
+            <div class="col-lg-3 col-md-12 form-group" *ngIf="supplierList.otherRemark">
                 <label for="">Other Remarks</label>
                 <span>{{supplierList.otherRemark}}</span>
             </div>
